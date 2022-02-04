@@ -15,7 +15,7 @@ export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 type Item = {component: Component; key: string};
 
 const { useGlobalState, setGlobalState } = createGlobalState({
-  modals: { counter: 0, items: [] as Item[] }
+  modals: { counter: 0, items: [] as Item[] },
 });
 
 
