@@ -13,11 +13,10 @@ export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 
 type Item = {component: Component; key: string};
-const initialState = {
-  modals: { counter: 0, items: [] as Item[] },
-};
 
-const { useGlobalState, setGlobalState } = createGlobalState(initialState);
+const { useGlobalState, setGlobalState } = createGlobalState({
+  modals: { counter: 0, items: [] as Item[] }
+});
 
 
 /** Get an unique key for the component so they won't lose the children state changes.
@@ -54,6 +53,9 @@ export function removeModalOrPortal(componentOrKey: Component | React.Key): void
 }
 
 /** Global state */
+// TODO add way to select the ModalsAndPortals component, like target: string.
+// This way, we can have like <ModalsAndPortals id='snackbar'/>, and addSnackbar({}: {id?: string})
+// Add someway to stack them https://material.io/archive/guidelines/components/snackbars-toasts.html
 export function ModalsAndPortals(): JSX.Element {
   const [modals] = useGlobalState('modals');
   return (<>
