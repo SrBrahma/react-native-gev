@@ -21,3 +21,4 @@ export { Loading, LoadingProps } from './components/Others/Loading';
 export { RefreshControl, RefreshControlProps } from './components/Others/RefreshControl';
 export { StatusBarProvider, StatusBarProviderProps } from './components/Others/StatusBar';
 export { Text, TextProps } from './components/Others/Text';
+export { PageScrollView, PageScrollViewProps } from 'pagescrollview';
