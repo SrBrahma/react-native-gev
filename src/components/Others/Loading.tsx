@@ -3,20 +3,26 @@ import { useTheme } from '../../theme';
 import { Portal } from '../Modals/ModalBase';
 
 
-// Number on iOS will be 'small'. later change to a better alternative than builtin.
-export function Loading({ size: sizeProp, text, fullscreen, flex, onRequestClose, viewStyle }: {
+
+export type LoadingProps = {
   /** If should be in the middle of the screen. Will use 'absolute'
    * @default false */
-  fullscreen?: boolean;
-  /** When using fullscreen */
-  onRequestClose?: () => void;
-  size?: number | 'large' | 'small' | undefined;
-  text?: string;
-  /** If not using fullscreen, if the loading view should flex to use all available space.
-   * @default false */
-  flex?: boolean;
-  viewStyle?: StyleProp<ViewStyle>;
-}): JSX.Element {
+   fullscreen?: boolean;
+   /** When using fullscreen */
+   onRequestClose?: () => void;
+   size?: number | 'large' | 'small' | undefined;
+   text?: string;
+   /** If not using fullscreen, if the loading view should flex to use all available space.
+    * @default false */
+   flex?: boolean;
+   viewStyle?: StyleProp<ViewStyle>;
+};
+
+// Number on iOS will be 'small'. later change to a better alternative than builtin.
+/** Wrapper around ActivityIndicator with extra functionalities. */
+export function Loading({
+  size: sizeProp, text, fullscreen, flex, onRequestClose, viewStyle,
+}: LoadingProps): JSX.Element {
 
   const { colors } = useTheme();
 

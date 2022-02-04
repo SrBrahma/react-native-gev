@@ -5,7 +5,7 @@ import { Portal } from './ModalBase';
 
 
 
-type ModalBottomViewProps = {
+export type ModalBottomViewProps = {
   title?: string;
   onCancel?: () => void;
   /** Style of the wrapping box. */

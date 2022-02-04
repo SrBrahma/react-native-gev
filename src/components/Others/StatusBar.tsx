@@ -16,7 +16,7 @@ type ContextData = {
 
 const Context = createContext<ContextData>({} as any);
 
-type BetterStatusBarProviderProps = {
+export type StatusBarProviderProps = {
   /** @default false */
   useNativeDriver?: boolean;
   /** The starting color for the StatusBar.
@@ -28,7 +28,9 @@ type BetterStatusBarProviderProps = {
   // barStyle
   // etc add other StaturBar props here, and then add them in the hook/component to mirror the StatusBar behavior.
 };
-export const StatusBarProvider: React.FC<BetterStatusBarProviderProps> = ({
+
+/** You shall add it before any SafeArea Provider. */
+export const StatusBarProvider: React.FC<StatusBarProviderProps> = ({
   children, backgroundColor = '#fff',
 }) => {
   // const colorR = useRef(backgroundColor).current

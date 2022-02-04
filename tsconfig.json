@@ -6,7 +6,7 @@
     "declaration": true,                      /* Generates corresponding '.d.ts' file. */
     "outDir": "lib",                          /* Redirect output structure to the directory. */
     "rootDir": "src",                         /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-    "isolatedModules": true,                  /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+    "isolatedModules": false,                 /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
     "strict": true,                           /* Enable all strict type-checking options. */
     "noUncheckedIndexedAccess": true,         /* Include 'undefined' in index signature results */
     "moduleResolution": "node",               /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */

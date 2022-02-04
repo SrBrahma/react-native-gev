@@ -70,7 +70,7 @@ function constrainIndex(index: number | undefined, dataLength: number) {
 
 const isIos = Platform.OS === 'ios';
 
-export default function ScrollPicker<T>({
+export function ScrollPicker<T>({
   itemHeight = 30, data = [], highlightColor = false,
   changeValueWhileDragging = true, onValueChange, selectedIndex: selectedIndexProp, ...p
 }: ScrollPickerProps<T>): JSX.Element {

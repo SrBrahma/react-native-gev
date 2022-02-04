@@ -7,19 +7,19 @@ import { modalLoading } from '../Modals/modalLoading';
 
 
 
-export const buttonBorderRadius = 4;
-export const buttonMargin = 12;
-export const iconSize = 22;
+const buttonBorderRadius = 4;
+const buttonMargin = 12;
+const iconSize = 22;
 
-export const iconPadding = 15;
+const iconPadding = 15;
 
-export const totalIconSize = iconSize + iconPadding * 2;
+const totalIconSize = iconSize + iconPadding * 2;
 
 
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
 
-type ButtonProps<T extends void | any | Promise<any>> = {
+export type ButtonProps<T extends void | any | Promise<any>> = {
   /** You may pass an array if you want to space between two texts. */
   text: string;
   /** Use this! */

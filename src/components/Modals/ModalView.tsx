@@ -4,7 +4,7 @@ import { useTheme } from '../../theme';
 
 
 
-type ModalViewProps = {
+export type ModalViewProps = {
   onCancel: () => void;
   /** Style of the wrapping box. */
   containerStyle?: StyleProp<ViewStyle>;
