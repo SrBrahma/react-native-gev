@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Control, useController, Validate } from 'react-hook-form';
 import { StyleSheet, TextInputProps as RNTextInputProps, ViewStyle } from 'react-native';
 import { integerPriceToString } from '@ahive/shared';
-import ccValidator from 'card-validator';
+// import ccValidator from 'card-validator';
 // TODO add plugin to treeshake add it, as non-br users or even br users who won't use this won't want this by default
 // In preset, check if plugin was loaded.
-import { cnpj, cpf } from 'cpf-cnpj-validator';
+// import { cnpj, cpf } from 'cpf-cnpj-validator';
 import { InputOutline, InputOutlineProps } from './InputOutline';
 
 /*

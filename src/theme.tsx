@@ -120,19 +120,19 @@ const defaultThemeContextValue: ThemesParam = {
 
 
 
-function getThemeReturn({ themesParam, themeId }: {themesParam: ThemesParam; themeId: string}): ThemeReturn {
+function createUseThemeData({ themesParam, themeId }: {themesParam: ThemesParam; themeId?: string}): ThemeReturn {
   const theme: Theme = deepmerge.all([
     themesParam.themes[defaultInitialTheme] ?? {},
     themesParam.themes[themesParam.initialTheme] ?? {},
-    themesParam.themes[themeId] ?? {},
+    ...(themeId ? [themesParam.themes[themeId] ?? {}] : []),
   ]) as Theme;
 
   return {
     ...theme,
     $settings: {
       availableThemes: Object.keys(themesParam.themes),
-      currentTheme: themeId,
-      changeTheme: (themeId) => setGlobalState('theme', () => getThemeReturn({ themesParam, themeId })),
+      currentTheme: themeId ?? themesParam.initialTheme, // initialTheme defaults to defaultInitialTheme.
+      changeTheme: (themeId) => setGlobalState('theme', () => createUseThemeData({ themesParam, themeId })),
     },
   };
 }
@@ -144,7 +144,7 @@ const { useGlobalState, setGlobalState } = createGlobalState<{
   theme: ThemeReturn;
 }>({
   params: defaultThemeContextValue,
-  theme: getThemeReturn({ themesParam: defaultThemeContextValue, themeId: defaultInitialTheme }),
+  theme: createUseThemeData({ themesParam: defaultThemeContextValue, themeId: defaultInitialTheme }),
 });
 
 
@@ -158,18 +158,29 @@ type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
 
-export function createThemes<T extends Record<string, DeepPartial<Theme>>>({}: {
-  themes: T;
-  // /** The theme to fallback to. After this fallback, it will fallback to `'light'`. */
-  // defaultThemeId?: string
-  // /** The theme it will start in.  */
-  // initialThemeId?: string
-  //
-  // /** If should use `useColorScheme` to  */
-  // useUseColorScheme?: boolean
-}): {
-  useTheme: typeof useTheme;
-} {
+
+type CreateThemePops = {
+  light?: DeepPartial<Theme>;
+  dark?: DeepPartial<Theme>;
+  // [others: string]: DeepPartial<Theme>,
+} & Record<string, DeepPartial<Theme>>;
+
+type CreateThemeRtn = {
+  useTheme: () => ThemeReturn;
+};
+
+type CreateThemeOptions = {
+  noOptionsYet: null;
+
+};
+
+/** Changes the default colors of react-native-gev components.
+ *
+ * You may also use the given colors in your app by using useTheme() hook.
+ *
+ * As it uses `react-hooks-global-state`, it doesn't need a context provider. */
+export function createTheme<T extends CreateThemePops>(t: T, opts?: CreateThemeOptions): CreateThemeRtn {
+  createUseThemeData;
   return {
     useTheme,
   };
