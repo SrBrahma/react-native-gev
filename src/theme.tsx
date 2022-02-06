@@ -164,10 +164,10 @@ type CreateThemeOptions = {
  *
  * As it uses `react-hooks-global-state`, it doesn't need a context provider. */
 export function createTheme<T extends DeepPartialThemes>(themes: T, opts?: CreateThemeOptions): CreateThemeRtn {
-  createUseThemeData({
+  setGlobalState('useThemeData', createUseThemeData({
     themes,
     initialTheme: opts?.initialTheme ?? defaultInitialTheme,
-  });
+  }));
   return {
     useTheme,
   };
