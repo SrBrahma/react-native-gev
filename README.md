@@ -18,7 +18,7 @@
 
 <br/>
 
-## This README and the package itself still early dev stage. I am already using it but won't have time to properly publish it.
+## This README and the package itself still early dev stage. I am already using it but I don't have time to properly publish it now.
 
 There are great known components libs like React Native Elements, React Native Paper... but none of them really pleases my eyes and my coding styles.
 
