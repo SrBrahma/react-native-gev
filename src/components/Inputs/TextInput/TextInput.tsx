@@ -17,14 +17,14 @@ export type CommonTextInputPros = MaskedTextInputProps & {
 
 
 
-export type TextInputProps<T extends Control<any, any>> = Omit<CommonTextInputPros & {
+export type TextInputProps<T extends Control<any, any>> = Omit<Partial<CommonTextInputPros> & {
+  control: T;
+  /** How you will get it with react-hook-form */
+  id: (keyof T['_defaultValues']) & string;
   mask?: string;
   /** If will add a basic margin bottom.
    * @default true */
   marginBottom?: boolean;
-  control: T;
-  /** How you will get it with react-hook-form */
-  id: (keyof T['_defaultValues']) & string;
   /** User-readable name of this input. */
   label?: string;
   optional?: boolean;
@@ -39,7 +39,6 @@ export type TextInputProps<T extends Control<any, any>> = Omit<CommonTextInputPr
   /** If you want to use a custom component. */
   component?: (p: CommonTextInputPros) => JSX.Element;
 }, 'defaultValue'>; /** defaultValue unused as we at most will use hook-form defaultValues. It sets the field value. */
-
 
 
 export function TextInput<T extends Control<any, any>>({
