@@ -13,6 +13,9 @@
 
 Changelog won't be updated at the current dev stage.
 
+## 0.5.0 - 2022-02-07
+* Added `component`, `containerStyle` and `errorStyle` props to `TextInput`
+* Now some theme's colors defaults to another colors. `_button.destructive` for example defaults to `error` color.
 
 ## 0.4.0 - 2022-02-07
 * Added useForm.

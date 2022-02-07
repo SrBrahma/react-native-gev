@@ -1,14 +1,23 @@
 import { useState } from 'react';
 import { Control, useController } from 'react-hook-form';
-import { TextInputProps as RnTextInputProps } from 'react-native';
+import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { getPresetInfo, PresetIds, TextInputPreset } from './presets/presets';
+import { MaskedTextInputProps } from './MaskedTextInput';
 import { TextInputFormal } from './TextInputFormal';
 
 
 
 
+export type CommonTextInputPros = MaskedTextInputProps & {
+  label?: string;
+  error?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  errorStyle?: StyleProp<TextStyle>;
+};
 
-export type TextInputProps<T extends Control<any, any>> = Omit<RnTextInputProps & {
+
+
+export type TextInputProps<T extends Control<any, any>> = Omit<CommonTextInputPros & {
   mask?: string;
   /** If will add a basic margin bottom.
    * @default true */
@@ -27,6 +36,8 @@ export type TextInputProps<T extends Control<any, any>> = Omit<RnTextInputProps 
    * @default false */
   hideCharacterCount?: boolean;
   errorMessage?: string;
+  /** If you want to use a custom component. */
+  component?: (p: CommonTextInputPros) => JSX.Element;
 }, 'defaultValue'>; /** defaultValue unused as we at most will use hook-form defaultValues. It sets the field value. */
 
 
@@ -37,6 +48,7 @@ export function TextInput<T extends Control<any, any>>({
   /** @default false */
   required = false,
   preset,
+  component,
   // style,
   // marginBottom = true,
   ...props
@@ -85,7 +97,7 @@ export function TextInput<T extends Control<any, any>>({
     setUnmasked(unmasked);
   };
 
-  const commonProps = {
+  const commonProps: CommonTextInputPros = {
     value: unmasked,
     numberOfLines: 1,
     error: props.errorMessage ?? (fieldState.error ? String(fieldState.error.message) : undefined),
@@ -96,6 +108,10 @@ export function TextInput<T extends Control<any, any>>({
     maxLength,
     mask: typeof mask === 'function' ? mask({ unmasked }) : mask,
   };
+
+  if (component)
+    return component(commonProps);
+
   return <TextInputFormal {...commonProps}/>;
   // return <InputOutline
   //   selectionColor='#ffb12090' // The blinking cursor

@@ -9,16 +9,21 @@ type Id<T> = unknown & { [P in keyof T]: T[P] };
 type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
+type Obj = Record<string, any>;
+type EmptyObj = Record<never, never>; // <string, never> would give a {[x: string]: never} in the Theme.
+
 
 
 // Some were based on https://callstack.github.io/react-native-paper/theming.html
 type Colors = {
   primary: string;
+  // primaryLighter1: in hsl() format, it shall have ~10% more lightness
   // secondary: string;
   background: string;
   disabled: string;
-  /** Color for placeholder text, such as input placeholder. */
+  error: string;
   text: string;
+  /** Color for placeholder text, such as input placeholder. */
   placeholder: string;
   /** Color for backdrops of various components such as modals. */
   backdrop: string;
@@ -27,13 +32,17 @@ type Colors = {
   // /** background color for badges */
   // notification: string
   /** For Navigation/Header.tsx */
+  /** Defaults to `primary` color */
   header: string;
   _button: {
+    /** Defaults to `background` color */
     text: string;
-    // TODO: /** Defaults to primary */
+    /** Defaults to `primary` color */
     action: string;
-    neutral: string;
+    /** Defaults to `error` color */
     destructive: string;
+    // TODO defaults to [?]
+    neutral: string;
   };
 };
 
@@ -49,36 +58,30 @@ const defaultCommon = {
     paddingHorizontalShort: 16,
   },
 };
-
 // Not hard typed as it is boring to set it up .
 type Common = typeof defaultCommon;
 
 
 
-
-type Theme = {
-  common: Common;
+type Theme<T extends Obj = EmptyObj> = T & {
   colors: Colors;
+  common: Common;
   // presets: Presets;
 };
 
 
-
-type ThemeReturn = Id<
-  Theme & {
-    $settings: {
-      /** The themes that are available. */
-      availableThemes: string[];
-      currentTheme: string;
-      changeTheme: (theme: string) => void;
-      // onSystemColorChange
-    };
-  }
->;
+type ThemeReturn<T extends Obj = EmptyObj> = Theme<T> & {
+  $settings: {
+    /** The themes that are available. */
+    availableThemes: string[];
+    currentTheme: string;
+    changeTheme: (theme: string) => void;
+    // onSystemColorChange
+  };
+};
 
 
-const defaultInitialTheme = 'light';
-const defaultLightTheme: Theme = {
+const partialDefaultLightTheme: DeepPartial<Theme> = {
   common: defaultCommon,
   colors: {
     primary: '#ff4',
@@ -86,29 +89,58 @@ const defaultLightTheme: Theme = {
     text: '#000',
     backdrop: '#00000056',
     disabled: '#dadada',
-    _button: {
-      text: '#fff',
-      action: '#f88',
-      neutral: '#eee',
-      destructive: '#c22',
-    },
-    header: '#444',
+    error: '#dd0020',
     placeholder: '#aaa',
+    _button: {
+      neutral: '#eee',
+    },
   },
 };
 
+/** Some colors fallbacks to other colors. */
+function applyThemeFallbacks(t: DeepPartial<Theme>): Theme {
+  return deepmerge.all([t, {
+    colors: {
+      header: t.colors?.primary,
+      _button: {
+        text: t.colors?.background,
+        action: t.colors?.primary,
+        destructive: t.colors?.error,
+      },
+    },
+  } as DeepPartial<Theme>]) as Theme;
+}
+
+const defaultLightTheme = applyThemeFallbacks(partialDefaultLightTheme);
+const defaultInitialTheme = 'light';
+
+const { useGlobalState, setGlobalState } = createGlobalState<{useThemeData: ThemeReturn}>({
+  useThemeData: createUseThemeData({
+    themes: { light: defaultLightTheme },
+    initialTheme: defaultInitialTheme,
+  }),
+});
 
 
+
+type Themes<T extends Obj = EmptyObj> = {
+  light: Theme;
+  dark: Theme;
+} & T;
+
+type DeepPartialThemes<T extends Obj = EmptyObj> = DeepPartial<Themes<T>>;
 
 
 /** Selects the theme */
-function createUseThemeData({ themes, themeId, initialTheme }: {themes: DeepPartialThemes; themeId?: string; initialTheme: string}): ThemeReturn {
-  const theme: Theme = deepmerge.all([
+function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initialTheme }: {
+  themes: DeepPartialThemes<T>; themeId?: string; initialTheme: string;
+}): ThemeReturn<T> {
+  const theme = applyThemeFallbacks(deepmerge.all([
     defaultLightTheme,
     themes[defaultInitialTheme] ?? {},
     themes[initialTheme] ?? {},
     ...(themeId ? [themes[themeId] ?? {}] : []),
-  ]) as Theme;
+  ]) as Theme<T>) as Theme<T>;
 
   function changeTheme(themeId: string) {
     setGlobalState('useThemeData', createUseThemeData({ themes, themeId, initialTheme }));
@@ -126,49 +158,30 @@ function createUseThemeData({ themes, themeId, initialTheme }: {themes: DeepPart
 
 
 
-const { useGlobalState, setGlobalState } = createGlobalState<{
-  useThemeData: ThemeReturn;
-}>({
-  useThemeData: createUseThemeData({
-    themes: { light: defaultLightTheme },
-    initialTheme: defaultInitialTheme,
-  }),
-});
-
 
 /** To be used only inside react-native-gev. To use in your app, use createThemes(). */
-export function useTheme(): ThemeReturn {
-  return useGlobalState('useThemeData')[0]; // [0] is the state. [1] is the setGlobalState.
+export function useTheme<T>(): ThemeReturn<T> {
+  return useGlobalState('useThemeData')[0] as ThemeReturn<T>; // [0] is the state. [1] is the setGlobalState.
 }
 
-
-
-
-type DeepPartialThemes = {
-  light?: DeepPartial<Theme>;
-  dark?: DeepPartial<Theme>;
-  // [others: string]: DeepPartial<Theme>,
-} & Record<string, DeepPartial<Theme>>;
-
-type CreateThemeRtn = {
-  useTheme: () => ThemeReturn;
-};
 
 type CreateThemeOptions = {
   initialTheme?: string;
 };
-
+type CreateThemeRtn<T extends Obj = EmptyObj> = {
+  useTheme: () => ThemeReturn<T>;
+};
 /** Changes the default colors of react-native-gev components.
  *
  * You may also use the given colors in your app by using useTheme() hook.
  *
  * As it uses `react-hooks-global-state`, it doesn't need a context provider. */
-export function createTheme<T extends DeepPartialThemes>(themes: T, opts?: CreateThemeOptions): CreateThemeRtn {
+export function createTheme<T extends DeepPartialThemes<any>>(themes: T, opts?: CreateThemeOptions): Id<CreateThemeRtn<T[keyof T]>> {
   setGlobalState('useThemeData', createUseThemeData({
-    themes,
+    themes: themes as any,
     initialTheme: opts?.initialTheme ?? defaultInitialTheme,
   }));
   return {
-    useTheme,
+    useTheme: useTheme as any,
   };
 }

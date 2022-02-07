@@ -1,27 +1,27 @@
 import { StyleSheet, View } from 'react-native';
 import { Text, useTheme } from '../../..';
-import { MaskedTextInput, MaskedTextInputProps } from './MaskedTextInput';
+import { MaskedTextInput } from './MaskedTextInput';
+import type { CommonTextInputPros } from './TextInput';
 
 
 
-type CommonTextInputPros = MaskedTextInputProps & {
-  label?: string;
-  error?: string;
-};
 
-export function TextInputFormal({ label, style, error, ...p }: CommonTextInputPros): JSX.Element {
+
+export function TextInputFormal({
+  label, error, containerStyle, errorStyle, ...inputProps
+}: CommonTextInputPros): JSX.Element {
   const theme = useTheme();
 
   return (
-    <View>
+    <View style={containerStyle}>
       {label && <Text t={label} s={s.label}/>}
       <MaskedTextInput
-        {...p}
-        style={[s.textInput, style]}
         placeholderTextColor={theme.colors.placeholder}
         selectionColor={theme.colors.primary}
+        {...inputProps}
+        style={[s.textInput, inputProps.style]}
       />
-      <Text t={error ?? ''} s={s.errorMessage}/>
+      <Text t={error ?? ''} s={[s.errorMessage, { color: theme.colors.error }, errorStyle]}/>
     </View>
   );
 }
@@ -43,6 +43,7 @@ const s = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
   },
   errorMessage: {
-    fontSize: 16,
+    fontSize: 14,
+    paddingVertical: 2,
   },
 });
