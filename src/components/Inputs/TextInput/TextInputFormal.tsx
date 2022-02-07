@@ -17,7 +17,7 @@ export function TextInputFormal({
         placeholderTextColor={theme.colors.placeholder}
         selectionColor={theme.colors.primary}
         {...inputProps}
-        style={[s.textInput, { borderColor: theme.colors.error }, inputProps.style]}
+        style={[s.textInput, !!error && { borderColor: theme.colors.error }, inputProps.style]}
       />
       <Text t={error ?? ''} s={[s.errorMessage, { color: theme.colors.error }, errorStyle]}/>
     </View>
