@@ -5,8 +5,6 @@ import type { CommonTextInputPros } from './TextInput';
 
 
 
-
-
 export function TextInputFormal({
   label, error, containerStyle, errorStyle, ...inputProps
 }: CommonTextInputPros): JSX.Element {
@@ -19,7 +17,7 @@ export function TextInputFormal({
         placeholderTextColor={theme.colors.placeholder}
         selectionColor={theme.colors.primary}
         {...inputProps}
-        style={[s.textInput, inputProps.style]}
+        style={[s.textInput, { borderColor: theme.colors.error }, inputProps.style]}
       />
       <Text t={error ?? ''} s={[s.errorMessage, { color: theme.colors.error }, errorStyle]}/>
     </View>
@@ -31,19 +29,21 @@ const s = StyleSheet.create({
   label: {
     fontSize: 16,
     fontFamily: 'Roboto_500Medium', // TODO
-    // fontFamily: F.Roboto_500Medium,
     marginBottom: 4,
   },
   textInput: {
     borderRadius: 1.5,
     fontSize: 18,
-    borderColor: '#666',
+    borderColor: '#bbb',
     paddingVertical: 4,
     paddingHorizontal: 8,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
   },
   errorMessage: {
-    fontSize: 14,
-    paddingVertical: 2,
+    fontSize: 13,
+    marginLeft: 8,
+    paddingTop: 6,
+    paddingBottom: 7,
+    fontFamily: 'Roboto_500Medium',
   },
 });
