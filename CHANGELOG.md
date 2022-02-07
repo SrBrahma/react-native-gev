@@ -11,6 +11,8 @@
 *
 -->
 
+Changelog won't be updated at the current dev stage.
+
 
 ## 0.1.0 (2022-02-03)
 

@@ -1,11 +1,14 @@
 import React, { useMemo } from 'react';
 import {
+  FlatList,
+  FlatListProps,
   Platform,
   Pressable, StyleProp,
   StyleSheet, Text, TextProps, TextStyle, View, ViewStyle,
 } from 'react-native';
-import { moderateVerticalScale, ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from '../..';
 import { Switch, SwitchProps } from '../Inputs/Switch';
 
 
@@ -17,9 +20,9 @@ const Web = Platform.OS === 'web';
 
 // Use this to avoid different scales.
 const scale = 0.4;
-const iconDefaultSize = Web ? 24 : moderateVerticalScale(24, scale);
-const defaultPaddingLeft = Web ? 20 : moderateVerticalScale(22, scale);
-const noIconExtraPadLeft = Web ? 18 : moderateVerticalScale(18, scale);
+const iconDefaultSize = Web ? 24 : moderateScale(24, scale);
+const defaultPaddingLeft = Web ? 20 : moderateScale(22, scale);
+const noIconExtraPadLeft = Web ? 18 : moderateScale(18, scale);
 // const a = new MaterialCommunityIcons({})
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 type DividerType = undefined | boolean | 'full' | 'mid' | number;
@@ -62,31 +65,33 @@ export type ListProps<NavProp extends Record<string, any>> = {
    * @default true */
   chevronOnNavTo?: boolean;
   items: ItemListItemProps<NavProp>[];
+  flatListProps?: FlatListProps<unknown>;
   // divider // TODO
 };
 
-export function List<Nav>(props: ListProps<Nav>): JSX.Element {
-  const {
-    items,
-    chevronOnNavTo = true,
-    navigation,
-  } = props;
-  return (<View>
-    {items.map((i) => {
-      if (i.omit === true || i.show === false)
-        return;
-      if (i.onPressNav && !navigation)
-        throw new Error ('onPressNav is defined but navigation is not!');
-      return (<ListItem
-        key={(i.key ?? i.title ?? i.pretitle) as string}
+/** The backgroundColor defaults to the theme background color. */
+export function List<Nav>({
+  items, navigation, chevronOnNavTo = true, flatListProps,
+}: ListProps<Nav>): JSX.Element {
+  const theme = useTheme();
+  return <FlatList
+    data={items}
+    keyExtractor={(i) => (i.key ?? i.title ?? i.pretitle) as string}
+    renderItem={({ item: i }) => {
+      if (i.omit === true || i.show === false) return null;
+      if (i.onPressNav && !navigation) throw new Error ('onPressNav is defined but navigation is not!');
+      return <ListItem
         chevron={i.onPressNav && chevronOnNavTo}
         firstItemPadTop={i === 0}
         lastItemPadBottom={i === items.length - 1}
         {...(i.onPressNav && { onPress: () => navigation?.navigate && i.onPressNav?.(navigation.navigate) })}
         {...i}
-      />);
-    })}
-  </View>);
+      />;
+    }}
+    {...flatListProps as any as Record<string, never>} // typecast so it won't mess the FlatList generic type.
+    style={[{ flexGrow: 1 }, flatListProps?.style]}
+    contentContainerStyle={[{ flex: 1, backgroundColor: theme.colors.background }, flatListProps?.contentContainerStyle]}
+  />;
 }
 
 
@@ -270,14 +275,14 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
 
 const s = ScaledSheet.create({
   content: {
-    paddingRight: Web ? 30 : moderateVerticalScale(22, scale),
-    paddingVertical: Web ? 18 : moderateVerticalScale(22, scale),
+    paddingRight: Web ? 30 : moderateScale(22, scale),
+    paddingVertical: Web ? 18 : moderateScale(22, scale),
   },
   firstItemPadTop: {
-    paddingTop: Web ? 20 : moderateVerticalScale(24, 0.6), // 0.6 is ~ bigger in bigger screens and smaller on smaller.
+    paddingTop: Web ? 20 : moderateScale(24, 0.6), // 0.6 is ~ bigger in bigger screens and smaller on smaller.
   },
   lastItemPadBottom: {
-    paddingBottom: Web ? 20 : moderateVerticalScale(24, 0.6),
+    paddingBottom: Web ? 20 : moderateScale(24, 0.6),
   },
   dividerFull: {
     height: StyleSheet.hairlineWidth,
@@ -286,8 +291,8 @@ const s = ScaledSheet.create({
   divider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.divider,
-    marginRight: Web ? 30 : moderateVerticalScale(30, scale),
-    marginLeft: Web ? 30 : moderateVerticalScale(36, scale),
+    marginRight: Web ? 30 : moderateScale(30, scale),
+    marginLeft: Web ? 30 : moderateScale(36, scale),
   },
   backgroundDisabled: {
     backgroundColor: colors.disabledBackground,
@@ -309,23 +314,23 @@ const s = ScaledSheet.create({
   pretitle: {
     fontWeight: 'bold',
     color: colors.pretitle,
-    fontSize: Web ? 18 : moderateVerticalScale(13.5, scale),
+    fontSize: Web ? 18 : moderateScale(13.5, scale),
   },
   title: {
     color: colors.title,
     ...Platform.select({
       android: { fontFamily: mediumFont },
     }),
-    fontSize: Web ? 20 : moderateVerticalScale(15, scale),
+    fontSize: Web ? 20 : moderateScale(15, scale),
   },
   subtitle: {
     color: colors.subtitle,
-    fontSize: Web ? 15 : moderateVerticalScale(13.5, scale),
+    fontSize: Web ? 15 : moderateScale(13.5, scale),
   },
   leftIcon: {
     color: colors.icon,
     fontSize: iconDefaultSize,
-    marginRight: Web ? 18 : moderateVerticalScale(17, scale),
+    marginRight: Web ? 18 : moderateScale(17, scale),
     // height: '100%', // was here. remove it if doesn't fix anything.
   },
   rightIcon: {

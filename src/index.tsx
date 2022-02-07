@@ -16,9 +16,9 @@ export { ModalView, ModalViewProps } from './components/Modals/ModalView';
 // export * from './components/Inputs/InputOutline';
 // export * from './components/Inputs/TextInput';
 // Others
-export { ItemListItemProps, List, ListItem, ListItemProps, ListProps } from './components/Others/List';
 export { Loading, LoadingProps } from './components/Others/Loading';
 export { RefreshControl, RefreshControlProps } from './components/Others/RefreshControl';
 export { StatusBarProvider, StatusBarProviderProps } from './components/Others/StatusBar';
 export { Text, TextProps } from './components/Others/Text';
+export { ItemListItemProps, List, ListItem, ListItemProps, ListProps } from './components/Views/List';
 export { PageScrollView, PageScrollViewProps } from 'pagescrollview';
