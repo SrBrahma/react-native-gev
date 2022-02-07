@@ -10,8 +10,6 @@
 
 # react-native-gev
 
-<!-- descriptionHere -->
-
 <br/>
 
 <div align="center">
@@ -20,7 +18,24 @@
 
 <br/>
 
-The Typescript `/src` is intentionally shipped with the package.
+## This README and the package itself still early dev stage. I am already using it but I don't have time to properly publish it now.
+
+There are great known components libs like React Native Elements, React Native Paper... but none of them really pleases my eyes and my coding styles.
+
+I don't aim to make this too much generic. This is actually very opinated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
+
+It uses:
+```
+react-native-mask-text
+react-hook-forms
+react-native-size-matters
+@expo/vector-icons
+react-native-shadow-2
+@react-navigation
+```
+
+
+The `/src` is intentionally shipped with the package.
 
 ## Installation
 ```bash
