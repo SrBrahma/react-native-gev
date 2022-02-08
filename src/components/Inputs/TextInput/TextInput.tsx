@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Control, useController } from 'react-hook-form';
+import { Control, useController, Validate } from 'react-hook-form';
 import { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { getPresetInfo, PresetIds, TextInputPreset } from './presets/presets';
+import { getPreset, Mask, PresetIds, TextInputPreset } from './presets/presets';
 import { MaskedTextInputProps } from './MaskedTextInput';
 import { TextInputFormal } from './TextInputFormal';
-
 
 
 
@@ -23,7 +22,7 @@ export type TextInputProps<T extends Control<any, any>> = Omit<Partial<CommonTex
   id: Id<T>;
   /** An object that relates the `id` prop to the `label` prop for this TextInput. */
   idToLabel?: Record<Id<T>, string>;
-  mask?: string;
+  mask?: Mask;
   /** If will add a basic margin bottom.
    * @default true */
   marginBottom?: boolean;
@@ -58,8 +57,7 @@ export function TextInput<T extends Control<any, any>>({
 }: Omit<TextInputProps<T>, 'onChangeText'>): JSX.Element {
   if (!id) throw new Error('id not set for TextInput');
 
-  // TODO could uppercase first letter and separate camelCase/snake_case with spaces.
-  const label = labelProp ?? idToLabel?.[id];
+  const label = labelProp ?? idToLabel?.[id] ?? id;
 
   const overwriters = {
     maxLength: props.maxLength,
@@ -71,9 +69,15 @@ export function TextInput<T extends Control<any, any>>({
     mask, validations, inputProps,
     prettifyUnmasked, unmaskedToLogical, logicalToUnmasked,
   } = {
-    ...(typeof preset === 'string' ? getPresetInfo(preset) : preset),
+    ...(typeof preset === 'string' ? getPreset(preset) : preset),
     ...(JSON.parse(JSON.stringify(overwriters)) as Partial<typeof overwriters>),
   };
+
+  /** Apply form values to the validations. */
+  const validations2: Record<string, Validate<any>> = Object.fromEntries(
+    Object
+      .entries(validations ?? {})
+      .map(([id, validation]) => [id, (v: any) => validation(v, control._formValues)]));
 
   const { field, fieldState } = useController({
     name: id,
@@ -82,9 +86,11 @@ export function TextInput<T extends Control<any, any>>({
       required: { value: required, message: 'Requerido' },
       ...maxLength && { maxLength: { value: maxLength, message: `Excede ${maxLength} caracteres` } },
       ...minLength && { minLength: { value: minLength, message: `Mínimo ${minLength} caracteres` } },
-      validate: { ...validations },
+      validate: validations2,
     },
   });
+
+
 
   /** The display value. The TextInput component should mask it, if it's the case. */
   const [unmasked, setUnmasked] = useState<string>(() => {

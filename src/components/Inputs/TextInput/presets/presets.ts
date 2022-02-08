@@ -1,18 +1,19 @@
-import { Validate } from 'react-hook-form';
+import { ValidateResult } from 'react-hook-form';
 import { TextInputProps as RnTextInputProps } from 'react-native';
 import { cpf } from 'cpf-cnpj-validator';
+import { z, ZodSchema } from 'zod';
 
 
-
-type Validation = ((v: any) => true | string | undefined);
-type Validations = Record<string, Validation>;
+// Same as react-hook-form validate but with other fields values as seconds param
+export type Validate = (value: any, allValues: Record<string, any>) => ValidateResult | Promise<ValidateResult>;
+export type Validations = Record<string, Validate>;
 
 /** May be a function, where the param is the current value and it must return its mask. */
 export type Mask = string | ((p: {unmasked: string}) => string);
 
 
 // To be reused inside presets
-function makeValidations<T extends Record<string, Validate<any> |((p: any) => Record<string, Validate<any>>)>>(p: T) { return p; }
+function makeValidations<T extends Record<string, Validate |((p: any) => Record<string, Validate>)>>(p: T) { return p; }
 export const Validations = makeValidations({
   numbersOnly: (v: string) => /^\d*$/.test(v) || 'Número inválido',
   mustBeNotNegative: (v: number) => v >= 0 || 'Deve ser positivo',
@@ -23,11 +24,18 @@ export const Validations = makeValidations({
 });
 
 
+function parseZod(z: ZodSchema<any>, v: any): ValidateResult {
+  const parsed = z.safeParse(v);
+  return parsed.success || parsed.error.message;
+}
+
 
 export type PresetIds =
   'name'
   | 'email'
   | 'password'
+  /** Its value must equal password */
+  | 'confirmPassword'
   | 'country.br.cpf'
   | 'mm/yy';
 
@@ -55,51 +63,57 @@ export type TextInputPreset = {
   unmaskedToLogical?: (p: {unmasked: string}) => string | number;
   logicalToUnmasked?: (p: {logical: any}) => string;
 };
+const presets: Record<PresetIds, TextInputPreset> = {
+  'name': {
+    inputProps: {
+      textContentType: 'name',
+      autoCompleteType: 'name', // Beware that in RN ~ >0.66 it's renamed to autoComplete. We're still in .64 in Expo.
+    },
+  },
+  'password': {
+    inputProps: {
+      secureTextEntry: true,
+    },
+  },
+  'confirmPassword': {
+    inputProps: {
+      secureTextEntry: true,
+    },
+    validations: {
+      validConfirmPassword: (v: string, a) => v === a['password'] || 'As senhas não correspondem',
+    },
+  },
+  'email': {
+    inputProps: {
+      textContentType: 'emailAddress',
+      autoCompleteType: 'email',
+      keyboardType: 'email-address',
+      autoCapitalize: 'none',
+      caretHidden: false, // For some reason without defining this, the caret wasn't being shown
+    },
+    validations: {
+      validEmail: (v: string) => parseZod(z.string().email('Email inválido'), v),
+    },
+  },
+  // Move this to a separate dir and require specific import. same for cc presets.
+  // https://pt.stackoverflow.com/q/94956
+  'country.br.cpf': {
+    mask: '999.999.999-99',
+    inputProps: {
+      keyboardType: 'numeric',
+    },
+    validations: {
+      validCpf: (v: string) => { if (!cpf.isValid(v)) return 'Valor inválido'; },
+    },
+  },
+  'mm/yy': {
+    mask: '99/99',
+    validations: { 'mm/yy': (v: string) => (v.length === 4 && Number(v.slice(0, 2)) < 13) || 'Data inválida' },
+    inputProps: { keyboardType: 'numeric' },
+  },
+};
 
 // In InputOutline we get maxLength from mask.length using maskedText.
-export function getPresetInfo(preset: PresetIds | undefined): TextInputPreset {
-  if (!preset)
-    return {};
-
-  const presets: Record<PresetIds, TextInputPreset> = {
-    'name': {
-      inputProps: {
-        textContentType: 'name',
-        autoCompleteType: 'name', // Beware that in RN ~ >0.66 it's renamed to autoComplete. We're still in .64 in Expo.
-      },
-    },
-    'password': {
-      inputProps: {
-        secureTextEntry: true,
-      },
-    },
-    'email': {
-      inputProps: {
-        textContentType: 'emailAddress',
-        autoCompleteType: 'email',
-        keyboardType: 'email-address',
-        autoCapitalize: 'none',
-        caretHidden: false, // For some reason without defining this, the caret wasn't being shown
-      },
-    },
-    // Move this to a separate dir and require specific import. same for cc presets.
-    // https://pt.stackoverflow.com/q/94956
-    'country.br.cpf': {
-      mask: '999.999.999-99',
-      inputProps: {
-        keyboardType: 'numeric',
-      },
-      validations: {
-        validCpf: (v: string) => { if (!cpf.isValid(v)) return 'Valor inválido'; },
-      },
-    },
-    'mm/yy': {
-      mask: '99/99',
-      validations: { 'mm/yy': (v: string) => (v.length === 4 && Number(v.slice(0, 2)) < 13) || 'Data inválida' },
-      inputProps: { keyboardType: 'numeric' },
-    },
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  return presets[preset] ?? {}; // just to be sure
+export function getPreset(preset: string): TextInputPreset {
+  return (presets as Record<string, TextInputPreset>)[preset] ?? {};
 }
