@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Control, useController } from 'react-hook-form';
 import { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { getPreset, Mask, PresetIds, TextInputPreset } from './presets/presets';
+import { getPreset, Mask, PresetIds, TextInputPreset, Validations } from './presets/presets';
 import { MaskedTextInputProps } from './MaskedTextInput';
 import { TextInputFormal } from './TextInputFormal';
 
@@ -39,6 +39,7 @@ export type TextInputProps<T extends Control<any, any>> = Omit<Partial<CommonTex
   errorMessage?: string;
   /** If you want to use a custom component. */
   component?: (p: CommonTextInputPros) => JSX.Element;
+  validations?: Validations;
 }, 'defaultValue'>; /** defaultValue unused as we at most will use hook-form defaultValues. It sets the field value. */
 
 
@@ -52,6 +53,7 @@ export function TextInput<T extends Control<any, any>>({
   idToLabel,
   component,
   onChangeText: onChangeProp,
+  validations: validationsProp,
   // style,
   // marginBottom = true,
   ...props
@@ -87,7 +89,10 @@ export function TextInput<T extends Control<any, any>>({
       required: { value: required, message: 'Requerido' },
       ...maxLength && { maxLength: { value: maxLength, message: `Excede ${maxLength} caracteres` } },
       ...minLength && { minLength: { value: minLength, message: `Mínimo ${minLength} caracteres` } },
-      validate: validations,
+      validate: {
+        ...validations,
+        ...validationsProp,
+      },
     },
   });
 
