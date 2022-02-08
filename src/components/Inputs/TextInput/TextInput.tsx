@@ -16,11 +16,13 @@ export type CommonTextInputPros = MaskedTextInputProps & {
 };
 
 
-
+type Id<T extends Control<any, any>> = (keyof T['_defaultValues']) & string;
 export type TextInputProps<T extends Control<any, any>> = Omit<Partial<CommonTextInputPros> & {
   control: T;
   /** How you will get it with react-hook-form */
-  id: (keyof T['_defaultValues']) & string;
+  id: Id<T>;
+  /** An object that relates the `id` prop to the `label` prop for this TextInput. */
+  idToLabel?: Record<Id<T>, string>;
   mask?: string;
   /** If will add a basic margin bottom.
    * @default true */
@@ -47,12 +49,17 @@ export function TextInput<T extends Control<any, any>>({
   /** @default false */
   required = false,
   preset,
+  label: labelProp,
+  idToLabel,
   component,
   // style,
   // marginBottom = true,
   ...props
 }: Omit<TextInputProps<T>, 'onChangeText'>): JSX.Element {
   if (!id) throw new Error('id not set for TextInput');
+
+  // TODO could uppercase first letter and separate camelCase/snake_case with spaces.
+  const label = labelProp ?? idToLabel?.[id];
 
   const overwriters = {
     maxLength: props.maxLength,
@@ -97,6 +104,7 @@ export function TextInput<T extends Control<any, any>>({
   };
 
   const commonProps: CommonTextInputPros = {
+    label,
     value: unmasked,
     numberOfLines: 1,
     error: props.errorMessage ?? (fieldState.error ? String(fieldState.error.message) : undefined),

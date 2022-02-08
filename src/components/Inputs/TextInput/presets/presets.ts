@@ -90,7 +90,7 @@ export function getPresetInfo(preset: PresetIds | undefined): TextInputPreset {
         keyboardType: 'numeric',
       },
       validations: {
-        validCpf: (v: string) => { if (!cpf.isValid(v)) return 'CPF inválido'; },
+        validCpf: (v: string) => { if (!cpf.isValid(v)) return 'Valor inválido'; },
       },
     },
     'mm/yy': {
