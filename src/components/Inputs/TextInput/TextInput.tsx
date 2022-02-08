@@ -43,6 +43,11 @@ export type TextInputProps<T extends Control<any, any>> = Omit<Partial<CommonTex
 }, 'defaultValue'>; /** defaultValue unused as we at most will use hook-form defaultValues. It sets the field value. */
 
 
+/**
+ * `label`, a text that will show up identifying the TextInput, defaults to `idToLabel?.[id]`, and then to `id`.
+ *
+ * `accessibilityLabel`, used for tests, defaults to `label`.
+ */
 export function TextInput<T extends Control<any, any>>({
   id,
   control,
@@ -126,6 +131,7 @@ export function TextInput<T extends Control<any, any>>({
     onBlur,
     maxLength,
     mask: typeof mask === 'function' ? mask({ unmasked }) : mask,
+    accessibilityLabel: label,
   };
 
   if (component)
