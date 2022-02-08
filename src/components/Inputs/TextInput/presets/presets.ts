@@ -26,7 +26,7 @@ export const Validations = makeValidations({
 
 function parseZod(z: ZodSchema<any>, v: any): ValidateResult {
   const parsed = z.safeParse(v);
-  return parsed.success || parsed.error.message;
+  return parsed.success || parsed.error.issues[0]?.message || 'Error';
 }
 
 
@@ -34,8 +34,6 @@ export type PresetIds =
   'name'
   | 'email'
   | 'password'
-  /** Its value must equal password */
-  | 'confirmPassword'
   | 'country.br.cpf'
   | 'mm/yy';
 
@@ -73,14 +71,6 @@ const presets: Record<PresetIds, TextInputPreset> = {
   'password': {
     inputProps: {
       secureTextEntry: true,
-    },
-  },
-  'confirmPassword': {
-    inputProps: {
-      secureTextEntry: true,
-    },
-    validations: {
-      validConfirmPassword: (v: string, a) => v === a['password'] || 'As senhas não correspondem',
     },
   },
   'email': {
