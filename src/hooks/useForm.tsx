@@ -24,7 +24,7 @@ type UseFormReturn<F extends FieldValues = FieldValues, C extends object = objec
 
 
 type UseFormProps<F extends FieldValues = FieldValues, C extends object = object> = UseFormPropsInternal<F, C> & {
-  idToLabel: Record<keyof F, string>;
+  idToLabel?: Record<keyof F, string>;
 };
 
 /** Improves the useForm:

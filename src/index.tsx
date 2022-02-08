@@ -10,12 +10,14 @@ export { M } from './components/Modals/Modals';
 export { ModalView, ModalViewProps } from './components/Modals/ModalView';
 
 
-
+// Modals
+export { Snackbar, SnackbarOptions } from './components/Modals/Snackbar';
 
 // export * from './components/Views/BottomView';
 // export * from './components/Inputs/InputOutline';
 // export * from './components/Inputs/TextInput';
 // Others
+
 export { Loading, LoadingProps } from './components/Others/Loading';
 export { RefreshControl, RefreshControlProps } from './components/Others/RefreshControl';
 export { StatusBarProvider, StatusBarProviderProps } from './components/Others/StatusBar';
