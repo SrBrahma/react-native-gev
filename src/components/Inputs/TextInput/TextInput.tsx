@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Control, useController, Validate } from 'react-hook-form';
+import { Control, useController } from 'react-hook-form';
 import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { getPreset, Mask, PresetIds, TextInputPreset } from './presets/presets';
 import { MaskedTextInputProps } from './MaskedTextInput';
@@ -51,10 +51,11 @@ export function TextInput<T extends Control<any, any>>({
   label: labelProp,
   idToLabel,
   component,
+  onChangeText: onChangeProp,
   // style,
   // marginBottom = true,
   ...props
-}: Omit<TextInputProps<T>, 'onChangeText'>): JSX.Element {
+}: TextInputProps<T>): JSX.Element {
   if (!id) throw new Error('id not set for TextInput');
 
   const label = labelProp ?? idToLabel?.[id] ?? id;
@@ -74,10 +75,10 @@ export function TextInput<T extends Control<any, any>>({
   };
 
   /** Apply form values to the validations. */
-  const validations2: Record<string, Validate<any>> = Object.fromEntries(
-    Object
-      .entries(validations ?? {})
-      .map(([id, validation]) => [id, (v: any) => validation(v, control._formValues)]));
+  // const validations2: Record<string, Validate<any>> = Object.fromEntries(
+  //   Object
+  //     .entries(validations ?? {})
+  //     .map(([id, validation]) => [id, (v: any) => validation(v, control._formValues)]));
 
   const { field, fieldState } = useController({
     name: id,
@@ -86,7 +87,7 @@ export function TextInput<T extends Control<any, any>>({
       required: { value: required, message: 'Requerido' },
       ...maxLength && { maxLength: { value: maxLength, message: `Excede ${maxLength} caracteres` } },
       ...minLength && { minLength: { value: minLength, message: `Mínimo ${minLength} caracteres` } },
-      validate: validations2,
+      validate: validations,
     },
   });
 
@@ -106,6 +107,7 @@ export function TextInput<T extends Control<any, any>>({
     const logicalValue: string | number = unmaskedToLogical?.({ unmasked }) ?? unmasked;
     field.onChange(logicalValue);
     setUnmasked(unmasked);
+    onChangeProp?.(masked, unmasked);
   };
 
   const commonProps: CommonTextInputPros = {

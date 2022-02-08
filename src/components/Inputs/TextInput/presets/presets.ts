@@ -1,19 +1,18 @@
-import { ValidateResult } from 'react-hook-form';
+import { Validate, ValidateResult } from 'react-hook-form';
 import { TextInputProps as RnTextInputProps } from 'react-native';
 import { cpf } from 'cpf-cnpj-validator';
 import { z, ZodSchema } from 'zod';
 
 
-// Same as react-hook-form validate but with other fields values as seconds param
-export type Validate = (value: any, allValues: Record<string, any>) => ValidateResult | Promise<ValidateResult>;
-export type Validations = Record<string, Validate>;
+
+export type Validations = Record<string, Validate<any>>;
 
 /** May be a function, where the param is the current value and it must return its mask. */
 export type Mask = string | ((p: {unmasked: string}) => string);
 
 
 // To be reused inside presets
-function makeValidations<T extends Record<string, Validate |((p: any) => Record<string, Validate>)>>(p: T) { return p; }
+function makeValidations<T extends Record<string, Validate<any> |((p: any) => Record<string, Validate<any>>)>>(p: T) { return p; }
 export const Validations = makeValidations({
   numbersOnly: (v: string) => /^\d*$/.test(v) || 'Número inválido',
   mustBeNotNegative: (v: number) => v >= 0 || 'Deve ser positivo',
