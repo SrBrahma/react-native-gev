@@ -4,9 +4,9 @@ import { StyleProp, StyleSheet, Text as RnText, TextProps as RnTextProps, TextSt
 
 export type TextProps = {
   /** Shortcut prop instead using children to pass the text. */
-  text?: string | number;
+  text?: React.ReactNode;
   /** Shortcut prop instead using children to pass the text. Alias to text prop. */
-  t?: string | number;
+  t?: React.ReactNode;
   /** Alias to style. */
   s?: StyleProp<TextStyle>;
   /** Besides numberOfLines: 1, will ellipsis and shrink the text if going outside the maximum size. */

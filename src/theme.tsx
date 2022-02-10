@@ -105,7 +105,7 @@ const partialDefaultLightTheme: DeepPartial<Theme> = {
       neutral: '#eee',
     },
     _snackbar: {
-      error: '#da3338',
+      error: '#dd464bfa',
       textOnError: '#fff',
     },
   },
@@ -122,6 +122,7 @@ function applyThemeFallbacks(t: DeepPartial<Theme>): Theme {
         destructive: t.colors?.error,
       },
       _snackbar: {
+        neutral: t.colors?.background,
         textOnNeutral: t.colors?.text,
       },
     },

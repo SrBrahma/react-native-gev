@@ -6,9 +6,11 @@ import {
   SafeAreaView,
   StyleProp,
   StyleSheet,
+  View,
   ViewStyle,
 } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../..';
 import { Text } from './Text';
 
@@ -17,6 +19,9 @@ import { Text } from './Text';
 export type SnackbarTypes = 'neutral' | 'error';
 
 export type SnackbarProps = {
+  distance?: number;
+  /** @default 'bottom' */
+  position?: 'top' | 'bottom';
   /** Whether the Snackbar is currently visible. */
   visible: boolean;
   /** What is the purpose of this snackbar. It defines the colors and in the future the left icons.
@@ -36,7 +41,8 @@ export type SnackbarProps = {
    * It has a false as argument so you can `onDismiss={setSnackbarVisible}`. */
   onDismiss: (v: false) => void;
   /** Text content of the Snackbar. */
-  children: React.ReactNode;
+  text: string;
+  // children: React.ReactNode
   /** Style for the wrapper of the snackbar. */
   wrapperStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
@@ -48,25 +54,21 @@ const DURATION_LONG = 7000;
 
 
 export function Snackbar({
+  distance = 60,
   visible,
-  type,
-  action,
+  type = 'error',
+  position = 'bottom',
+  // action,
   duration = DURATION_MEDIUM,
   onDismiss,
-  children,
+  text,
   wrapperStyle,
   contentStyle,
 }: SnackbarProps): JSX.Element | null {
-  const { current: opacity } = React.useRef<Animated.Value>(
-    new Animated.Value(0.0),
-  );
+  const { current: opacity } = React.useRef<Animated.Value>(new Animated.Value(0.0));
   const [hidden, setHidden] = React.useState<boolean>(!visible);
-
   const hideTimeout = React.useRef<NodeJS.Timeout | undefined>(undefined);
-
-  // const { scale } = theme.animation;
-
-  const scale = 1;
+  const scale = 1; // used theme.animation;
 
   React.useEffect(() => {
     return () => { if (hideTimeout.current) clearTimeout(hideTimeout.current); };
@@ -108,42 +110,52 @@ export function Snackbar({
   //   ...actionProps
   // } = action || {};
 
-  const { textColor, backgroundColor } = (() => {
+  const { textColor, backgroundColor, icon } = (() => {
     switch (type) {
       case 'error': return {
         backgroundColor: theme.colors._snackbar.error,
         textColor: theme.colors._snackbar.textOnError,
+        icon: <MaterialCommunityIcons name='alert-circle' color={theme.colors._snackbar.textOnError} style={s.icon}/>,
       };
       case 'neutral':
       default: return {
         backgroundColor: theme.colors._snackbar.neutral,
         textColor: theme.colors._snackbar.textOnNeutral,
+        icon: undefined,
+
       };
     }
   })();
 
   return (
-    <SafeAreaView pointerEvents='box-none' style={[s.wrapper, wrapperStyle]}>
+    <SafeAreaView pointerEvents='box-none' style={[s.wrapper, { ...position === 'top' ? { top: distance } : { bottom: distance } }, wrapperStyle]}>
       <Animated.View pointerEvents='box-none' style={{
+        position: 'relative',
         opacity,
         transform: [{ scale: visible ? opacity.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] }) : 1 }],
       }}>
         <Shadow
-          viewStyle={[
-            s.container, {
+          startColor='#00000028'
+          distance={3}
+          offset={[0, 1]}
+          containerViewStyle={s.container2}
+        >
+          <View pointerEvents='none' style={[
+            s.content, {
               borderRadius: theme.common.roundness,
               backgroundColor,
-            }, contentStyle,
-          ]}
-        >
-          <Text accessibilityLiveRegion='polite' style={[s.content, { marginRight: action ? 0 : 16, color: textColor }]}>
-            {children}
-          </Text>
+            },
+            contentStyle,
+          ]}>
+            {icon}
+            <Text accessibilityLiveRegion='polite' style={[s.text, { color: textColor }]} t={text}/>
+          </View>
         </Shadow>
       </Animated.View>
     </SafeAreaView>
   );
 }
+
 
 /** Show the Snackbar for a short duration. */
 Snackbar.DURATION_SHORT = DURATION_SHORT;
@@ -155,22 +167,34 @@ Snackbar.DURATION_LONG = DURATION_LONG;
 
 const s = StyleSheet.create({
   wrapper: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    ...StyleSheet.absoluteFillObject,
+    top: undefined, bottom: undefined,
     alignItems: 'center',
-    margin: 8,
+  },
+  // The shadow container
+  container2: {
+    marginHorizontal: 40, // Horizontal distance to screen borders
+  },
+  // The painted box
+  content: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 26,
     borderRadius: 4,
   },
-  content: {
-    marginLeft: 16,
-    marginVertical: 14,
+  icon: {
+    fontSize: 15,
+    marginLeft: -8,
+    marginRight: 13,
+  },
+  // The text or content
+  text: {
+    paddingVertical: 16, // padding instead margin so we catch the press and ignore it.
+    fontFamily: 'Roboto_500Medium',
     flexWrap: 'wrap',
-    flex: 1,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   // button: {
   //   marginHorizontal: 8,
@@ -179,18 +203,18 @@ const s = StyleSheet.create({
 });
 
 
-{/* {action ? (
-          <Button
-            onPress={() => {
-              onPressAction?.();
-              onDismiss();
-            }}
-            style={[styles.button, actionStyle]}
-            color={colors.accent}
-            compact
-            mode='text'
-            {...actionProps}
-          >
-            {actionLabel}
-          </Button>
-        ) : null} */}
+// {action ? (
+// <Button
+//   onPress={() => {
+//     onPressAction?.();
+//     onDismiss();
+//   }}
+//   style={[styles.button, actionStyle]}
+//   color={colors.accent}
+//   compact
+//   mode='text'
+//   {...actionProps}
+// >
+//   {actionLabel}
+// </Button>
+// ) : null}
