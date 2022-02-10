@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
 import { Animated, BackHandler, Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -6,36 +6,44 @@ import { useTheme } from '../../theme';
 
 // To avoid state loss - https://github.com/callstack/react-native-paper/issues/736#issuecomment-455678596
 
-type Component = JSX.Element | (() => JSX.Element);
+
 
 // https://stackoverflow.com/a/54178819/10247962
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-
-type Item = {component: Component; key: string};
+type Item = {element: JSX.Element; key: string};
 
 const { useGlobalState, setGlobalState } = createGlobalState({
   modals: { counter: 0, items: [] as Item[] },
+  keysAskedToRetire: {} as Record<string, true>,
 });
 
 
-/** Get an unique key for the component so they won't lose the children state changes.
+
+
+
+/** Global state. It can both add Modals and Portals.
  *
- * This won't conflict with the normal key generated from the normal counter. This one starts with an underscore! */
-let specialKeyCounter = 0;
-function getSpecialKey() {
-  return `_${specialKeyCounter++}`;
-}
-
-
-/** Global state.
+ * You shouldn't manually create the key.
+ *
  * Returns the modal/portal key. */
-export function addModalOrPortal(component: Component, o?: {key?: string}): string {
+export function addPortal(component: JSX.Element | ((key: string) => JSX.Element), o?: {key?: string}): string {
   let key = '';
   setGlobalState('modals', (modals) => {
     key = o?.key ?? String(modals.counter);
+
+    // Replace if key already exists
+    const newItems = { ...modals.items };
+    const element = typeof component === 'function' ? component(key) : component;
+
+    const keyExists = modals.items.findIndex((i) => i.key === key);
+    if (keyExists > -1)
+      newItems[keyExists] = { element, key };
+    else
+      newItems.push({ element, key });
+
     return {
-      items: modals.items.concat({ component, key }),
+      items: newItems,
       counter: modals.counter + 1,
     };
   });
@@ -43,14 +51,24 @@ export function addModalOrPortal(component: Component, o?: {key?: string}): stri
 }
 
 /** Global state */
-export function removeModalOrPortal(componentOrKey: Component | React.Key): void {
-  const removeByComponent = (m: Item) => m.component !== componentOrKey;
-  const removeByKey = (m: Item) => m.key !== componentOrKey;
-  setGlobalState('modals', (modals) => ({
-    counter: modals.counter,
-    items: modals.items.filter(typeof componentOrKey === 'string' ? removeByKey : removeByComponent),
+export function removePortal(key?: React.Key): void {
+  if (key)
+    setGlobalState('modals', (modals) => ({
+      counter: modals.counter,
+      items: modals.items.filter((m: Item) => key !== m.key),
+    }));
+}
+
+export function askToRemovePortal(key: React.Key): void {
+  setGlobalState('keysAskedToRetire', (k) => ({
+    ...k,
+    ...{ [key]: true as const },
   }));
 }
+
+// export function cleanGarbageAskToRemove() {
+// }
+
 
 /** Global state */
 // TODO add way to select the ModalsAndPortals component, like target: string.
@@ -59,17 +77,18 @@ export function removeModalOrPortal(componentOrKey: Component | React.Key): void
 export function ModalsAndPortals(): JSX.Element {
   const [modals] = useGlobalState('modals');
   return (<>
-    {modals.items.map((m) => (typeof m.component === 'function' ? <m.component key={m.key}/> : <Fragment key={m.key}>{m.component}</Fragment>))}
+    {modals.items.map((m) => <Fragment key={m.key}>{m.element}</Fragment>)}
   </>
   );
 }
+
 
 
 const fadeDefaultDuration = 250;
 
 export function Portal({
   children, viewStyle, darken, onRequestClose, fade = fadeDefaultDuration,
-  requestCloseOnOutsidePress = true,
+  requestCloseOnOutsidePress = true, key: keyProp,
 }: {
   children: JSX.Element | null;
   viewStyle?: StyleProp<ViewStyle>;
@@ -90,63 +109,75 @@ export function Portal({
    *
    * @default 250 */
   fade?: true | number | false | null;
+  key?: string;
 }): null {
   const { colors } = useTheme();
-  /** Get an unique key for this component so we won't lose the children state changes. (prob it wasn't the reason. Leaving it here for performance)
-   * Note it's `(getSpecialKey)` and not `(getSpecialKey())`, so it only runs on init. */
-  const [key] = useState(getSpecialKey);
-
+  const key = useRef<undefined | string>(keyProp);
   const fadeDuration = fade === true ? fadeDefaultDuration : (fade || 0);
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  // const [component, setComponent] = useState<null | JSX.Element>(null);
+  const isMounting = useRef<boolean>(false);
   const isUnmounting = useRef<boolean>(false);
+  const [keysToRetire, setKeysToRetire] = useGlobalState('keysAskedToRetire');
 
 
-  const Component = useMemo(() => <Pressable
-    onPress={() => requestCloseOnOutsidePress && onRequestClose?.()}
-    style={s.container}
-  >
-    <Animated.View
-      style={[
-        { flex: 1, opacity: fadeAnim },
-        darken && { backgroundColor: colors.backdrop },
-        viewStyle,
-      ]}
-    >
-      {children}
-    </Animated.View>
-  </Pressable>, [children, colors.backdrop, darken, fadeAnim, onRequestClose, requestCloseOnOutsidePress, viewStyle]);
-
-  useEffect(() => {
-    return () => { isUnmounting.current = true;};
-  }, []);
-
-  /** Animate on mount */
-  useEffect(() => {
-    Animated.timing(fadeAnim, { toValue: 1, duration: fadeDuration, useNativeDriver: true }).start();
+  const animateToUnmount = useCallback(() => {
+    Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
+      removePortal(key.current);
+    });
   }, [fadeAnim, fadeDuration]);
 
-  /** Animate on unmount */
-  useEffect(() => {
-    return () => {
-      if (isUnmounting.current) {
-        Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
-          removeModalOrPortal(Component);
-        });
-      }
-    };
-  }, [Component, fadeAnim, fadeDuration]);
+  if (key.current && keysToRetire[key.current]) {
+    animateToUnmount();
+    setKeysToRetire((v) => {
+      if (!key.current) return v;
+      const newKeys = { ...v };
+      delete newKeys[key.current];
+      return newKeys;
+    });
+  }
+
+  useEffect(() => { return () => { isUnmounting.current = true;}; }, []);
+
+
+
+  const Component = useMemo(() => (
+    <Pressable
+      onPress={() => requestCloseOnOutsidePress && onRequestClose?.()}
+      style={s.container}
+    >
+      <Animated.View
+        style={[
+          { flex: 1, opacity: fadeAnim },
+          darken && { backgroundColor: colors.backdrop },
+          viewStyle,
+        ]}
+        children={children}
+      />
+    </Pressable>
+  ), [children, colors.backdrop, darken, fadeAnim, onRequestClose, requestCloseOnOutsidePress, viewStyle]);
+
 
 
   /** Add and remove the modal on component change.
    *
    * Don't remove the modal here if unmounting, the animation will do it. */
   useEffect(() => {
-    // We must enter the same key, else the children component will not keep their state changes.
-    addModalOrPortal(Component, { key });
-    return () => { !isUnmounting.current && removeModalOrPortal(Component);};
+    // Reuse the same key
+    key.current = addPortal(Component, { key: key.current });
+    return () => { !isUnmounting.current && removePortal(key.current);};
   }, [Component, key]);
+
+  /** Animate on mount */
+  useEffect(() => {
+    if (isMounting.current)
+      Animated.timing(fadeAnim, { toValue: 1, duration: fadeDuration, useNativeDriver: true }).start();
+  }, [fadeAnim, fadeDuration, isMounting]);
+
+
+  /** Animate on unmount */
+  useEffect(() => {
+    return () => { isUnmounting.current && animateToUnmount();};
+  }, [animateToUnmount]);
 
 
   /** Handle the back button press */
@@ -160,8 +191,11 @@ export function Portal({
     }).remove;
   }, [onRequestClose]));
 
+  useEffect(() => { isMounting.current = false; }, []);
+
   return null;
 }
+
 
 const s = StyleSheet.create({
   container: {

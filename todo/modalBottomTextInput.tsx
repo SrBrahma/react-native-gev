@@ -197,10 +197,10 @@ const s = StyleSheet.create({
 });
 
 export function modalBottomInput(props: PartialBy<BottomInputProps, 'onCancel'>): void {
-  const component = <BottomInput {...props}
-    onCancel={() => { removeModalOrPortal(component); props.onCancel?.(); }}
-    onConfirmation={(v) => { removeModalOrPortal(component); props.onConfirmation(v); }}
-  />;
+  const key = addModalOrPortal(<BottomInput {...props}
+    onCancel={() => { removeModalOrPortal(key); props.onCancel?.(); }}
+    onConfirmation={(v) => { removeModalOrPortal(key); props.onConfirmation(v); }}
+  />);
 
-  addModalOrPortal(component);
+
 }

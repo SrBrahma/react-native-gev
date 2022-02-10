@@ -1,13 +1,13 @@
-import { ActivityIndicator, StyleProp, Text, View, ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { useTheme } from '../../theme';
 import { Portal } from '../Modals/ModalBase';
 
 
 
 export type LoadingProps = {
-  /** If should be in the middle of the screen. Will use 'absolute'
+  /** If should be a portal in the middle of the screen.
    * @default false */
-   fullscreen?: boolean;
+   portal?: boolean;
    /** When using fullscreen */
    onRequestClose?: () => void;
    size?: number | 'large' | 'small' | undefined;
@@ -16,30 +16,32 @@ export type LoadingProps = {
     * @default false */
    flex?: boolean;
    viewStyle?: StyleProp<ViewStyle>;
+   key?: string;
 };
 
 // Number on iOS will be 'small'. later change to a better alternative than builtin.
 /** Wrapper around ActivityIndicator with extra functionalities. */
 export function Loading({
-  size: sizeProp, text, fullscreen, flex, onRequestClose, viewStyle,
+  size: sizeProp, text, flex, onRequestClose, viewStyle,
+  portal, key,
 }: LoadingProps): JSX.Element {
-
   const { colors } = useTheme();
 
-  const size = sizeProp ?? fullscreen ? 80 : 60;
+  const size = sizeProp ?? portal ? 80 : 60;
 
   const children = (<>
     <ActivityIndicator size={size} color={colors.primary}/>
     {text && <Text style={{ fontSize: 15, paddingTop: 8 }}>{text}</Text>}
   </>);
 
-  if (fullscreen)
-    return (
-      <Portal darken viewStyle={[{ alignItems: 'center', justifyContent: 'center' }, viewStyle]} onRequestClose={onRequestClose}>
-        {children}
-      </Portal>
-    );
+  if (portal)
+    return <Portal darken viewStyle={s.center} children={children} key={key} onRequestClose={onRequestClose}/>;
 
-  else
-    return <View style={[{ alignItems: 'center', justifyContent: 'center', flex: flex ? 1 : undefined }, viewStyle]} children={children}/>;
+  return <View style={[s.center, { flex: flex ? 1 : undefined }, viewStyle]} children={children} key={key}/>;
 }
+
+const s = StyleSheet.create({
+  center: {
+    alignItems: 'center', justifyContent: 'center',
+  },
+});

@@ -103,21 +103,22 @@ export function Button<T extends(void | any | Promise<any>)>({
       <Pressable
         android_ripple={{ color: '#ffffff2f' }}
         onPress={async (e) => {
-          if (disabled) {
-            onDisabledPress?.();
-            return;
-          }
+          if (disabled)
+            return onDisabledPress?.();
+
           // Don't trigger if already awaiting a previous press. pointerEvents on loading modal wouldn't work as it isn't the parent of this.
           if (isAwaitingPress.current)
             return;
+
           Keyboard.dismiss();
+
           if (!awaitOnPress)
             void onPress(e);
+
           else {
             isAwaitingPress.current = true;
-            await modalLoading(onPress);
-            // No need to finally, modalLoading won't throw errors by default.
-            isAwaitingPress.current = false;
+            await modalLoading(onPress)
+              .finally(() => {isAwaitingPress.current = false;});
           }
         }}
         {...props}

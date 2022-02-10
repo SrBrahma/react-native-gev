@@ -6,7 +6,7 @@ export { Switch, SwitchProps } from './components/Inputs/Switch';
 export { CommonTextInputPros, TextInput, TextInputProps } from './components/Inputs/TextInput/TextInput';
 export { TextInputFormal } from './components/Inputs/TextInput/TextInputFormal';
 export { ScrollPicker, ScrollPickerProps } from './components/Inputs/WheelPicker';
-export { addModalOrPortal, ModalsAndPortals, Portal, removeModalOrPortal } from './components/Modals/ModalBase';
+export { addPortal, ModalsAndPortals, Portal, removePortal } from './components/Modals/ModalBase';
 export { ModalBottomView, ModalBottomViewProps } from './components/Modals/ModalBottomView';
 export { M } from './components/Modals/Modals';
 export { ModalView, ModalViewProps } from './components/Modals/ModalView';
