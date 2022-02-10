@@ -33,7 +33,7 @@ export function addPortal(component: JSX.Element | ((key: string) => JSX.Element
     key = o?.key ?? String(modals.counter);
 
     // Replace if key already exists
-    const newItems = { ...modals.items };
+    const newItems = [...modals.items];
     const element = typeof component === 'function' ? component(key) : component;
 
     const keyExists = modals.items.findIndex((i) => i.key === key);
