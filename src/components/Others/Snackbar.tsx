@@ -47,7 +47,7 @@ const DURATION_MEDIUM = 5000;
 const DURATION_LONG = 7000;
 
 
-const Snackbar = ({
+export function Snackbar({
   visible,
   type,
   action,
@@ -56,7 +56,7 @@ const Snackbar = ({
   children,
   wrapperStyle,
   contentStyle,
-}: SnackbarProps) => {
+}: SnackbarProps): JSX.Element | null {
   const { current: opacity } = React.useRef<Animated.Value>(
     new Animated.Value(0.0),
   );
@@ -69,9 +69,7 @@ const Snackbar = ({
   const scale = 1;
 
   React.useEffect(() => {
-    return () => {
-      if (hideTimeout.current) clearTimeout(hideTimeout.current);
-    };
+    return () => { if (hideTimeout.current) clearTimeout(hideTimeout.current); };
   }, []);
 
   React.useLayoutEffect(() => {
@@ -145,7 +143,7 @@ const Snackbar = ({
       </Animated.View>
     </SafeAreaView>
   );
-};
+}
 
 /** Show the Snackbar for a short duration. */
 Snackbar.DURATION_SHORT = DURATION_SHORT;

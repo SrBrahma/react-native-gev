@@ -11,7 +11,7 @@ export { ModalView, ModalViewProps } from './components/Modals/ModalView';
 
 
 // Modals
-export { Snackbar, SnackbarOptions } from './components/Modals/Snackbar';
+export { SnackbarOptions } from './components/Modals/Snackbar';
 
 // export * from './components/Views/BottomView';
 // export * from './components/Inputs/InputOutline';
@@ -20,10 +20,11 @@ export { Snackbar, SnackbarOptions } from './components/Modals/Snackbar';
 
 export { Loading, LoadingProps } from './components/Others/Loading';
 export { RefreshControl, RefreshControlProps } from './components/Others/RefreshControl';
+export { Snackbar, SnackbarProps } from './components/Others/Snackbar';
 export { StatusBarProvider, StatusBarProviderProps } from './components/Others/StatusBar';
 export { Text, TextProps } from './components/Others/Text';
 export { ItemListItemProps, List, ListItem, ListItemProps, ListProps } from './components/Views/List';
-export { PageScrollView, PageScrollViewProps } from 'pagescrollview';
+export { PageScrollView, PageScrollViewProps } from './components/Views/PageScrollView';
 
 // Hooks
 export { useForm } from './hooks/useForm';
