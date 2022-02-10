@@ -11,11 +11,11 @@ import { useTheme } from '../../theme';
 // https://stackoverflow.com/a/54178819/10247962
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-type Item = {element: JSX.Element; key: string};
+type Item = {element: JSX.Element; id: string};
 
 const { useGlobalState, setGlobalState } = createGlobalState({
   modals: { counter: 0, items: [] as Item[] },
-  keysAskedToRetire: {} as Record<string, true>,
+  idsAskedToRetire: {} as Record<string, true>,
 });
 
 
@@ -27,42 +27,42 @@ const { useGlobalState, setGlobalState } = createGlobalState({
  * You shouldn't manually create the key.
  *
  * Returns the modal/portal key. */
-export function addPortal(component: JSX.Element | ((key: string) => JSX.Element), o?: {key?: string}): string {
-  let key = '';
+export function addPortal(component: JSX.Element | ((key: string) => JSX.Element), o?: {id?: string}): string {
+  let id = '';
   setGlobalState('modals', (modals) => {
-    key = o?.key ?? String(modals.counter);
+    id = o?.id ?? String(modals.counter);
 
     // Replace if key already exists
     const newItems = [...modals.items];
-    const element = typeof component === 'function' ? component(key) : component;
+    const element = typeof component === 'function' ? component(id) : component;
 
-    const keyExists = modals.items.findIndex((i) => i.key === key);
+    const keyExists = modals.items.findIndex((i) => i.id === id);
     if (keyExists > -1)
-      newItems[keyExists] = { element, key };
+      newItems[keyExists] = { element, id };
     else
-      newItems.push({ element, key });
+      newItems.push({ element, id });
 
     return {
       items: newItems,
       counter: modals.counter + 1,
     };
   });
-  return key;
+  return id;
 }
 
 /** Global state */
-export function removePortal(key?: React.Key): void {
-  if (key)
+export function removePortal(id?: React.Key): void {
+  if (id)
     setGlobalState('modals', (modals) => ({
       counter: modals.counter,
-      items: modals.items.filter((m: Item) => key !== m.key),
+      items: modals.items.filter((m: Item) => id !== m.id),
     }));
 }
 
-export function askToRemovePortal(key: React.Key): void {
-  setGlobalState('keysAskedToRetire', (k) => ({
-    ...k,
-    ...{ [key]: true as const },
+export function askToRemovePortal(id: React.Key): void {
+  setGlobalState('idsAskedToRetire', (ids) => ({
+    ...ids,
+    ...{ [id]: true as const },
   }));
 }
 
@@ -77,7 +77,7 @@ export function askToRemovePortal(key: React.Key): void {
 export function ModalsAndPortals(): JSX.Element {
   const [modals] = useGlobalState('modals');
   return (<>
-    {modals.items.map((m) => <Fragment key={m.key}>{m.element}</Fragment>)}
+    {modals.items.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
   </>
   );
 }
@@ -88,7 +88,7 @@ const fadeDefaultDuration = 250;
 
 export function Portal({
   children, viewStyle, darken, onRequestClose, fade = fadeDefaultDuration,
-  requestCloseOnOutsidePress = true, key: keyProp,
+  requestCloseOnOutsidePress = true, id: idProp,
 }: {
   children: JSX.Element | null;
   viewStyle?: StyleProp<ViewStyle>;
@@ -109,30 +109,30 @@ export function Portal({
    *
    * @default 250 */
   fade?: true | number | false | null;
-  key?: string;
+  id?: string;
 }): null {
   const { colors } = useTheme();
-  const key = useRef<undefined | string>(keyProp);
+  const id = useRef<undefined | string>(idProp);
   const fadeDuration = fade === true ? fadeDefaultDuration : (fade || 0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const isMounting = useRef<boolean>(false);
   const isUnmounting = useRef<boolean>(false);
-  const [keysToRetire, setKeysToRetire] = useGlobalState('keysAskedToRetire');
+  const [idsToRetire, setIdsToRetire] = useGlobalState('idsAskedToRetire');
 
 
   const animateToUnmount = useCallback(() => {
     Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
-      removePortal(key.current);
+      removePortal(id.current);
     });
   }, [fadeAnim, fadeDuration]);
 
-  if (key.current && keysToRetire[key.current]) {
+  if (id.current && idsToRetire[id.current]) {
     animateToUnmount();
-    setKeysToRetire((v) => {
-      if (!key.current) return v;
-      const newKeys = { ...v };
-      delete newKeys[key.current];
-      return newKeys;
+    setIdsToRetire((v) => {
+      if (!id.current) return v;
+      const newIds = { ...v };
+      delete newIds[id.current];
+      return newIds;
     });
   }
 
@@ -163,9 +163,9 @@ export function Portal({
    * Don't remove the modal here if unmounting, the animation will do it. */
   useEffect(() => {
     // Reuse the same key
-    key.current = addPortal(Component, { key: key.current });
-    return () => { !isUnmounting.current && removePortal(key.current);};
-  }, [Component, key]);
+    id.current = addPortal(Component, { id: id.current });
+    return () => { !isUnmounting.current && removePortal(id.current);};
+  }, [Component, id]);
 
   /** Animate on mount */
   useEffect(() => {

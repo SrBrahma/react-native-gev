@@ -22,7 +22,7 @@ export async function modalLoading<T extends(void | any | Promise<any>)>(param: 
     // Only add modal if it's a promise. We do this to avoid nav bar colorization even if not a promise.
     if (is.promise(possiblePromise)) {
       // By entering the key, it will only add one Portal.
-      const key = addPortal((key) => <Loading portal key={key}/>);
+      const key = addPortal((id) => <Loading portal id={id}/>);
       await possiblePromise.finally(() => askToRemovePortal(key));
     }
   } catch (err) {
