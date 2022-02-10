@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
+import { createContext, Fragment, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
 import { Animated, BackHandler, Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -88,7 +88,7 @@ export function removePortalMeta(id: React.Key): void {
 }
 
 
-
+const MetaContext = createContext<{id: string}>({ id: '' });
 
 /** Global state */
 // TODO add way to select the ModalsAndPortals component, like target: string.
@@ -99,7 +99,7 @@ export function ModalsAndPortals(): JSX.Element {
   const [modalsMeta] = useGlobalState('modalsMeta');
   return (<>
     {/* meta won't render anything but controls the modals */}
-    {modalsMeta.items.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
+    {modalsMeta.items.map((m) => <MetaContext.Provider value={{ id: m.id }} key={m.id}>{m.element}</MetaContext.Provider>)}
     {modals.items.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
   </>
   );
@@ -135,29 +135,33 @@ export function Portal({
   id?: string;
 }): null {
   const { colors } = useTheme();
-  const id = useRef<undefined | string>(idProp);
   const fadeDuration = fade === true ? fadeDefaultDuration : (fade || 0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const isMounting = useRef<boolean>(true);
   const isUnmounting = useRef<boolean>(false);
+  const portalId = useRef<undefined | string>(idProp);
+  const metaData = useContext(MetaContext);
   const [idsToRetire, setIdsToRetire] = useGlobalState('idsAskedToRetire');
 
 
   const animateToUnmount = useCallback(() => {
     Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
-      id.current && removePortal(id.current);
+      portalId.current && removePortal(portalId.current);
+      removePortalMeta(metaData.id);
     });
-  }, [fadeAnim, fadeDuration]);
+  }, [fadeAnim, fadeDuration, metaData.id]);
 
-  if (id.current && idsToRetire[id.current]) {
-    animateToUnmount();
-    setIdsToRetire((v) => {
-      if (!id.current) return v;
-      const newIds = { ...v };
-      delete newIds[id.current];
-      return newIds;
-    });
-  }
+  useEffect(() => {
+    if (portalId.current && idsToRetire[portalId.current]) {
+      animateToUnmount();
+      setIdsToRetire((v) => {
+        if (!portalId.current) return v;
+        const newIds = { ...v };
+        delete newIds[portalId.current];
+        return newIds;
+      });
+    }
+  }, [animateToUnmount, idsToRetire, setIdsToRetire]);
 
   useEffect(() => { return () => { isUnmounting.current = true;}; }, []);
 
@@ -175,10 +179,8 @@ export function Portal({
     </Pressable>
   ), [children, colors.backdrop, darken, fadeAnim, onRequestClose, requestCloseOnOutsidePress, viewStyle]);
 
-
-
-  /** Update the portal on component change. Reuses the same key*/
-  useEffect(() => { id.current = addPortal(Component, { id: id.current }); }, [Component, id]);
+  /** Update the portal on component change. Reuses the same key */
+  useEffect(() => { portalId.current = addPortal(Component, { id: portalId.current }); }, [Component, portalId]);
 
   /** Animate on mount */
   useEffect(() => {
@@ -186,10 +188,8 @@ export function Portal({
       Animated.timing(fadeAnim, { toValue: 1, duration: fadeDuration, useNativeDriver: true }).start();
   }, [fadeAnim, fadeDuration, isMounting]);
 
-
   /** Animate on unmount */
   useEffect(() => (() => { isUnmounting.current && animateToUnmount();}), [animateToUnmount]);
-
 
   /** Handle the back button press */
   // TODO this will prob be messed on multiple Portals
@@ -206,7 +206,6 @@ export function Portal({
 
   return null;
 }
-
 
 
 
