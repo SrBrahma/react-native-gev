@@ -41,7 +41,7 @@ export type SnackbarProps = {
    * It has a false as argument so you can `onDismiss={setSnackbarVisible}`. */
   onDismiss: (v: false) => void;
   /** Text content of the Snackbar. */
-  text: string;
+  text: React.ReactNode;
   // children: React.ReactNode
   /** Style for the wrapper of the snackbar. */
   wrapperStyle?: StyleProp<ViewStyle>;
