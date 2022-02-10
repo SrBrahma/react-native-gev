@@ -1,6 +1,6 @@
 import is from '@sindresorhus/is';
 import { Loading } from '../Others/Loading';
-import { addPortal, askToRemovePortal } from './ModalBase';
+import { addPortalMeta, askPortalMetaRemoval } from './ModalBase';
 import { modalError } from './modalError';
 
 
@@ -22,8 +22,8 @@ export async function modalLoading<T extends(void | any | Promise<any>)>(param: 
     // Only add modal if it's a promise. We do this to avoid nav bar colorization even if not a promise.
     if (is.promise(possiblePromise)) {
       // By entering the key, it will only add one Portal.
-      const key = addPortal((id) => <Loading portal id={id}/>);
-      await possiblePromise.finally(() => askToRemovePortal(key));
+      const key = addPortalMeta(<Loading portal/>);
+      await possiblePromise.finally(() => askPortalMetaRemoval(key));
     }
   } catch (err) {
     switch (opts.onError) {

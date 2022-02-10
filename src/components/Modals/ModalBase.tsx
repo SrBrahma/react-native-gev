@@ -15,6 +15,7 @@ type Item = {element: JSX.Element; id: string};
 
 const { useGlobalState, setGlobalState } = createGlobalState({
   modals: { counter: 0, items: [] as Item[] },
+  modalsMeta: { counter: 0, items: [] as Item[] },
   idsAskedToRetire: {} as Record<string, true>,
 });
 
@@ -51,23 +52,42 @@ export function addPortal(component: JSX.Element | ((key: string) => JSX.Element
 }
 
 /** Global state */
-export function removePortal(id?: React.Key): void {
-  if (id)
-    setGlobalState('modals', (modals) => ({
-      counter: modals.counter,
-      items: modals.items.filter((m: Item) => id !== m.id),
-    }));
+export function removePortal(id: React.Key): void {
+  setGlobalState('modals', ({ counter, items }) => ({
+    counter,
+    items: items.filter((m: Item) => id !== m.id),
+  }));
 }
-
-export function askToRemovePortal(id: React.Key): void {
+/** Lets the portal to do its removal animation and then remove itself. */
+export function askPortalMetaRemoval(id: React.Key): void {
   setGlobalState('idsAskedToRetire', (ids) => ({
     ...ids,
     ...{ [id]: true as const },
   }));
 }
 
-// export function cleanGarbageAskToRemove() {
-// }
+
+
+export function addPortalMeta(element: JSX.Element): string {
+  let id = '';
+  setGlobalState('modalsMeta', ({ counter, items }) => {
+    id = String(counter);
+    return {
+      items: [...items, { element, id }],
+      counter: counter + 1,
+    };
+  });
+  return id;
+}
+/** Global state */
+export function removePortalMeta(id: React.Key): void {
+  setGlobalState('modalsMeta', ({ counter, items }) => ({
+    counter,
+    items: items.filter((m: Item) => id !== m.id),
+  }));
+}
+
+
 
 
 /** Global state */
@@ -76,7 +96,10 @@ export function askToRemovePortal(id: React.Key): void {
 // Add someway to stack them https://material.io/archive/guidelines/components/snackbars-toasts.html
 export function ModalsAndPortals(): JSX.Element {
   const [modals] = useGlobalState('modals');
+  const [modalsMeta] = useGlobalState('modalsMeta');
   return (<>
+    {/* meta won't render anything but controls the modals */}
+    {modalsMeta.items.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
     {modals.items.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
   </>
   );
@@ -122,7 +145,7 @@ export function Portal({
 
   const animateToUnmount = useCallback(() => {
     Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
-      removePortal(id.current);
+      id.current && removePortal(id.current);
     });
   }, [fadeAnim, fadeDuration]);
 
@@ -139,12 +162,8 @@ export function Portal({
   useEffect(() => { return () => { isUnmounting.current = true;}; }, []);
 
 
-
   const Component = useMemo(() => (
-    <Pressable
-      onPress={() => requestCloseOnOutsidePress && onRequestClose?.()}
-      style={s.container}
-    >
+    <Pressable onPress={() => requestCloseOnOutsidePress && onRequestClose?.()} style={s.container}>
       <Animated.View
         style={[
           { flex: 1, opacity: fadeAnim },
@@ -158,14 +177,8 @@ export function Portal({
 
 
 
-  /** Add and remove the modal on component change.
-   *
-   * Don't remove the modal here if unmounting, the animation will do it. */
-  useEffect(() => {
-    // Reuse the same key
-    id.current = addPortal(Component, { id: id.current });
-    return () => { !isUnmounting.current && removePortal(id.current);};
-  }, [Component, id]);
+  /** Update the portal on component change. Reuses the same key*/
+  useEffect(() => { id.current = addPortal(Component, { id: id.current }); }, [Component, id]);
 
   /** Animate on mount */
   useEffect(() => {
@@ -175,9 +188,7 @@ export function Portal({
 
 
   /** Animate on unmount */
-  useEffect(() => {
-    return () => { isUnmounting.current && animateToUnmount();};
-  }, [animateToUnmount]);
+  useEffect(() => (() => { isUnmounting.current && animateToUnmount();}), [animateToUnmount]);
 
 
   /** Handle the back button press */
@@ -195,6 +206,9 @@ export function Portal({
 
   return null;
 }
+
+
+
 
 
 const s = StyleSheet.create({

@@ -16,15 +16,13 @@ export type LoadingProps = {
     * @default false */
    flex?: boolean;
    viewStyle?: StyleProp<ViewStyle>;
-   /** Id for the portal. You certainly won't need to use this. */
-   id?: string;
 };
 
 // Number on iOS will be 'small'. later change to a better alternative than builtin.
 /** Wrapper around ActivityIndicator with extra functionalities. */
 export function Loading({
   size: sizeProp, text, flex, onRequestClose, viewStyle,
-  portal, id,
+  portal,
 }: LoadingProps): JSX.Element {
   const { colors } = useTheme();
 
@@ -36,13 +34,14 @@ export function Loading({
   </>);
 
   if (portal)
-    return <Portal darken viewStyle={s.center} children={children} id={id} onRequestClose={onRequestClose}/>;
+    return <Portal darken viewStyle={s.center} children={children} onRequestClose={onRequestClose}/>;
 
   return <View style={[s.center, { flex: flex ? 1 : undefined }, viewStyle]} children={children}/>;
 }
 
 const s = StyleSheet.create({
   center: {
-    alignItems: 'center', justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -13,7 +13,7 @@ const iconSize = 22;
 
 const iconPadding = 15;
 
-const totalIconSize = iconSize + iconPadding * 2;
+// const totalIconSize = iconSize + iconPadding * 2;
 
 
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
@@ -118,7 +118,7 @@ export function Button<T extends(void | any | Promise<any>)>({
           else {
             isAwaitingPress.current = true;
             await modalLoading(onPress)
-              .finally(() => {isAwaitingPress.current = false;});
+              .finally(() => { isAwaitingPress.current = false; });
           }
         }}
         {...props}

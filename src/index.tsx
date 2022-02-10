@@ -30,3 +30,7 @@ export { PageScrollView, PageScrollViewProps } from './components/Views/PageScro
 // Hooks
 export { useForm } from './hooks/useForm';
 export { usePreventCloseApp } from './hooks/usePreventClose';
+
+
+// Utils
+export { wait } from './utils/wait';
