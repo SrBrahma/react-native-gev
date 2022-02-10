@@ -115,7 +115,7 @@ export function Portal({
   const id = useRef<undefined | string>(idProp);
   const fadeDuration = fade === true ? fadeDefaultDuration : (fade || 0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const isMounting = useRef<boolean>(false);
+  const isMounting = useRef<boolean>(true);
   const isUnmounting = useRef<boolean>(false);
   const [idsToRetire, setIdsToRetire] = useGlobalState('idsAskedToRetire');
 
