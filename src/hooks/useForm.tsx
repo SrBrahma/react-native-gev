@@ -1,7 +1,7 @@
 import { Control, FieldError, FieldValues, useForm as useFormInternal, UseFormHandleSubmit, UseFormProps as UseFormPropsInternal, UseFormReturn as UseFormReturnInternal } from 'react-hook-form';
 import {} from 'react-native';
 import { TextInput, TextInputProps } from '../components/Inputs/TextInput/TextInput';
-import { Snackbar } from '../components/Modals/Snackbar';
+import { M } from '..';
 
 
 
@@ -39,10 +39,9 @@ export function useForm<F extends FieldValues = FieldValues, C extends object = 
   const { control, handleSubmit } = useFormReturn;
   const improvedHandleSubmit: UseFormHandleSubmit<F> = (valid, invalid) => handleSubmit(valid, (e) => {
     const error = Object.entries(e)[0]! as [id: keyof F, error: FieldError];
-    // Could automatically prettify the id as fallback, but: https://stackoverflow.com/questions/7225407/convert-camelcasetext-to-sentence-case-text
     const label = idToLabel?.[error[0]] ?? error[0];
     const message = `${label} - ${error[1].message}`;
-    Snackbar(message);
+    M.snackbar(message);
     invalid?.(e);
   });
   const components: Components<F, C> = {

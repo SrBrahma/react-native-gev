@@ -20,7 +20,9 @@
 
 ## This README and the package itself still early dev stage. I am already using it but I don't have time to properly publish it now.
 
-There are great known components libs like React Native Elements, React Native Paper... but none of them really pleases my eyes and my coding styles.
+There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think it's that good.
+
+
 
 I don't aim to make this too much generic. This is actually very opinated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
 
@@ -47,3 +49,5 @@ yarn add react-native-gev
 ## Usage
 
 ## [Changelog](CHANGELOG.md)
+
+## TODO add a builtin way to locally store data using another lib.

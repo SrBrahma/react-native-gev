@@ -7,7 +7,7 @@ export type SnackbarOptions = {
   timeout: number;
 };
 
-export function Snackbar(message: string, opts?: SnackbarOptions): void {
+export function modalSnackbar(message: string, opts?: SnackbarOptions): void {
   const {
     timeout = 2000,
   } = opts ?? {};

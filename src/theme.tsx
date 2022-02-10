@@ -34,6 +34,16 @@ type Colors = {
   /** For Navigation/Header.tsx */
   /** Defaults to `primary` color */
   header: string;
+  _snackbar: {
+    /** For common messages. Defaults to `background`. */
+    neutral: string;
+    /** For common messages. Defaults to `text`. */
+    textOnNeutral: string;
+    /** For error messages. */
+    error: string;
+    /** For common messages. */
+    textOnError: string;
+  };
   _button: {
     /** Defaults to `background` color */
     text: string;
@@ -94,6 +104,10 @@ const partialDefaultLightTheme: DeepPartial<Theme> = {
     _button: {
       neutral: '#eee',
     },
+    _snackbar: {
+      error: '#da3338',
+      textOnError: '#fff',
+    },
   },
 };
 
@@ -106,6 +120,9 @@ function applyThemeFallbacks(t: DeepPartial<Theme>): Theme {
         text: t.colors?.background,
         action: t.colors?.primary,
         destructive: t.colors?.error,
+      },
+      _snackbar: {
+        textOnNeutral: t.colors?.text,
       },
     },
   } as DeepPartial<Theme>]) as Theme;
