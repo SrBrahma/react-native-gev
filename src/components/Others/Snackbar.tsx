@@ -84,7 +84,7 @@ export function Snackbar({
         if (finished) {
           const isInfinity = duration === Number.POSITIVE_INFINITY || duration === Number.NEGATIVE_INFINITY;
           if (!isInfinity)
-            hideTimeout.current = setTimeout(onDismiss, duration) as unknown as NodeJS.Timeout;
+            hideTimeout.current = setTimeout(() => onDismiss(false), duration) as unknown as NodeJS.Timeout;
         }
       });
     } else { // hide
@@ -132,7 +132,7 @@ export function Snackbar({
       <Animated.View pointerEvents='box-none' style={{
         position: 'relative',
         opacity,
-        transform: [{ scale: visible ? opacity.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] }) : 1 }],
+        // transform: [{ scale: visible ? opacity.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] }) : 1 }],
       }}>
         <Shadow
           startColor='#00000028'
