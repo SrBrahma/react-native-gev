@@ -1,6 +1,6 @@
 import { FlatList, Keyboard, Modal, Pressable, ScrollViewProps, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { PageScrollView } from 'pagescrollview';
 import { useTheme } from '../../theme';
+import { PageScrollView } from '../Views/PageScrollView';
 
 
 

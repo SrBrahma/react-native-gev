@@ -90,6 +90,9 @@ export function List<Nav>({
     }}
     {...flatListProps as any as Record<string, never>} // typecast so it won't mess the FlatList generic type.
     style={[{ flexGrow: 1 }, flatListProps?.style]}
+    bounces={false}
+    overScrollMode='never'
+    keyboardShouldPersistTaps='handled'
     contentContainerStyle={[{ flex: 1, backgroundColor: theme.colors.background }, flatListProps?.contentContainerStyle]}
   />;
 }
