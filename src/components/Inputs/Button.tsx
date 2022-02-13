@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import type { PressableProps, ViewStyle } from 'react-native';
+import { useCallback, useRef } from 'react';
+import type { GestureResponderEvent, PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -24,6 +24,7 @@ type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 export type ButtonProps<T extends void | any | Promise<any>> = {
   /** You may pass an array if you want to space between two texts. */
   text: string;
+  textStyle: StyleProp<TextStyle>;
   /** Use this! */
   containerStyle?: ViewStyle;
   leftIcon?: Icons | JSX.Element;
@@ -59,15 +60,16 @@ export type ButtonProps<T extends void | any | Promise<any>> = {
 export function Button<T extends(void | any | Promise<any>)>({
   marginTop: marginTopArg = false,
   leftIcon: leftIconProp,
-  onPress,
+  onPress: onPressProp,
   awaitOnPress = true,
   hasShadow = false,
   disabled, onDisabledPress,
   stretchRow,
   stretch = stretchRow,
   iconContainerStyle,
-  text,
+  text, textStyle,
   invert,
+  style,
   ...props
 }: ButtonProps<T>): JSX.Element {
 
@@ -91,6 +93,18 @@ export function Button<T extends(void | any | Promise<any>)>({
     }</View>
   );
 
+  const onPress = useCallback(async (e: GestureResponderEvent) => {
+    if (disabled) return onDisabledPress?.();
+    // Don't trigger if already awaiting a previous press. pointerEvents on loading modal wouldn't work as it isn't the parent of this.
+    if (isAwaitingPress.current) return;
+    Keyboard.dismiss();
+    if (awaitOnPress) {
+      isAwaitingPress.current = true;
+      await mLoading(onPressProp).finally(() => { isAwaitingPress.current = false; });
+    }
+    else void onPressProp(e);
+  }, [awaitOnPress, disabled, onDisabledPress, onPressProp]);
+
   return (
     <Shadow
       offset={[0, 0.5]}
@@ -101,53 +115,34 @@ export function Button<T extends(void | any | Promise<any>)>({
       viewStyle={s.shadowView}
       {...!hasShadow && { distance: 0, paintInside: false }}
     >
-      {/* We don't use the disabled prop in Pressable so it keeps the ripple. */}
       <Pressable
         android_ripple={{ color: '#ffffff2f' }}
-        onPress={async (e) => {
-          if (disabled)
-            return onDisabledPress?.();
-
-          // Don't trigger if already awaiting a previous press. pointerEvents on loading modal wouldn't work as it isn't the parent of this.
-          if (isAwaitingPress.current)
-            return;
-
-          Keyboard.dismiss();
-
-          if (!awaitOnPress)
-            void onPress(e);
-
-          else {
-            isAwaitingPress.current = true;
-            await mLoading(onPress)
-              .finally(() => { isAwaitingPress.current = false; });
-          }
-        }}
-        {...props}
-        style={[
+        onPress={onPress}
+        {...props} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
+        style={(e) => [
           s.pressable,
           { backgroundColor: colorDefaultIsPrimary },
           disabled && { backgroundColor: colors.disabled },
           stretch && s.pressableStretch,
-          typeof props.style === 'object' && props.style,
+          typeof style === 'function' ? style(e) : style,
         ]}
       >
         {leftIcon}
-        {/* // https://stackoverflow.com/a/54750759 */}
         <Text
           selectable={false}
           adjustsFontSizeToFit
-          textBreakStrategy='simple'
+          textBreakStrategy='simple' // https://stackoverflow.com/a/54750759
           numberOfLines={1}
-          style={[s.text, leftIcon && s.textWhenIcon, { color: colorDefaultIsSecondary }]}
-        >
-          {text}
-        </Text>
+          style={[s.text, leftIcon && s.textWhenIcon, { color: colorDefaultIsSecondary }, textStyle]}
+          t={text}
+        />
       </Pressable>
     </Shadow>
   );
 }
 
+/** Useful when having a leftIcon with background color, so you want to paddingLeft the text. */
+export const buttonPaddingHorizontal = 22;
 
 const s = StyleSheet.create({
   shadowContainer: {
@@ -188,7 +183,7 @@ const s = StyleSheet.create({
   },
   text: {
     paddingTop: 2,
-    paddingHorizontal: 22,
+    paddingHorizontal: buttonPaddingHorizontal,
     flexShrink: 1, // Also needed to make adjustsFontSizeToFit work
     textShadowColor: '#0002',
     textShadowRadius: 2,
