@@ -10,16 +10,15 @@ type Common = RNSwitchProps & {
 };
 
 type Controlled<T extends Control<any, object>> = Common & {
+  /** Not required if not using inside a react-hook-form's form. */
   control: T;
-  /** How you will get it with react-hook-form */
+  /** Not required if not using inside a react-hook-form's form. */
   id: (keyof T['_defaultValues']) & string;
-  /** May already have been defined at useForm. */
-  defaultValue?: boolean;
 };
 
 type Uncontrolled = Common;
 
-export type SwitchProps<T = null> = T extends Control<any, object> ? Controlled<T> : Uncontrolled;
+export type SwitchProps<T extends Control<any, object> = Control<any, object>> = Controlled<T> | Uncontrolled;
 
 
 
@@ -35,11 +34,10 @@ const sizes = {
 const hitSlop = { bottom: 20, left: 20, right: 20, top: 20 };
 
 function ControlledSwitch<T extends Control<any, object>>(props: Controlled<T>) {
-  const { control, defaultValue, id } = props;
+  const { control, id } = props;
   const { field } = useController({
     name: id,
     control,
-    defaultValue: defaultValue as any, // idk why as any.
   });
   return <RNSwitch hitSlop={hitSlop} {...props} onValueChange={field.onChange} value={field.value}/>;
 }
@@ -76,7 +74,7 @@ function UncontrolledSwitch(props: RNSwitchProps) {
   />;
 }
 
-export function Switch<T>({
+export function Switch<T extends Control<any, object> = Control<any, object>>({
   size = 'normal',
   ...props
 }: SwitchProps<T>): JSX.Element {

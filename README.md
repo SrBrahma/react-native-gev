@@ -18,10 +18,9 @@
 
 <br/>
 
-## This README and the package itself still early dev stage. I am already using it but I don't have time to properly publish it now.
+## This readme and the package itself are on heavy early dev stage. Don't use it yet.
 
 There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think it's that good.
-
 
 
 I don't aim to make this too much generic. This is actually very opinated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
