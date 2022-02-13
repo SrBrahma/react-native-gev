@@ -142,13 +142,16 @@ export function Snackbar({
         >
           <View pointerEvents='none' style={[
             s.content, {
-              borderRadius: theme.common.roundness,
+              borderRadius: theme.sizes.roundness,
               backgroundColor,
             },
             contentStyle,
           ]}>
             {icon}
-            <Text accessibilityLiveRegion='polite' style={[s.text, { color: textColor }]} t={text}/>
+            <Text accessibilityLiveRegion='polite' style={[s.text, {
+              color: textColor,
+              fontFamily: theme.fonts.medium,
+            }]} t={text}/>
           </View>
         </Shadow>
       </Animated.View>
@@ -191,7 +194,6 @@ const s = StyleSheet.create({
   // The text or content
   text: {
     paddingVertical: 16, // padding instead margin so we catch the press and ignore it.
-    fontFamily: 'Roboto_500Medium',
     flexWrap: 'wrap',
     textAlign: 'center',
     textAlignVertical: 'center',

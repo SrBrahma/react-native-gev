@@ -13,9 +13,6 @@ import { Switch, SwitchProps } from '../Inputs/Switch';
 
 
 
-const mediumFont = 'Roboto_500Medium';
-
-
 const Web = Platform.OS === 'web';
 
 // Use this to avoid different scales.
@@ -149,6 +146,7 @@ export type ListItemProps = {
 
 
 export const ListItem: React.FC<ListItemProps> = (props) => {
+  const theme = useTheme();
 
   const result = useMemo(() => {
     const {
@@ -218,7 +216,9 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
     }
 
     const titleStyle = StyleSheet.flatten([
-      s.title, titleStyleProp,
+      s.title,
+      { fontFamily: theme.fonts.medium },
+      titleStyleProp,
       (greyTitle || (disabled && greyIfDisabled?.includes('title'))) && s.greyTitle,
     ]);
 
@@ -269,7 +269,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       </Pressable>
       {divider(bottomDivider)}
     </View>);
-  }, [props]);
+  }, [props, theme.fonts.medium]);
 
   return result;
 };
@@ -321,9 +321,6 @@ const s = ScaledSheet.create({
   },
   title: {
     color: colors.title,
-    ...Platform.select({
-      android: { fontFamily: mediumFont },
-    }),
     fontSize: Web ? 20 : moderateScale(15, scale),
   },
   subtitle: {

@@ -1,9 +1,10 @@
 import { useRef } from 'react';
-import { Keyboard, Platform, Pressable, PressableProps, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Keyboard, Platform, Pressable, PressableProps, StyleSheet, View, ViewStyle } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../theme';
 import { modalLoading } from '../Modals/modalLoading';
+import { Text } from '../Others/Text';
 
 
 

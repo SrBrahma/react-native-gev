@@ -60,6 +60,8 @@ export function Header({ headerBackProps, ...props }: StackHeaderProps & {header
   const hasRtn = stateType === 'stack' && props.navigation.canGoBack() && !props.options.headerLeft;
   const title = props.options.headerTitle || props.options.title || undefined;
 
+  const theme=useTheme();
+
   if (!props.options.headerShown)
     return;
 
@@ -82,7 +84,7 @@ export function Header({ headerBackProps, ...props }: StackHeaderProps & {header
         includeFontPadding: false,
         flexGrow: 1,
         textAlign: props.options.headerTitleAlign,
-        fontFamily: F.Roboto_500Medium,
+        fontFamily: theme.fonts.medium,
         fontSize: 22,
         paddingLeft: props.options.headerTitleAlign === 'center'
           ? undefined

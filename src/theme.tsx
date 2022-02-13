@@ -9,6 +9,9 @@ type Id<T> = unknown & { [P in keyof T]: T[P] };
 type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
+type DeepPartialAndExpandable<T> = T extends object ? {
+  [P in keyof T]?: DeepPartial<T[P]> & Record<string, any>;
+} : T;
 type Obj = Record<string, any>;
 type EmptyObj = Record<never, never>; // <string, never> would give a {[x: string]: never} in the Theme.
 
@@ -57,7 +60,7 @@ type Colors = {
 };
 
 
-const defaultCommon = {
+const defaultSizes = {
   roundness: 4,
   screen: {
     paddingVertical: 40,
@@ -69,13 +72,21 @@ const defaultCommon = {
   },
 };
 // Not hard typed as it is boring to set it up .
-type Common = typeof defaultCommon;
+type Common = typeof defaultSizes;
 
 
 
 type Theme<T extends Obj = EmptyObj> = T & {
   colors: Colors;
-  common: Common;
+  sizes: Common;
+  /** The fonts for basic texts. */
+  fonts: { // Only regular and medium as they are the only ones being used in this lib.
+    // thin: string;
+    // light: string;
+    regular: string;
+    medium: string;
+    bold: string;
+  };
   // presets: Presets;
 };
 
@@ -92,9 +103,12 @@ type ThemeReturn<T extends Obj = EmptyObj> = Theme<T> & {
 
 
 const partialDefaultLightTheme: DeepPartial<Theme> = {
-  common: defaultCommon,
+  sizes: defaultSizes,
+  fonts: {
+    medium: 'Roboto_500Medium',
+  },
   colors: {
-    primary: '#ff4',
+    primary: '#55f',
     background: '#fff',
     text: '#000',
     backdrop: '#00000056',
@@ -142,6 +156,7 @@ const { useGlobalState, setGlobalState } = createGlobalState<{useThemeData: Them
 
 
 type Themes<T extends Obj = EmptyObj> = {
+  common: Theme;
   light: Theme;
   dark: Theme;
 } & T;
@@ -182,6 +197,8 @@ export function useTheme<T>(): ThemeReturn<T> {
   return useGlobalState('useThemeData')[0] as ThemeReturn<T>; // [0] is the state. [1] is the setGlobalState.
 }
 
+/** It doesn't error when writing non-existing props. */
+type DeepPartialAndExpandableThemes<T extends Obj = EmptyObj> = DeepPartialAndExpandable<Themes<T>>;
 
 type CreateThemeOptions = {
   initialTheme?: string;
@@ -194,7 +211,7 @@ type CreateThemeRtn<T extends Obj = EmptyObj> = {
  * You may also use the given colors in your app by using useTheme() hook.
  *
  * As it uses `react-hooks-global-state`, it doesn't need a context provider. */
-export function createTheme<T extends DeepPartialThemes<any>>(themes: T, opts?: CreateThemeOptions): Id<CreateThemeRtn<T[keyof T]>> {
+export function createTheme<T extends DeepPartialAndExpandableThemes>(themes: T, opts?: CreateThemeOptions): Id<CreateThemeRtn<T[keyof T]>> {
   setGlobalState('useThemeData', createUseThemeData({
     themes: themes as any,
     initialTheme: opts?.initialTheme ?? defaultInitialTheme,

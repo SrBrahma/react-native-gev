@@ -1,4 +1,5 @@
 import { StyleProp, StyleSheet, Text as RnText, TextProps as RnTextProps, TextStyle } from 'react-native';
+import { useTheme } from '../..';
 
 
 
@@ -14,17 +15,23 @@ export type TextProps = {
 } & RnTextProps;
 
 export const Text: React.FC<TextProps> = ({
-  t, text, children, s, singlelineEllipsis, style,
+  t, text, children, s: sProp, singlelineEllipsis, style,
   ...rest
 }) => {
+  const theme = useTheme();
+
   return (
     <RnText
       {...singlelineEllipsis && { numberOfLines: 1, ellipsizeMode: 'tail' }}
       {...rest}
       style={[
-        styles.style,
-        singlelineEllipsis && styles.shrink,
-        s ?? style,
+        s.style,
+        singlelineEllipsis && s.shrink,
+        {
+          fontFamily: theme.fonts.regular,
+          color: theme.colors.text,
+        },
+        sProp ?? style,
       ]}
     >
       {t ?? text ?? children}
@@ -32,7 +39,7 @@ export const Text: React.FC<TextProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const s = StyleSheet.create({
   style: {
     includeFontPadding: false,
   },

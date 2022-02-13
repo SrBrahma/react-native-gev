@@ -59,7 +59,7 @@ export const ModalView: React.FC<ModalViewProps> = ({
               {Header && (typeof Header === 'function' ? <Header/> : Header)}
               {/* This padding because absolute stuff were being cropped */}
               {innerScroll && <PageScrollView viewStyle={[s.content, contentStyle]} nestedScrollEnabled {...scrollViewProps} children={inner()}/>}
-              {!innerScroll && <View style={[s.content, theme.common.screen, contentStyle]} children={inner()}/>}
+              {!innerScroll && <View style={[s.content, theme.sizes.screen, contentStyle]} children={inner()}/>}
               {Footer && (typeof Footer === 'function' ? <Footer/> : Footer)}
             </Pressable>
           </Pressable>

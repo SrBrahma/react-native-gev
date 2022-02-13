@@ -12,14 +12,17 @@ export function TextInputFormal({
 
   return (
     <View style={containerStyle}>
-      {label && <Text t={label} s={s.label}/>}
+      {label && <Text t={label} s={[s.label, { fontFamily: theme.fonts.medium }]}/>}
       <MaskedTextInput
         placeholderTextColor={theme.colors.placeholder}
         selectionColor={theme.colors.primary}
         {...inputProps}
         style={[s.textInput, !!error && { borderColor: theme.colors.error }, inputProps.style]}
       />
-      <Text t={error ?? ''} s={[s.errorMessage, { color: theme.colors.error }, errorStyle]}/>
+      <Text t={error ?? ''} s={[s.errorMessage, {
+        color: theme.colors.error,
+        fontFamily: theme.fonts.medium,
+      }, errorStyle]}/>
     </View>
   );
 }
@@ -28,7 +31,6 @@ export function TextInputFormal({
 const s = StyleSheet.create({
   label: {
     fontSize: 16,
-    fontFamily: 'Roboto_500Medium', // TODO
     marginBottom: 4,
   },
   textInput: {
@@ -44,6 +46,5 @@ const s = StyleSheet.create({
     marginLeft: 8,
     paddingTop: 6,
     paddingBottom: 7,
-    fontFamily: 'Roboto_500Medium',
   },
 });

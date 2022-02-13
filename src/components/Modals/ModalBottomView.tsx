@@ -56,7 +56,7 @@ export const ModalBottomView: React.FC<ModalBottomViewProps> = ({
         renderItem={() => ( */}
       {/* <Pressable onPress={onCancel} style={s.back}> */}
       {/* Pressable inside to ignore touches inside. Dismiss needed here for some reason to blur input */}
-      <Pressable style={[s.container, theme.common.screen, containerStyle]}>
+      <Pressable style={[s.container, theme.sizes.screen, containerStyle]}>
         {Header && (typeof Header === 'function' ? <Header/> : Header)}
         {/* This padding because absolute stuff were being cropped */}
         {innerScroll && <PageScrollView viewStyle={[s.childrenContent, childrenContentStyle]} nestedScrollEnabled {...scrollViewProps} children={inner()}/>}
