@@ -24,7 +24,7 @@ type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 export type ButtonProps<T extends void | any | Promise<any>> = {
   /** You may pass an array if you want to space between two texts. */
   text: string;
-  textStyle: StyleProp<TextStyle>;
+  textStyle?: StyleProp<TextStyle>;
   /** Use this! */
   containerStyle?: ViewStyle;
   leftIcon?: Icons | JSX.Element;
