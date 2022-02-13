@@ -172,10 +172,6 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     minHeight: iconSize + iconPadding * 2,
   },
-  icon: {
-    fontSize: 28,
-    left: 4,
-  },
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -185,9 +181,13 @@ const s = StyleSheet.create({
     borderTopLeftRadius: buttonBorderRadius,
     borderBottomLeftRadius: buttonBorderRadius,
   },
+  icon: {
+    fontSize: 28,
+    left: 4,
+  },
   text: {
     paddingTop: 2,
-    paddingHorizontal: 28,
+    paddingHorizontal: 22,
     flexShrink: 1, // Also needed to make adjustsFontSizeToFit work
     textShadowColor: '#0002',
     textShadowRadius: 2,
@@ -202,5 +202,6 @@ const s = StyleSheet.create({
   /** Do also use text */
   textWhenIcon: {
     fontSize: 17,
+    paddingLeft: 0,
   },
 });

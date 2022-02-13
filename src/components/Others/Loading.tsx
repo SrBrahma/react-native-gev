@@ -7,7 +7,7 @@ import { Portal } from '../Modals/ModalBase';
 export type LoadingProps = {
   /** If should be a portal in the middle of the screen.
    * @default false */
-   portal?: boolean;
+   fullscreen?: boolean;
    /** When using fullscreen */
    onRequestClose?: () => void;
    size?: number | 'large' | 'small' | undefined;
@@ -22,18 +22,18 @@ export type LoadingProps = {
 /** Wrapper around ActivityIndicator with extra functionalities. */
 export function Loading({
   size: sizeProp, text, flex, onRequestClose, viewStyle,
-  portal,
+  fullscreen,
 }: LoadingProps): JSX.Element {
   const { colors } = useTheme();
 
-  const size = sizeProp ?? portal ? 80 : 60;
+  const size = sizeProp ?? fullscreen ? 80 : 60;
 
   const children = (<>
     <ActivityIndicator size={size} color={colors.primary}/>
     {text && <Text style={{ fontSize: 15, paddingTop: 8 }}>{text}</Text>}
   </>);
 
-  if (portal)
+  if (fullscreen)
     return <Portal darken viewStyle={s.center} children={children} onRequestClose={onRequestClose}/>;
 
   return <View style={[s.center, { flex: flex ? 1 : undefined }, viewStyle]} children={children}/>;
