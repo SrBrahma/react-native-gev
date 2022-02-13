@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Control, useController } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native';
 import is from '@sindresorhus/is';
 
@@ -9,7 +9,10 @@ type Common = RNSwitchProps & {
   size?: 'normal' | 'small';
 };
 
-type Controlled<T extends Control<any, any>> = Common & {
+/** react-hook-form's Control type would make some components throw errors. Simplified type. */
+type Control = {'_defaultValues': any};
+
+type Controlled<T extends Control> = Common & {
   /** Not required if not using inside a react-hook-form's form. */
   control: T;
   /** Not required if not using inside a react-hook-form's form. */
@@ -18,11 +21,11 @@ type Controlled<T extends Control<any, any>> = Common & {
 
 type Uncontrolled = Common;
 
-export type SwitchProps<T extends Control<any, any> = Control<any, any>> = Controlled<T> | Uncontrolled;
+export type SwitchProps<T extends Control = Control> = Controlled<T> | Uncontrolled;
 
 
 
-function isControlled<T extends Control<any, any>>(a: any): a is Controlled<T> {
+function isControlled<T extends Control>(a: any): a is Controlled<T> {
   return !!(a as Controlled<T>).control;
 }
 
@@ -33,11 +36,11 @@ const sizes = {
 
 const hitSlop = { bottom: 20, left: 20, right: 20, top: 20 };
 
-function ControlledSwitch<T extends Control<any, any>>(props: Controlled<T>) {
+function ControlledSwitch<T extends Control>(props: Controlled<T>) {
   const { control, id } = props;
   const { field } = useController({
     name: id,
-    control,
+    control: control as any,
   });
   return <RNSwitch hitSlop={hitSlop} {...props} onValueChange={field.onChange} value={field.value}/>;
 }
@@ -74,7 +77,7 @@ function UncontrolledSwitch(props: RNSwitchProps) {
   />;
 }
 
-export function Switch<T extends Control<any, any> = Control<any, any>>({
+export function Switch<T extends Control = Control>({
   size = 'normal',
   ...props
 }: SwitchProps<T>): JSX.Element {
