@@ -3,7 +3,7 @@ import { Keyboard, Platform, Pressable, PressableProps, StyleSheet, View, ViewSt
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../theme';
-import { modalLoading } from '../Modals/modalLoading';
+import { mLoading } from '../Modals/mLoading';
 import { Text } from '../Others/Text';
 
 
@@ -118,7 +118,7 @@ export function Button<T extends(void | any | Promise<any>)>({
 
           else {
             isAwaitingPress.current = true;
-            await modalLoading(onPress)
+            await mLoading(onPress)
               .finally(() => { isAwaitingPress.current = false; });
           }
         }}

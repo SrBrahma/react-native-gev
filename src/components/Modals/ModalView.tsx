@@ -64,8 +64,6 @@ export const ModalView: React.FC<ModalViewProps> = ({
             </Pressable>
           </Pressable>
         )}/>
-
-
     </Modal>
   );
 };

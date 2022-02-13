@@ -32,55 +32,59 @@ const sizes = {
   normal: 1.25,
 };
 
+const hitSlop = { bottom: 20, left: 20, right: 20, top: 20 };
+
+function ControlledSwitch<T extends Control<any, object>>(props: Controlled<T>) {
+  const { control, defaultValue, id } = props;
+  const { field } = useController({
+    name: id,
+    control,
+    defaultValue: defaultValue as any, // idk why as any.
+  });
+  return <RNSwitch hitSlop={hitSlop} {...props} onValueChange={field.onChange} value={field.value}/>;
+}
+
+function UncontrolledSwitch(props: RNSwitchProps) {
+  const [tempValue, setTempValue] = useState<boolean | null>(null);
+
+  const value = tempValue ?? props.value;
+
+  useEffect(() => {
+    setTempValue(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.value]);
+
+  // useCallback would mess the value, wouldn't update.
+  const onValueChange = async (value: boolean) => {
+    if (props.onValueChange) {
+      try {
+        const rtn = props.onValueChange(value);
+        if (is.promise(rtn)) {
+          setTempValue(value);
+          await rtn;
+        }
+      } finally {
+        // Always resetting tempValue. Dev is responsible to change the switch value by himself.
+        setTempValue(null);
+      }
+    }
+  };
+
+  return <RNSwitch
+    hitSlop={hitSlop} {...props} value={value}
+    onValueChange={props.onValueChange ? onValueChange : undefined}
+  />;
+}
+
 export function Switch<T>({
   size = 'normal',
   ...props
 }: SwitchProps<T>): JSX.Element {
   const style = [{ transform: [{ scale: sizes[size] }] }, props.style];
-  if (isControlled(props))
-    return function C() {
-      const { control, defaultValue, id } = props;
-      const { field } = useController({
-        name: id,
-        control,
-        defaultValue: defaultValue as any, // idk why as any.
-      });
-      return <RNSwitch style={style} value={field.value} onValueChange={field.onChange} {...props} hitSlop={40}/>;
-    }();
-  else {
-    return function C() {
-      const [tempValue, setTempValue] = useState<boolean | null>(null);
 
-      const value = tempValue ?? props.value;
-
-      useEffect(() => {
-        setTempValue(null);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [props.value]);
-
-      // useCallback would mess the value, wouldn't update.
-      const onValueChange = async (value: boolean) => {
-        if (props.onValueChange) {
-          try {
-            const rtn = props.onValueChange(value);
-            if (is.promise(rtn)) {
-              setTempValue(value);
-              await rtn;
-            }
-          } finally {
-            // Always resetting tempValue. Dev is responsible to change the switch value by himself.
-            setTempValue(null);
-          }
-        }
-      };
-
-      return <RNSwitch
-        {...props} style={style} value={value}
-        onValueChange={props.onValueChange ? onValueChange : undefined}
-        hitSlop={40}
-      />;
-    }();
-  }
+  return isControlled(props)
+    ? <ControlledSwitch {...props} style={style}/>
+    : <UncontrolledSwitch {...props} style={style}/>;
 }
 
 

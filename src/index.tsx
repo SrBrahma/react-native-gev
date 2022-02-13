@@ -8,11 +8,11 @@ export { TextInputFormal } from './components/Inputs/TextInput/TextInputFormal';
 export { ScrollPicker, ScrollPickerProps } from './components/Inputs/WheelPicker';
 export { addPortal, ModalsAndPortals, Portal, removePortal } from './components/Modals/ModalBase';
 export { ModalBottomView, ModalBottomViewProps } from './components/Modals/ModalBottomView';
-export { M } from './components/Modals/Modals';
 export { ModalView, ModalViewProps } from './components/Modals/ModalView';
 
 // Modals
-export { SnackbarOptions } from './components/Modals/Snackbar';
+export { mError } from './components/Modals/mError';
+export { mLoading, OnModalLoadingError } from './components/Modals/mLoading';
 
 // export * from './components/Views/BottomView';
 // export * from './components/Inputs/InputOutline';
