@@ -8,7 +8,7 @@ import { addPortalMeta, askPortalMetaRemoval } from './ModalBase';
 export type OnModalLoadingError = 'modal' | 'snackbar' | 'none';
 
 /** Loading Modal. Won't throw errors unless throw: true, so you can `void mLoading`. */
-export async function mLoading<T extends(void | any | Promise<any>)>(param: (T | (() => T)), opts: {
+export async function mLoading<T extends void | any | Promise<any>>(param: (T | (() => T)), opts: {
   // There used to be a onSuccess and onError. Just use .catch and .then or await.
   /** If it shall throw/rethrow on error. Won't remove the Alert.
    * @default false */
@@ -23,7 +23,11 @@ export async function mLoading<T extends(void | any | Promise<any>)>(param: (T |
     if (is.promise(possiblePromise)) {
       // By entering the key, it will only add one Portal.
       const key = addPortalMeta(<Loading fullscreen/>);
-      await possiblePromise.finally(() => askPortalMetaRemoval(key));
+      try {
+        await possiblePromise;
+      } finally {
+        askPortalMetaRemoval(key);
+      }
     }
   } catch (err) {
     switch (opts.onError) {
