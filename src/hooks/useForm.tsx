@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
-import { Control, FieldValues, useForm as useFormInternal, UseFormProps as UseFormPropsInternal, UseFormReturn as UseFormReturnInternal } from 'react-hook-form';
+import type { Control, FieldValues, UseFormProps as UseFormPropsInternal, UseFormReturn as UseFormReturnInternal } from 'react-hook-form';
+import { useForm as useFormInternal } from 'react-hook-form';
 import {} from 'react-native';
-import { TextInput, TextInputProps } from '../components/Inputs/TextInput/TextInput';
+import type { TextInputProps } from '../components/Inputs/TextInput/TextInput';
+import { TextInput } from '../components/Inputs/TextInput/TextInput';
 
 
 

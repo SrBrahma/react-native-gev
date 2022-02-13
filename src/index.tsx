@@ -29,6 +29,7 @@ export { PageScrollView, PageScrollViewProps } from './components/Views/PageScro
 
 // Hooks
 export { useForm } from './hooks/useForm';
+export { useImagePicker } from './hooks/useImagePicker';
 export { usePreventCloseApp } from './hooks/usePreventClose';
 
 

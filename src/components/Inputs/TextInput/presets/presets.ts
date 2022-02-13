@@ -1,7 +1,8 @@
-import { Validate, ValidateResult } from 'react-hook-form';
-import { TextInputProps as RnTextInputProps } from 'react-native';
+import type { Validate, ValidateResult } from 'react-hook-form';
+import type { TextInputProps as RnTextInputProps } from 'react-native';
 import { cpf } from 'cpf-cnpj-validator';
-import { z, ZodSchema } from 'zod';
+import type { ZodSchema } from 'zod';
+import { z } from 'zod';
 
 
 

@@ -1,4 +1,5 @@
-import { Keyboard, Pressable, ScrollViewProps, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import type { ScrollViewProps, StyleProp, ViewStyle } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, View } from 'react-native';
 import { useTheme } from '../../theme';
 import { PageScrollView } from '../Views/PageScrollView';
 import { Portal } from './ModalBase';

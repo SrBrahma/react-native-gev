@@ -1,13 +1,15 @@
 // Modified version of https://github.com/callstack/react-native-paper/blob/main/src/components/Snackbar.tsx
 import * as React from 'react';
+import type {
+  PressableProps,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import {
   Animated,
-  PressableProps,
   SafeAreaView,
-  StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
 } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';

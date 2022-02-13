@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useController } from 'react-hook-form';
-import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native';
+import type { SwitchProps as RNSwitchProps } from 'react-native';
+import { Switch as RNSwitch } from 'react-native';
 import is from '@sindresorhus/is';
 
 

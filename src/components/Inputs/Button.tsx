@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { Keyboard, Platform, Pressable, PressableProps, StyleSheet, View, ViewStyle } from 'react-native';
+import type { PressableProps, ViewStyle } from 'react-native';
+import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../theme';

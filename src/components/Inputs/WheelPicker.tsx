@@ -1,10 +1,11 @@
 // Based on https://github.com/rheng001/react-native-wheel-scrollview-picker but heavily changed.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { NativeScrollEvent, NativeSyntheticEvent, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import {
-  Dimensions, NativeScrollEvent, NativeSyntheticEvent, Platform,
+  Dimensions, Platform,
   Pressable,
-  ScrollView, StyleProp, StyleSheet, Text, View, ViewProps, ViewStyle,
+  ScrollView, StyleSheet, Text, View,
 } from 'react-native';
 
 

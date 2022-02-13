@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Control, useController } from 'react-hook-form';
-import { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { getPreset, Mask, PresetIds, TextInputPreset, Validations } from './presets/presets';
-import { MaskedTextInputProps } from './MaskedTextInput';
+import type { Control } from 'react-hook-form';
+import { useController } from 'react-hook-form';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { Mask, PresetIds, TextInputPreset, Validations } from './presets/presets';
+import { getPreset } from './presets/presets';
+import type { MaskedTextInputProps } from './MaskedTextInput';
 import { TextInputFormal } from './TextInputFormal';
 
 

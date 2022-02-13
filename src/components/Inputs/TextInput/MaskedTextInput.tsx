@@ -1,10 +1,12 @@
 // Almost a copy from https://github.com/akinncar/react-native-mask-text
 // but there is always something in his code that I want to improve
 
-import { forwardRef, ForwardRefRenderFunction, useCallback, useEffect, useState } from 'react';
-import { TextInput as RnTextInput, TextInputProps as RnTextInputProps } from 'react-native';
+import type { ForwardRefRenderFunction } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
+import type { TextInputProps as RnTextInputProps } from 'react-native';
+import { TextInput as RnTextInput } from 'react-native';
 import { mask, unMask } from 'react-native-mask-text';
-import { MaskOptions } from 'react-native-mask-text/lib/typescript/@types/MaskOptions';
+import type { MaskOptions } from 'react-native-mask-text/lib/typescript/@types/MaskOptions';
 
 
 

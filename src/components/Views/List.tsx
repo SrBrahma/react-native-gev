@@ -1,15 +1,16 @@
 import React, { useMemo } from 'react';
+import type { FlatListProps, StyleProp, TextProps, TextStyle, ViewStyle } from 'react-native';
 import {
   FlatList,
-  FlatListProps,
   Platform,
-  Pressable, StyleProp,
-  StyleSheet, Text, TextProps, TextStyle, View, ViewStyle,
+  Pressable,
+  StyleSheet, Text, View,
 } from 'react-native';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../..';
-import { Switch, SwitchProps } from '../Inputs/Switch';
+import type { SwitchProps } from '../Inputs/Switch';
+import { Switch } from '../Inputs/Switch';
 
 
 
