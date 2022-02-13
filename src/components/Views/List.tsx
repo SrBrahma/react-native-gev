@@ -41,8 +41,10 @@ const colors = {
 };
 
 
+/** So we don't need to import the navigation type. */
+type NavBase = { navigate: unknown }; // Unknown is better than any as it won't allow n() if navigation is undefined & invalid routes.
 
-export type ItemListItemProps<NavProp extends Record<string, any> = any> = ListItemProps & {
+export type ItemListItemProps<Nav extends NavBase = NavBase> = ListItemProps & {
   /** If the item should not be rendered. Good for omitting stuf the user may not have access due to role limitation.
    * @default false */
   omit?: boolean;
@@ -52,22 +54,23 @@ export type ItemListItemProps<NavProp extends Record<string, any> = any> = ListI
   /** If undefined, will use the Item title as key. */
   key?: string;
   /** On press, will navigate to this route. */
-  onPressNav?: (n: NavProp['navigate']) => void;
+  onPressNav?: (n: Nav['navigate']) => void;
 };
 
+
 // TODO: Probably I can stop using the react-navigation import if I copy the types I need from it.
-export type ListProps<NavProp extends Record<string, any>> = {
-  navigation?: any;// NavProp;
+export type ListProps<Nav extends NavBase = NavBase> = {
+  navigation?: Nav;
   /** Will add chevron for items when navTo prop is defined.
    * @default true */
   chevronOnNavTo?: boolean;
-  items: ItemListItemProps<NavProp>[];
+  items: ItemListItemProps<Nav>[];
   flatListProps?: FlatListProps<unknown>;
   // divider // TODO
 };
 
 /** The backgroundColor defaults to the theme background color. */
-export function List<Nav>({
+export function List<Nav extends NavBase = NavBase>({
   items, navigation, chevronOnNavTo = true, flatListProps,
 }: ListProps<Nav>): JSX.Element {
   const theme = useTheme();
