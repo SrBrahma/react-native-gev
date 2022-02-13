@@ -9,7 +9,7 @@ type Common = RNSwitchProps & {
   size?: 'normal' | 'small';
 };
 
-type Controlled<T extends Control<any, object>> = Common & {
+type Controlled<T extends Control<any, any>> = Common & {
   /** Not required if not using inside a react-hook-form's form. */
   control: T;
   /** Not required if not using inside a react-hook-form's form. */
@@ -18,11 +18,11 @@ type Controlled<T extends Control<any, object>> = Common & {
 
 type Uncontrolled = Common;
 
-export type SwitchProps<T extends Control<any, object> = Control<any, object>> = Controlled<T> | Uncontrolled;
+export type SwitchProps<T extends Control<any, any> = Control<any, any>> = Controlled<T> | Uncontrolled;
 
 
 
-function isControlled<T extends Control<any, object>>(a: any): a is Controlled<T> {
+function isControlled<T extends Control<any, any>>(a: any): a is Controlled<T> {
   return !!(a as Controlled<T>).control;
 }
 
@@ -33,7 +33,7 @@ const sizes = {
 
 const hitSlop = { bottom: 20, left: 20, right: 20, top: 20 };
 
-function ControlledSwitch<T extends Control<any, object>>(props: Controlled<T>) {
+function ControlledSwitch<T extends Control<any, any>>(props: Controlled<T>) {
   const { control, id } = props;
   const { field } = useController({
     name: id,
@@ -74,7 +74,7 @@ function UncontrolledSwitch(props: RNSwitchProps) {
   />;
 }
 
-export function Switch<T extends Control<any, object> = Control<any, object>>({
+export function Switch<T extends Control<any, any> = Control<any, any>>({
   size = 'normal',
   ...props
 }: SwitchProps<T>): JSX.Element {
