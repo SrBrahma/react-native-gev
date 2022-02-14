@@ -80,8 +80,9 @@ export function removePortalMeta(id: React.Key): void {
 }
 
 
+type MetaContext = { id: string } | undefined;
 /** For the Portals meta to know their id. */
-const MetaContext = createContext<{id: string}>({ id: '' });
+const MetaContext = createContext<MetaContext>(undefined);
 
 /** Global state */
 // TODO add way to select the ModalsAndPortals component, like target: string.
@@ -94,8 +95,7 @@ export function ModalsAndPortals(): JSX.Element {
     {/* meta won't render anything but controls the modals */}
     {modalsMeta.map((m) => <MetaContext.Provider value={{ id: m.id }} key={m.id}>{m.element}</MetaContext.Provider>)}
     {modals.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
-  </>
-  );
+  </>);
 }
 
 
@@ -104,7 +104,7 @@ const fadeDefaultDuration = 250;
 
 export function Portal({
   children, viewStyle, darken, onRequestClose, fade = fadeDefaultDuration,
-  requestCloseOnOutsidePress = true, id: idProp,
+  requestCloseOnOutsidePress = true,
 }: {
   children: JSX.Element | null;
   viewStyle?: StyleProp<ViewStyle>;
@@ -125,16 +125,15 @@ export function Portal({
    *
    * @default 250 */
   fade?: true | number | false | null;
-  id?: string;
 }): null {
   const { colors } = useTheme();
   const fadeDuration = fade === true ? fadeDefaultDuration : (fade || 0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const isMounting = useRef<boolean>(true);
   const isUnmounting = useRef<boolean>(false);
-  const portalId = useRef<undefined | string>(idProp);
-  const metaData = useContext(MetaContext);
-  const [idsToRetire, setIdsToRetire] = useGlobalState('metaIdsAskedToRetire');
+  const portalId = useRef<undefined | string>();
+  const metaData = useContext(MetaContext); // May be undefined if added via component instead addPortal().
+  const [metaIdsToRetire, setMetaIdsToRetire] = useGlobalState('metaIdsAskedToRetire');
 
 
   const isAnimatingToUnmount = useRef(false);
@@ -143,24 +142,24 @@ export function Portal({
       isAnimatingToUnmount.current = true;
       Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
         portalId.current && removePortal(portalId.current); // No need to !== undefined, it's a string not number (won't be 0)
-        removePortalMeta(metaData.id);
+        metaData?.id && removePortalMeta(metaData.id);
       });
     }
-  }, [fadeAnim, fadeDuration, metaData.id]);
+  }, [fadeAnim, fadeDuration, metaData]);
 
 
   /** Check if it was required for this portal to unmount. */
   useEffect(() => {
-    if (portalId.current && idsToRetire[portalId.current]) {
+    if (metaData?.id && metaIdsToRetire[metaData.id]) {
       animateToUnmount();
-      setIdsToRetire((v) => {
-        if (!portalId.current) return v;
+      setMetaIdsToRetire((v) => {
+        if (!metaData.id) return v;
         const newIds = { ...v };
-        delete newIds[portalId.current];
+        delete newIds[metaData.id];
         return newIds;
       });
     }
-  }, [animateToUnmount, idsToRetire, setIdsToRetire]);
+  }, [animateToUnmount, metaData?.id, metaIdsToRetire, setMetaIdsToRetire]);
 
 
   /** Set isUnmounting=true on unmount. */
