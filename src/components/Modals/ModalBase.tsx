@@ -1,4 +1,4 @@
-import { createContext, Fragment, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { createContext, Fragment, useCallback, useContext, useEffect, useRef } from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Animated, BackHandler, Pressable, StyleSheet } from 'react-native';
@@ -15,12 +15,17 @@ export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 type Item = {element: JSX.Element; id: string};
 
 const { useGlobalState, setGlobalState } = createGlobalState({
-  modals: { counter: 0, items: [] as Item[] },
-  modalsMeta: { counter: 0, items: [] as Item[] },
-  idsAskedToRetire: {} as Record<string, true>,
+  modals: [] as Item[],
+  modalsMeta: [] as Item[],
+  metaIdsAskedToRetire: {} as Record<string, true>,
 });
 
 
+// No need at all to have it on a state.
+let counter = 0;
+function generateId() {
+  return String(counter++);
+}
 
 
 
@@ -30,38 +35,31 @@ const { useGlobalState, setGlobalState } = createGlobalState({
  *
  * Returns the modal/portal key. */
 export function addPortal(component: JSX.Element | ((key: string) => JSX.Element), o?: {id?: string}): string {
-  let id = '';
-  setGlobalState('modals', (modals) => {
-    id = o?.id ?? String(modals.counter);
-
+  const id = o?.id ?? generateId();
+  setGlobalState('modals', (items) => {
     // Replace if key already exists
-    const newItems = [...modals.items];
+    const newItems = [...items];
     const element = typeof component === 'function' ? component(id) : component;
 
-    const keyExists = modals.items.findIndex((i) => i.id === id);
+    const keyExists = items.findIndex((i) => i.id === id);
     if (keyExists > -1)
       newItems[keyExists] = { element, id };
     else
       newItems.push({ element, id });
 
-    return {
-      items: newItems,
-      counter: modals.counter + 1,
-    };
+    return newItems;
   });
   return id;
 }
 
 /** Global state */
 export function removePortal(id: React.Key): void {
-  setGlobalState('modals', ({ counter, items }) => ({
-    counter,
-    items: items.filter((m: Item) => id !== m.id),
-  }));
+  setGlobalState('modals', (items) => items.filter((m: Item) => id !== m.id));
 }
+
 /** Lets the portal to do its removal animation and then remove itself. */
 export function askPortalMetaRemoval(id: React.Key): void {
-  setGlobalState('idsAskedToRetire', (ids) => ({
+  setGlobalState('metaIdsAskedToRetire', (ids) => ({
     ...ids,
     ...{ [id]: true as const },
   }));
@@ -70,25 +68,19 @@ export function askPortalMetaRemoval(id: React.Key): void {
 
 
 export function addPortalMeta(element: JSX.Element): string {
-  let id = '';
-  setGlobalState('modalsMeta', ({ counter, items }) => {
-    id = String(counter);
-    return {
-      items: [...items, { element, id }],
-      counter: counter + 1,
-    };
-  });
+  const id = generateId();
+  setGlobalState('modalsMeta', (items) => [...items, { element, id }]);
   return id;
 }
+
+
 /** Global state */
 export function removePortalMeta(id: React.Key): void {
-  setGlobalState('modalsMeta', ({ counter, items }) => ({
-    counter,
-    items: items.filter((m: Item) => id !== m.id),
-  }));
+  setGlobalState('modalsMeta', (items) => items.filter((m: Item) => id !== m.id));
 }
 
 
+/** For the Portals meta to know their id. */
 const MetaContext = createContext<{id: string}>({ id: '' });
 
 /** Global state */
@@ -100,8 +92,8 @@ export function ModalsAndPortals(): JSX.Element {
   const [modalsMeta] = useGlobalState('modalsMeta');
   return (<>
     {/* meta won't render anything but controls the modals */}
-    {modalsMeta.items.map((m) => <MetaContext.Provider value={{ id: m.id }} key={m.id}>{m.element}</MetaContext.Provider>)}
-    {modals.items.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
+    {modalsMeta.map((m) => <MetaContext.Provider value={{ id: m.id }} key={m.id}>{m.element}</MetaContext.Provider>)}
+    {modals.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
   </>
   );
 }
@@ -142,16 +134,22 @@ export function Portal({
   const isUnmounting = useRef<boolean>(false);
   const portalId = useRef<undefined | string>(idProp);
   const metaData = useContext(MetaContext);
-  const [idsToRetire, setIdsToRetire] = useGlobalState('idsAskedToRetire');
+  const [idsToRetire, setIdsToRetire] = useGlobalState('metaIdsAskedToRetire');
 
 
+  const isAnimatingToUnmount = useRef(false);
   const animateToUnmount = useCallback(() => {
-    Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
-      portalId.current && removePortal(portalId.current);
-      removePortalMeta(metaData.id);
-    });
+    if (!isAnimatingToUnmount.current) {
+      isAnimatingToUnmount.current = true;
+      Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
+        portalId.current && removePortal(portalId.current); // No need to !== undefined, it's a string not number (won't be 0)
+        removePortalMeta(metaData.id);
+      });
+    }
   }, [fadeAnim, fadeDuration, metaData.id]);
 
+
+  /** Check if it was required for this portal to unmount. */
   useEffect(() => {
     if (portalId.current && idsToRetire[portalId.current]) {
       animateToUnmount();
@@ -164,24 +162,28 @@ export function Portal({
     }
   }, [animateToUnmount, idsToRetire, setIdsToRetire]);
 
+
+  /** Set isUnmounting=true on unmount. */
   useEffect(() => { return () => { isUnmounting.current = true;}; }, []);
 
 
-  const Component = useMemo(() => (
-    <Pressable onPress={() => requestCloseOnOutsidePress && onRequestClose?.()} style={s.container}>
-      <Animated.View
-        style={[
-          { flex: 1, opacity: fadeAnim },
-          darken && { backgroundColor: colors.backdrop },
-          viewStyle,
-        ]}
-        children={children}
-      />
-    </Pressable>
-  ), [children, colors.backdrop, darken, fadeAnim, onRequestClose, requestCloseOnOutsidePress, viewStyle]);
-
   /** Update the portal on component change. Reuses the same key */
-  useEffect(() => { portalId.current = addPortal(Component, { id: portalId.current }); }, [Component, portalId]);
+  useEffect(() => {
+    const component = (
+      <Pressable onPress={() => requestCloseOnOutsidePress && onRequestClose?.()} style={s.container}>
+        <Animated.View
+          style={[
+            { flex: 1, opacity: fadeAnim },
+            darken && { backgroundColor: colors.backdrop },
+            viewStyle,
+          ]}
+          children={children}
+        />
+      </Pressable>
+    );
+    portalId.current = addPortal(component, { id: portalId.current });
+  }, [children, colors.backdrop, darken, fadeAnim, onRequestClose, requestCloseOnOutsidePress, viewStyle]);
+
 
   /** Animate on mount */
   useEffect(() => {
@@ -189,8 +191,10 @@ export function Portal({
       Animated.timing(fadeAnim, { toValue: 1, duration: fadeDuration, useNativeDriver: true }).start();
   }, [fadeAnim, fadeDuration, isMounting]);
 
+
   /** Animate on unmount */
   useEffect(() => (() => { isUnmounting.current && animateToUnmount();}), [animateToUnmount]);
+
 
   /** Handle the back button press */
   // TODO this will prob be messed on multiple Portals
@@ -203,6 +207,8 @@ export function Portal({
     }).remove;
   }, [onRequestClose]));
 
+
+  /** Set isMounting=false */
   useEffect(() => { isMounting.current = false; }, []);
 
   return null;
