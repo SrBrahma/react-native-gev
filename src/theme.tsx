@@ -126,21 +126,21 @@ const partialDefaultLightTheme: DeepPartial<Theme> = {
 };
 
 /** Some colors fallbacks to other colors. */
-function applyThemeFallbacks(t: DeepPartial<Theme>): Theme {
-  return deepmerge.all([t, {
+function applyThemeFallbacks(theme: DeepPartial<Theme>): Theme {
+  return deepmerge.all([{
     colors: {
-      header: t.colors?.primary,
+      header: theme.colors?.primary,
       _button: {
-        text: t.colors?.background,
-        action: t.colors?.primary,
-        destructive: t.colors?.error,
+        text: theme.colors?.background,
+        action: theme.colors?.primary,
+        destructive: theme.colors?.error,
       },
       _snackbar: {
-        neutral: t.colors?.background,
-        textOnNeutral: t.colors?.text,
+        neutral: theme.colors?.background,
+        textOnNeutral: theme.colors?.text,
       },
     },
-  } as DeepPartial<Theme>]) as Theme;
+  } as DeepPartial<Theme>, theme]) as Theme;
 }
 
 const defaultLightTheme = applyThemeFallbacks(partialDefaultLightTheme);
