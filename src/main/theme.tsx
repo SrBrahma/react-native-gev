@@ -165,12 +165,14 @@ type Themes<T extends Obj = EmptyObj> = {
 
 /** Selects the theme */
 function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initialTheme }: {
-  themes: DeepPartial<Themes<T>>; themeId?: string; initialTheme: string;
+  themes: DeepPartial<Themes<T>>; themeId?: string; initialTheme?: string;
 }): ThemeReturn<T> {
+  const currentTheme = themeId ?? initialTheme ?? defaultInitialThemeId;
+
   const theme = applyThemeFallbacks(deepmerge.all([
-    themes[initialTheme] ?? {},
     defaultTheme,
-    ...(themeId ? [themes[themeId] ?? {}] : []),
+    themes['common'] ?? {},
+    themes[currentTheme] ?? {},
   ]) as Theme<T>) as Theme<T>;
 
   function changeTheme(themeId: string) {
@@ -181,7 +183,7 @@ function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initial
     ...theme,
     $settings: {
       availableThemes: Object.keys(themes),
-      currentTheme: themeId ?? initialTheme, // initialTheme defaults to defaultInitialTheme.
+      currentTheme,
       changeTheme,
     },
   };
@@ -214,7 +216,7 @@ type CreateThemeRtn<T extends Obj = EmptyObj> = {
 export function createTheme<T extends DeepPartialAndExpandableThemes>(themes: T, opts?: CreateThemeOptions): Id<CreateThemeRtn<T[keyof T]>> {
   setGlobalState('useThemeData', createUseThemeData({
     themes: themes as any,
-    initialTheme: opts?.initialTheme ?? defaultInitialThemeId,
+    initialTheme: opts?.initialTheme,
   }));
   return {
     useTheme: useTheme as any,
