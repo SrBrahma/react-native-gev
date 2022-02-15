@@ -2,11 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeScrollEvent, NativeSyntheticEvent, StyleProp, ViewProps, ViewStyle } from 'react-native';
-import {
-  Dimensions, Platform,
-  Pressable,
-  ScrollView, StyleSheet, Text, View,
-} from 'react-native';
+import { Dimensions, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 
 

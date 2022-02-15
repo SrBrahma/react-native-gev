@@ -1,5 +1,7 @@
 import { createGlobalState } from 'react-hooks-global-state';
 import deepmerge from 'deepmerge';
+import type { Fonts } from './fonts';
+import { defaultFonts } from './fonts';
 // import { useColorScheme } from 'react-native';
 
 
@@ -14,6 +16,7 @@ type DeepPartialAndExpandable<T> = T extends object ? {
 } : T;
 type Obj = Record<string, any>;
 type EmptyObj = Record<never, never>; // <string, never> would give a {[x: string]: never} in the Theme.
+
 
 
 
@@ -34,13 +37,17 @@ type Colors = {
   // onSurface: string
   // /** background color for badges */
   // notification: string
-  /** For Navigation/Header.tsx */
-  /** Defaults to `primary` color */
+  /** For Navigation/Header.tsx
+   * @default primary */
   header: string;
+  /** @default primary */
+  badge: string;
   _snackbar: {
-    /** For common messages. Defaults to `background`. */
+    /** For common messages.
+     * @default background */
     neutral: string;
-    /** For common messages. Defaults to `text`. */
+    /** For common messages.
+     * @default text */
     textOnNeutral: string;
     /** For error messages. */
     error: string;
@@ -48,11 +55,11 @@ type Colors = {
     textOnError: string;
   };
   _button: {
-    /** Defaults to `background` color */
+    /** @default background */
     text: string;
-    /** Defaults to `primary` color */
+    /** @default primary */
     action: string;
-    /** Defaults to `error` color */
+    /** @default error */
     destructive: string;
     // TODO defaults to [?]
     neutral: string;
@@ -76,37 +83,19 @@ type Common = typeof defaultSizes;
 
 
 
+
 type Theme<T extends Obj = EmptyObj> = T & {
   colors: Colors;
   sizes: Common;
   /** The fonts for basic texts. */
-  fonts: { // Only regular and medium as they are the only ones being used in this lib.
-    // thin: string;
-    // light: string;
-    regular: string;
-    medium: string;
-    bold: string;
-  };
+  fonts: Fonts;
   // presets: Presets;
 };
 
 
-type ThemeReturn<T extends Obj = EmptyObj> = Theme<T> & {
-  $settings: {
-    /** The themes that are available. */
-    availableThemes: string[];
-    currentTheme: string;
-    changeTheme: (theme: string) => void;
-    // onSystemColorChange
-  };
-};
-
-
-const partialDefaultLightTheme: DeepPartial<Theme> = {
+const partialDefaultTheme: DeepPartial<Theme> = {
   sizes: defaultSizes,
-  fonts: {
-    medium: 'Roboto_500Medium',
-  },
+  fonts: { ...defaultFonts },
   colors: {
     primary: '#55f',
     background: '#fff',
@@ -125,10 +114,12 @@ const partialDefaultLightTheme: DeepPartial<Theme> = {
   },
 };
 
+
 /** Some colors fallbacks to other colors. */
 function applyThemeFallbacks(theme: DeepPartial<Theme>): Theme {
   return deepmerge.all([{
     colors: {
+      badge: theme.colors?.primary,
       header: theme.colors?.primary,
       _button: {
         text: theme.colors?.background,
@@ -143,13 +134,24 @@ function applyThemeFallbacks(theme: DeepPartial<Theme>): Theme {
   } as DeepPartial<Theme>, theme]) as Theme;
 }
 
-const defaultLightTheme = applyThemeFallbacks(partialDefaultLightTheme);
-const defaultInitialTheme = 'light';
+const defaultTheme = applyThemeFallbacks(partialDefaultTheme);
+const defaultInitialThemeId = 'light';
+
+
+type ThemeReturn<T extends Obj = EmptyObj> = Theme<T> & {
+  $settings: {
+    /** The themes that are available. */
+    availableThemes: string[];
+    currentTheme: string;
+    changeTheme: (theme: string) => void;
+    // onSystemColorChange
+  };
+};
 
 const { useGlobalState, setGlobalState } = createGlobalState<{useThemeData: ThemeReturn}>({
   useThemeData: createUseThemeData({
-    themes: { light: defaultLightTheme },
-    initialTheme: defaultInitialTheme,
+    themes: { common: defaultTheme },
+    initialTheme: defaultInitialThemeId,
   }),
 });
 
@@ -161,17 +163,13 @@ type Themes<T extends Obj = EmptyObj> = {
   dark: Theme;
 } & T;
 
-type DeepPartialThemes<T extends Obj = EmptyObj> = DeepPartial<Themes<T>>;
-
-
 /** Selects the theme */
 function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initialTheme }: {
-  themes: DeepPartialThemes<T>; themeId?: string; initialTheme: string;
+  themes: DeepPartial<Themes<T>>; themeId?: string; initialTheme: string;
 }): ThemeReturn<T> {
   const theme = applyThemeFallbacks(deepmerge.all([
-    defaultLightTheme,
-    themes[defaultInitialTheme] ?? {},
     themes[initialTheme] ?? {},
+    defaultTheme,
     ...(themeId ? [themes[themeId] ?? {}] : []),
   ]) as Theme<T>) as Theme<T>;
 
@@ -190,12 +188,13 @@ function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initial
 }
 
 
-
-
 /** To be used only inside react-native-gev. To use in your app, use createThemes(). */
 export function useTheme<T>(): ThemeReturn<T> {
   return useGlobalState('useThemeData')[0] as ThemeReturn<T>; // [0] is the state. [1] is the setGlobalState.
 }
+
+
+
 
 /** It doesn't error when writing non-existing props. */
 type DeepPartialAndExpandableThemes<T extends Obj = EmptyObj> = DeepPartialAndExpandable<Themes<T>>;
@@ -206,6 +205,7 @@ type CreateThemeOptions = {
 type CreateThemeRtn<T extends Obj = EmptyObj> = {
   useTheme: () => ThemeReturn<T>;
 };
+
 /** Changes the default colors of react-native-gev components.
  *
  * You may also use the given colors in your app by using useTheme() hook.
@@ -214,7 +214,7 @@ type CreateThemeRtn<T extends Obj = EmptyObj> = {
 export function createTheme<T extends DeepPartialAndExpandableThemes>(themes: T, opts?: CreateThemeOptions): Id<CreateThemeRtn<T[keyof T]>> {
   setGlobalState('useThemeData', createUseThemeData({
     themes: themes as any,
-    initialTheme: opts?.initialTheme ?? defaultInitialTheme,
+    initialTheme: opts?.initialTheme ?? defaultInitialThemeId,
   }));
   return {
     useTheme: useTheme as any,

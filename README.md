@@ -35,6 +35,7 @@ react-native-shadow-2
 @react-navigation
 ```
 
+Some stuff were based/built on top of react-native-paper, as they have some good solutions.
 
 The `/src` is intentionally shipped with the package.
 

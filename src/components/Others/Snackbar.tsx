@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from '../..';
+import { useTheme } from '../../main';
 import { Text } from './Text';
 
 
@@ -152,7 +152,7 @@ export function Snackbar({
             {icon}
             <Text accessibilityLiveRegion='polite' style={[s.text, {
               color: textColor,
-              fontFamily: theme.fonts.medium,
+              ...theme.fonts.medium,
             }]} t={text}/>
           </View>
         </Shadow>

@@ -1,6 +1,6 @@
 import type { StyleProp, TextProps as RnTextProps, TextStyle } from 'react-native';
 import { StyleSheet, Text as RnText } from 'react-native';
-import { useTheme } from '../..';
+import { useTheme } from '../../main';
 
 
 
@@ -29,7 +29,7 @@ export const Text: React.FC<TextProps> = ({
         s.style,
         singlelineEllipsis && s.shrink,
         {
-          fontFamily: theme.fonts.regular,
+          ...theme.fonts.regular,
           color: theme.colors.text,
         },
         sProp ?? style,

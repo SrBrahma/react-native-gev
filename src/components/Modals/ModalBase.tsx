@@ -3,7 +3,7 @@ import { createGlobalState } from 'react-hooks-global-state';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Animated, BackHandler, Pressable, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '../../theme';
+import { useTheme } from '../../main/theme';
 
 // To avoid state loss - https://github.com/callstack/react-native-paper/issues/736#issuecomment-455678596
 

@@ -3,7 +3,7 @@ import type { GestureResponderEvent, PressableProps, StyleProp, TextStyle, ViewS
 import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from '../../theme';
+import { useTheme } from '../../main/theme';
 import { mLoading } from '../Modals/mLoading';
 import { Text } from '../Others/Text';
 

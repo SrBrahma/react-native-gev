@@ -1,5 +1,5 @@
 import { PageScrollView as OriginalPageScrollView, PageScrollViewProps } from 'pagescrollview';
-import { useTheme } from '../../theme';
+import { useTheme } from '../../main/theme';
 
 
 

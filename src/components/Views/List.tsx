@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from '../..';
+import { useTheme } from '../../main';
 import type { SwitchProps } from '../Inputs/Switch';
 import { Switch } from '../Inputs/Switch';
 
@@ -221,7 +221,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
 
     const titleStyle = StyleSheet.flatten([
       s.title,
-      { fontFamily: theme.fonts.medium },
+      theme.fonts.medium,
       titleStyleProp,
       (greyTitle || (disabled && greyIfDisabled?.includes('title'))) && s.greyTitle,
     ]);

@@ -6,6 +6,7 @@ import type { Mask, PresetIds, TextInputPreset, Validations } from './presets/pr
 import { getPreset } from './presets/presets';
 import type { MaskedTextInputProps } from './MaskedTextInput';
 import { TextInputFormal } from './TextInputFormal';
+import { TextInputOutline } from './TextInputOutline';
 
 
 
@@ -30,11 +31,10 @@ export type TextInputProps<T extends Control<any, any>> = Omit<Partial<CommonTex
   marginBottom?: boolean;
   /** User-readable name of this input. */
   label?: string;
-  optional?: boolean;
+  /** @default false */
   required?: boolean;
   preset?: PresetIds | TextInputPreset;
   maxLength?: number;
-  pretitle?: string;
   /** Char count is shown if maxLength is defined.
    * @default false */
   hideCharacterCount?: boolean;
@@ -42,6 +42,7 @@ export type TextInputProps<T extends Control<any, any>> = Omit<Partial<CommonTex
   /** If you want to use a custom component. */
   component?: (p: CommonTextInputPros) => JSX.Element;
   validations?: Validations;
+  kind?: 'formal' | 'outline';
 }, 'defaultValue'>; /** defaultValue unused as we at most will use hook-form defaultValues. It sets the field value. */
 
 
@@ -61,8 +62,8 @@ export function TextInput<T extends Control<any, any>>({
   component,
   onChangeText: onChangeProp,
   validations: validationsProp,
-  // style,
   // marginBottom = true,
+  kind = 'formal',
   ...props
 }: TextInputProps<T>): JSX.Element {
   if (!id) throw new Error('id not set for TextInput');
@@ -139,11 +140,14 @@ export function TextInput<T extends Control<any, any>>({
   if (component)
     return component(commonProps);
 
-  return <TextInputFormal {...commonProps}/>;
+  switch (kind) {
+    case 'outline': return <TextInputOutline {...commonProps}/>;
+    case 'formal':
+    default: return <TextInputFormal {...commonProps}/>;
+  }
   // return <InputOutline
   //   selectionColor='#ffb12090' // The blinking cursor
   //   style={[s.textInput, marginBottom && { marginBottom: 28 }, style]}
-  //   numberOfLines={1}
   //   fontSize={18}
   //   characterCountFontSize={12}
   // />;

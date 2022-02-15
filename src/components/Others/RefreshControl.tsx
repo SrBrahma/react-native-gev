@@ -1,6 +1,6 @@
 import type { RefreshControlProps as RnRefreshControlProps } from 'react-native';
 import { RefreshControl as RnRefreshControl } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme } from '../../main/theme';
 
 
 
