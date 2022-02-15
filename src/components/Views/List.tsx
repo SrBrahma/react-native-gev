@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from '../../main';
+import { RefreshControl, useTheme } from '../../main';
 import type { SwitchProps } from '../Inputs/Switch';
 import { Switch } from '../Inputs/Switch';
 
@@ -67,15 +67,20 @@ export type ListProps<Nav extends NavBase = NavBase> = {
   chevronOnNavTo?: boolean;
   items: ItemListItemProps<Nav>[];
   flatListProps?: FlatListProps<unknown>;
+
+  refreshing?: boolean;
+  onRefresh?: () => void;
   // divider // TODO
 };
 
 /** The backgroundColor defaults to the theme background color. */
 export function List<Nav extends NavBase = NavBase>({
   items, navigation, chevronOnNavTo = true, flatListProps,
+  refreshing, onRefresh,
 }: ListProps<Nav>): JSX.Element {
   const theme = useTheme();
   return <FlatList
+    refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/>}
     data={items}
     keyExtractor={(i) => (i.key ?? i.title ?? i.pretitle) as string}
     renderItem={({ item: i }) => {
