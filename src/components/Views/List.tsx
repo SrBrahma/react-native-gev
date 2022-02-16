@@ -80,7 +80,7 @@ export function List<Nav extends NavBase = NavBase>({
 }: ListProps<Nav>): JSX.Element {
   const theme = useTheme();
   return <FlatList
-    refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/>}
+    refreshControl={onRefresh ? <RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/> : undefined}
     data={items}
     keyExtractor={(i) => (i.key ?? i.title ?? i.pretitle) as string}
     renderItem={({ item: i }) => {

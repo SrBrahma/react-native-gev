@@ -17,7 +17,7 @@ export type PageScrollViewProps = OriginalPageScrollViewProps & {
 export const PageScrollView: React.FC<PageScrollViewProps> = ({ refreshing, onRefresh, ...p }) => {
   const theme = useTheme();
   return <OriginalPageScrollView
-    refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/>}
+    refreshControl={onRefresh ? (<RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/>) : undefined}
     backgroundColor={theme.colors.background} {...p}
   />;
 };
