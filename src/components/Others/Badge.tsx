@@ -1,6 +1,5 @@
 // Based on https://github.com/callstack/react-native-paper/blob/main/src/components/Badge.tsx
 
-import type { ComponentProps } from 'react';
 import { useEffect, useRef } from 'react';
 import type { ColorValue, StyleProp, TextStyle } from 'react-native';
 import { Animated, StyleSheet } from 'react-native';
@@ -17,7 +16,7 @@ export default function getContrastingColor(input: ColorValue, light: string, da
 
 const defaultSize = 20;
 
-type Props = Omit<ComponentProps<typeof Animated.Text>, 'style'> & {
+export type BadgeProps = {
   /** Content of the `Badge`. Won't show up only if undefined. */
   value?: true | string | number;
   /** Size of the `Badge`.
@@ -25,6 +24,7 @@ type Props = Omit<ComponentProps<typeof Animated.Text>, 'style'> & {
   size?: number;
   textStyle?: StyleProp<TextStyle>;
 };
+
 
 /**
  * Badges are small status descriptors for UI elements.
@@ -58,13 +58,11 @@ export function Badge({
   size = defaultSize,
   textStyle,
   ...rest
-}: Props): JSX.Element {
+}: BadgeProps): JSX.Element {
   const visible = value !== undefined;
   const { current: opacity } = useRef(new Animated.Value(visible ? 1 : 0));
   const isFirstRender = useRef(true);
   const theme = useTheme();
-
-
 
   useEffect(() => {
     // Do not run animation on very first rendering

@@ -17,8 +17,9 @@ export { mLoading, OnModalLoadingError } from '../components/Modals/mLoading';
 // export * from './components/Views/BottomView';
 // export * from './components/Inputs/InputOutline';
 // export * from './components/Inputs/TextInput';
-// Others
 
+// Others
+export { Badge, BadgeProps } from '../components/Others/Badge';
 export { Loading, LoadingProps } from '../components/Others/Loading';
 export { RefreshControl, RefreshControlProps } from '../components/Others/RefreshControl';
 export { Snackbar, SnackbarProps } from '../components/Others/Snackbar';
