@@ -93,7 +93,8 @@ type Theme<T extends Obj = EmptyObj> = T & {
 };
 
 
-const partialDefaultTheme: DeepPartial<Theme> = {
+/** The colors that defaults to those ones are set in applyThemeFallbacks. */
+const defaultTheme: DeepPartial<Theme> = {
   sizes: defaultSizes,
   fonts: { ...defaultFonts },
   colors: {
@@ -113,28 +114,6 @@ const partialDefaultTheme: DeepPartial<Theme> = {
     },
   },
 };
-
-
-/** Some colors fallbacks to other colors. */
-function applyThemeFallbacks(theme: DeepPartial<Theme>): Theme {
-  return deepmerge.all([{
-    colors: {
-      badge: theme.colors?.primary,
-      header: theme.colors?.primary,
-      _button: {
-        text: theme.colors?.background,
-        action: theme.colors?.primary,
-        destructive: theme.colors?.error,
-      },
-      _snackbar: {
-        neutral: theme.colors?.background,
-        textOnNeutral: theme.colors?.text,
-      },
-    },
-  } as DeepPartial<Theme>, theme]) as Theme;
-}
-
-const defaultTheme = applyThemeFallbacks(partialDefaultTheme);
 const defaultInitialThemeId = 'light';
 
 
@@ -162,6 +141,26 @@ type Themes<T extends Obj = EmptyObj> = {
   light: Theme;
   dark: Theme;
 } & T;
+
+
+/** Some colors fallbacks to other colors. */
+function applyThemeFallbacks(theme: DeepPartial<Theme>): Theme {
+  return deepmerge.all([{
+    colors: {
+      badge: theme.colors?.primary,
+      header: theme.colors?.primary,
+      _button: {
+        text: theme.colors?.background,
+        action: theme.colors?.primary,
+        destructive: theme.colors?.error,
+      },
+      _snackbar: {
+        neutral: theme.colors?.background,
+        textOnNeutral: theme.colors?.text,
+      },
+    },
+  } as DeepPartial<Theme>, theme]) as Theme;
+}
 
 /** Selects the theme */
 function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initialTheme }: {

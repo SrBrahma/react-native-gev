@@ -78,9 +78,9 @@ export function Badge({
   }, [visible, opacity]);
 
 
+  /** We need the bgc here to get the contrasting color below. */
   const { backgroundColor = theme.colors.badge, ...restStyle } = StyleSheet.flatten(textStyle ?? {});
   const textColor = getContrastingColor(backgroundColor, '#fff', '#000');
-  const borderRadius = size / 2;
 
   return (
     <Animated.Text
@@ -95,7 +95,7 @@ export function Badge({
           lineHeight: size,
           height: size,
           minWidth: size,
-          borderRadius,
+          borderRadius: size / 2,
         },
         s.text,
         restStyle,
@@ -109,6 +109,7 @@ export function Badge({
 
 const s = StyleSheet.create({
   text: {
+    includeFontPadding: false,
     alignSelf: 'flex-end',
     textAlign: 'center',
     textAlignVertical: 'center',
