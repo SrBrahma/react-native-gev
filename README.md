@@ -40,6 +40,12 @@ Some stuff were based/built on top of react-native-paper, as they have some good
 The `/src` is intentionally shipped with the package.
 
 ## Installation
+
+## Expo users:
+```
+expo install react-native-safe-area-context
+``` [add rest]
+
 ```bash
 npm install react-native-gev
 # or
