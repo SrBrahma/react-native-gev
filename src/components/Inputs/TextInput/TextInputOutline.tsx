@@ -137,7 +137,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
   const errorTextStyle = StyleSheet.flatten([
     { fontSize: 10 }, errorTextStyleProp,
   ]) as TextStyle & {fontSize: number};
-  const { backgroundColor = '#fff' } = StyleSheet.flatten(containerStyle);
+  const { backgroundColor = '#fff' } = StyleSheet.flatten(containerStyle ?? {});
   const { color: counterColor, ...counterTextStyle } = StyleSheet.flatten([{
     color: inactiveColor, fontSize: 10,
   }, counterTextStyleProp]) as TextStyle & {fontSize: number};
