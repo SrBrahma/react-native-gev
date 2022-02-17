@@ -35,7 +35,7 @@ export function Loading({
   </>);
 
   if (fullscreen)
-    return <Portal darken viewStyle={s.center} children={children} onRequestClose={onRequestClose}/>;
+    return <Portal children={children} onRequestClose={onRequestClose}/>;
 
   return <View style={[s.center, { flex: flex ? 1 : undefined }, viewStyle]} children={children}/>;
 }

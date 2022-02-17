@@ -103,10 +103,22 @@ export function ModalsAndPortals(): JSX.Element {
 const fadeDefaultDuration = 250;
 
 export function Portal({
-  children, viewStyle, darken, onRequestClose, fade = fadeDefaultDuration,
+  children, viewStyle, darken = true, onRequestClose, fade = fadeDefaultDuration,
   requestCloseOnOutsidePress = true,
 }: {
   children: JSX.Element | null;
+  /**
+   * @default
+   * ```
+   * {
+   *   flex: 1,
+   *   alignItems: 'center',
+   *   justifyContent: 'center',
+   * }
+   * ```
+   *
+   * as you will most usually want it to act like a centered modal.
+   */
   viewStyle?: StyleProp<ViewStyle>;
   /** If shall give a dark background. Will also darken StatusBar and NavigationBar.
    *
@@ -172,7 +184,8 @@ export function Portal({
       <Pressable onPress={() => requestCloseOnOutsidePress && onRequestClose?.()} style={s.container}>
         <Animated.View
           style={[
-            { flex: 1, opacity: fadeAnim },
+            s.viewStyle,
+            { opacity: fadeAnim },
             darken && { backgroundColor: colors.backdrop },
             viewStyle,
           ]}
@@ -220,5 +233,10 @@ const s = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 99999,
+  },
+  viewStyle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
