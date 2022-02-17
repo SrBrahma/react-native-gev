@@ -4,7 +4,7 @@ import {
   forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState,
 } from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { LogBox, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { LogBox, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { MaskedTextInputProps } from 'react-native-mask-text';
 import { mask, unMask } from 'react-native-mask-text';
 import Animated, {
@@ -362,7 +362,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
 
   return (
     <Animated.View style={[s.container, animatedContainerStyle, containerStyle]}>
-      <TouchableWithoutFeedback onPress={handleFocus} style={s.inputContainer}>
+      <Pressable onPress={handleFocus} style={s.inputContainer}>
         {/* Only show leftText if there is a input. Else placeholder would be on top of it. */}
         {!!leftText && !!maskedValue && <Text style={s.leftText}>{leftText}</Text>}
         <TextInput
@@ -378,7 +378,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
           placeholder='' // Overwrite
           value={maskedValue}
         />
-      </TouchableWithoutFeedback>
+      </Pressable>
       {trailingIcon && <View style={s.trailingIcon}>{trailingIcon({})}</View>}
       <Animated.View style={[s.placeholderSpacer, animatedPlaceholderSpacerStyles]}/>
       <Animated.View style={placeholderStyle} onLayout={handlePlaceholderLayout} pointerEvents='none'>
