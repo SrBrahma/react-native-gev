@@ -13,6 +13,11 @@
 
 Changelog won't be updated at the current dev stage.
 
+## 0.13.0
+* Added `Switch` to useForm's `components` prop.
+
+# Ok I think I can already start to fill this changelog
+
 ## 0.5.0 - 2022-02-07
 * Added `component`, `containerStyle` and `errorStyle` props to `TextInput`
 * Now some theme's colors defaults to another colors. `_button.destructive` for example defaults to `error` color.

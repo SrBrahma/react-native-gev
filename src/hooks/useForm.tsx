@@ -4,6 +4,8 @@ import { useForm as useFormInternal } from 'react-hook-form';
 import {} from 'react-native';
 import type { TextInputProps } from '../components/Inputs/TextInput/TextInput';
 import { TextInput } from '../components/Inputs/TextInput/TextInput';
+import type { SwitchProps } from '../main';
+import { Switch } from '../main';
 
 
 
@@ -11,6 +13,7 @@ type OmitControl<T> = Omit<T, 'control'>;
 
 type Components<F extends FieldValues = FieldValues, C extends object = object> = {
   TextInput: (p: OmitControl<TextInputProps<Control<F, C>>>) => JSX.Element;
+  Switch: (p: OmitControl<SwitchProps<Control<F, C>>>) => JSX.Element;
 };
 
 type UseFormReturn<F extends FieldValues = FieldValues, C extends object = object> = {
@@ -49,7 +52,8 @@ export function useForm<F extends FieldValues = FieldValues, C extends object = 
     //   invalid?.(e);
     // });
     const components: Components<F, C> = {
-      TextInput: function (props2) { return <TextInput control={control} idToLabel={idToLabel} {...props2}/>;},
+      TextInput: function (p) { return <TextInput control={control} idToLabel={idToLabel} {...p}/>;},
+      Switch: function (p) { return <Switch control={control} {...p}/>;},
     };
     return {
       ...useFormReturn,
