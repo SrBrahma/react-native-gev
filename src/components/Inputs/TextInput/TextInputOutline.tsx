@@ -28,7 +28,7 @@ export interface InputOutlineMethods {
   clear: () => void;
 }
 
-export interface InputOutlineProps extends MaskedTextInputProps {
+export type InputOutlineProps = Partial<MaskedTextInputProps> & {
   containerStyle?: StyleProp<ViewStyle>;
   leftText?: string;
 
@@ -78,7 +78,7 @@ export interface InputOutlineProps extends MaskedTextInputProps {
    * maybe too complicated and situational. going to use a bigger maxLength and let mask remove excessive chars
    */
   // maxLength?: number
-}
+};
 
 
 export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProps>(({
@@ -175,7 +175,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
   }, [options, pattern, type]);
 
   /** Callbacks on changes */
-  useEffect(() => { onChangeTextProp(maskedValue, unMaskedValue); }, [maskedValue, onChangeTextProp, unMaskedValue]);
+  useEffect(() => { onChangeTextProp?.(maskedValue, unMaskedValue); }, [maskedValue, onChangeTextProp, unMaskedValue]);
 
   // animation vars
   const inputRef = useRef<TextInput>(null);

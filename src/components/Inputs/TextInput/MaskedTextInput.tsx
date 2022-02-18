@@ -11,14 +11,14 @@ import type { MaskOptions } from 'react-native-mask-text/lib/typescript/@types/M
 
 type TIProps = Omit<RnTextInputProps, 'onChangeText'>;
 
-export interface MaskedTextInputProps extends TIProps {
+export type MaskedTextInputProps = TIProps & {
   mask?: string;
   type?: 'custom' | 'currency';
   options?: MaskOptions;
   defaultValue?: string;
-  onChangeText: (text: string, rawText: string) => void;
+  onChangeText?: (text: string, rawText: string) => void;
   inputAccessoryView?: JSX.Element;
-}
+};
 
 export const MaskedTextInput = forwardRef<RnTextInput, MaskedTextInputProps>(({
   mask: pattern,
@@ -45,7 +45,7 @@ export const MaskedTextInput = forwardRef<RnTextInput, MaskedTextInputProps>(({
   }, [options, pattern, type]);
 
   useEffect(() => {
-    onChangeText(maskedValue, unMaskedValue);
+    onChangeText?.(maskedValue, unMaskedValue);
   }, [maskedValue, onChangeText, unMaskedValue]);
 
   return (

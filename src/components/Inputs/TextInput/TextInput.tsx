@@ -14,7 +14,7 @@ import { TextInputOutline } from './TextInputOutline';
 
 
 /** The TextInput custom components have this. */
-export type CommonTextInputPros = MaskedTextInputProps & {
+export type CommonTextInputPros = Partial<MaskedTextInputProps & {
   /** User-readable name of this input. */
   label?: string;
   error?: string;
@@ -23,7 +23,9 @@ export type CommonTextInputPros = MaskedTextInputProps & {
   /** As our TextInput may have other refs in the future and ref forwarding is bad when having generics components,
    * the TextInput ref is used with this prop. */
   inputRef?: Ref<RnTextInput>;
-};
+}>;
+
+
 
 type Kind = 'formal' | 'outline';
 
@@ -57,7 +59,7 @@ function TextInputUncontrolled(p: TextInputUncontrolledProps): JSX.Element {
 
 type Id<T extends Control> = (keyof T['_defaultValues']) & string;
 
-export type TextInputControlledProps<T extends Control = Control> = Omit<Partial<CommonTextInputPros> & {
+export type TextInputControlledProps<T extends Control = Control> = Omit<CommonTextInputPros & {
   control: T;
   /** How you will get it with react-hook-form */
   id: Id<T>;
@@ -131,7 +133,7 @@ export function TextInputControlled<T extends Control>({
     const logicalValue: string | number = unmaskedToLogical?.({ unmasked }) ?? unmasked;
     field.onChange(logicalValue);
     setUnmasked(unmasked);
-    onChangeProp(masked, unmasked);
+    onChangeProp?.(masked, unmasked);
   };
 
   const commonProps: CommonTextInputPros = {
