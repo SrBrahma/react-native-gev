@@ -3,15 +3,14 @@ import { useController } from 'react-hook-form';
 import type { SwitchProps as RNSwitchProps } from 'react-native';
 import { Switch as RNSwitch } from 'react-native';
 import is from '@sindresorhus/is';
+import type { Control } from './utils';
+import { isControlled } from './utils';
 
 
 
 type Common = RNSwitchProps & {
   size?: 'normal' | 'small';
 };
-
-/** react-hook-form's Control type would make some components throw errors. Simplified type. */
-type Control = {'_defaultValues': any};
 
 type Controlled<T extends Control> = Common & {
   /** Not required if not using inside a react-hook-form's form. */
@@ -25,11 +24,6 @@ type Uncontrolled = Common;
 export type SwitchProps<T extends Control = Control> = Controlled<T> | Uncontrolled;
 
 
-
-function isControlled<T extends Control>(a: any): a is Controlled<T> {
-  return !!(a as Controlled<T>).control;
-}
-
 const sizes = {
   small: 1,
   normal: 1.25,
@@ -37,30 +31,30 @@ const sizes = {
 
 const hitSlop = { bottom: 20, left: 20, right: 20, top: 20 };
 
-function ControlledSwitch<T extends Control>(props: Controlled<T>) {
-  const { control, id } = props;
+function ControlledSwitch<T extends Control>(p: Controlled<T>) {
+  const { control, id } = p;
   const { field } = useController({
     name: id,
     control: control as any,
   });
-  return <RNSwitch hitSlop={hitSlop} {...props} onValueChange={field.onChange} value={field.value}/>;
+  return <RNSwitch hitSlop={hitSlop} {...p} onValueChange={field.onChange} value={field.value}/>;
 }
 
-function UncontrolledSwitch(props: RNSwitchProps) {
+function UncontrolledSwitch(p: RNSwitchProps) {
   const [tempValue, setTempValue] = useState<boolean | null>(null);
 
-  const value = tempValue ?? props.value;
+  const value = tempValue ?? p.value;
 
   useEffect(() => {
     setTempValue(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.value]);
+  }, [p.value]);
 
   // useCallback would mess the value, wouldn't update.
   const onValueChange = async (value: boolean) => {
-    if (props.onValueChange) {
+    if (p.onValueChange) {
       try {
-        const rtn = props.onValueChange(value);
+        const rtn = p.onValueChange(value);
         if (is.promise(rtn)) {
           setTempValue(value);
           await rtn;
@@ -73,20 +67,20 @@ function UncontrolledSwitch(props: RNSwitchProps) {
   };
 
   return <RNSwitch
-    hitSlop={hitSlop} {...props} value={value}
-    onValueChange={props.onValueChange ? onValueChange : undefined}
+    hitSlop={hitSlop} {...p} value={value}
+    onValueChange={p.onValueChange ? onValueChange : undefined}
   />;
 }
 
 export function Switch<T extends Control = Control>({
   size = 'normal',
-  ...props
+  ...p
 }: SwitchProps<T>): JSX.Element {
-  const style = [{ transform: [{ scale: sizes[size] }] }, props.style];
+  const style = [{ transform: [{ scale: sizes[size] }] }, p.style];
 
-  return isControlled(props)
-    ? <ControlledSwitch {...props} style={style}/>
-    : <UncontrolledSwitch {...props} style={style}/>;
+  return isControlled(p)
+    ? <ControlledSwitch {...p} style={style}/>
+    : <UncontrolledSwitch {...p} style={style}/>;
 }
 
 

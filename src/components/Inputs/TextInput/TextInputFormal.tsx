@@ -1,3 +1,5 @@
+import { forwardRef } from 'react';
+import type { TextInput } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import { Text, useTheme } from '../../../main';
 import { MaskedTextInput } from './MaskedTextInput';
@@ -5,15 +7,16 @@ import type { CommonTextInputPros } from './TextInput';
 
 
 
-export function TextInputFormal({
-  label, error, containerStyle, errorStyle, ...inputProps
-}: CommonTextInputPros): JSX.Element {
+export const TextInputFormal = forwardRef<TextInput, CommonTextInputPros>(({
+  label, error, containerStyle, errorStyle, inputRef, ...inputProps
+}, ref) => {
   const theme = useTheme();
 
   return (
     <View style={containerStyle}>
       {label && <Text t={label} s={[s.label, theme.fonts.medium]}/>}
       <MaskedTextInput
+        ref={ref}
         placeholderTextColor={theme.colors.placeholder}
         selectionColor={theme.colors.primary}
         {...inputProps}
@@ -22,7 +25,7 @@ export function TextInputFormal({
       <Text t={error ?? ''} s={[s.errorMessage, { color: theme.colors.error }, theme.fonts.medium, errorStyle]}/>
     </View>
   );
-}
+});
 
 
 const s = StyleSheet.create({
@@ -31,6 +34,7 @@ const s = StyleSheet.create({
     marginBottom: 4,
   },
   textInput: {
+    flex: 1,
     borderRadius: 1.5,
     fontSize: 18,
     borderColor: '#bbb',

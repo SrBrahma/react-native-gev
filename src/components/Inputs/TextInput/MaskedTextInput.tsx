@@ -1,7 +1,6 @@
 // Almost a copy from https://github.com/akinncar/react-native-mask-text
 // but there is always something in his code that I want to improve
 
-import type { ForwardRefRenderFunction } from 'react';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 import type { TextInputProps as RnTextInputProps } from 'react-native';
 import { TextInput as RnTextInput } from 'react-native';
@@ -21,21 +20,15 @@ export interface MaskedTextInputProps extends TIProps {
   inputAccessoryView?: JSX.Element;
 }
 
-export const MaskedTextInputComponent: ForwardRefRenderFunction<
-  RnTextInput,
-  MaskedTextInputProps
-> = (
-  {
-    mask: pattern,
-    type = 'custom',
-    options = {} as MaskOptions,
-    defaultValue: defaultValueProp,
-    onChangeText,
-    inputAccessoryView,
-    ...rest
-  },
-  ref,
-): JSX.Element => {
+export const MaskedTextInput = forwardRef<RnTextInput, MaskedTextInputProps>(({
+  mask: pattern,
+  type = 'custom',
+  options = {} as MaskOptions,
+  defaultValue: defaultValueProp,
+  onChangeText,
+  inputAccessoryView,
+  ...rest
+}, ref) => {
 
   const defaultValue = defaultValueProp || (type === 'currency' ? '0' : '');
 
@@ -67,6 +60,4 @@ export const MaskedTextInputComponent: ForwardRefRenderFunction<
       {inputAccessoryView}
     </>
   );
-};
-
-export const MaskedTextInput = forwardRef(MaskedTextInputComponent);
+});
