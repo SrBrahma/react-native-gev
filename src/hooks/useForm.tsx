@@ -2,18 +2,18 @@ import { useMemo } from 'react';
 import type { Control, FieldValues, UseFormProps as UseFormPropsInternal, UseFormReturn as UseFormReturnInternal } from 'react-hook-form';
 import { useForm as useFormInternal } from 'react-hook-form';
 import {} from 'react-native';
-import type { TextInputProps } from '../components/Inputs/TextInput/TextInput';
+import type { SwitchControlledProps } from '../components/Inputs/Switch';
+import type { TextInputControlledProps } from '../components/Inputs/TextInput/TextInput';
 import { TextInput } from '../components/Inputs/TextInput/TextInput';
-import type { SwitchProps } from '../main';
 import { Switch } from '../main';
 
 
-
+/** Remove control props from the controlled components as we will automatically fill them. */
 type OmitControl<T> = Omit<T, 'control'>;
 
 type Components<F extends FieldValues = FieldValues, C extends object = object> = {
-  TextInput: (p: OmitControl<TextInputProps<Control<F, C>>>) => JSX.Element;
-  Switch: (p: OmitControl<SwitchProps<Control<F, C>>>) => JSX.Element;
+  TextInput: (p: OmitControl<TextInputControlledProps<Control<F, C>>>) => JSX.Element;
+  Switch: (p: OmitControl<SwitchControlledProps<Control<F, C>>>) => JSX.Element;
 };
 
 type UseFormReturn<F extends FieldValues = FieldValues, C extends object = object> = {
@@ -43,7 +43,7 @@ export function useForm<F extends FieldValues = FieldValues, C extends object = 
   const useFormReturn = useFormInternal({ mode: 'onTouched', ...rest });
   // Without this memo, the inputs/the form would lose their values on parent state change / render.
   return useMemo(() => {
-    const { control, handleSubmit } = useFormReturn;
+    const { control } = useFormReturn;
     // const improvedHandleSubmit: UseFormHandleSubmit<F> = (valid, invalid) => handleSubmit(valid, (e) => {
     //   const error = Object.entries(e)[0]! as [id: keyof F, error: FieldError];
     //   const label = idToLabel?.[error[0]] ?? error[0];
