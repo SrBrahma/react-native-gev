@@ -14,7 +14,7 @@ import { TextInputOutline } from './TextInputOutline';
 
 
 /** The TextInput custom components have this. */
-export type CommonTextInputPros = Partial<MaskedTextInputProps & {
+export type CommonTextInputProps = Partial<MaskedTextInputProps & {
   /** User-readable name of this input. */
   label?: string;
   error?: string;
@@ -30,7 +30,7 @@ export type CommonTextInputPros = Partial<MaskedTextInputProps & {
 type Kind = 'formal' | 'outline';
 
 
-export type TextInputUncontrolledProps = CommonTextInputPros & {
+export type TextInputUncontrolledProps = CommonTextInputProps & {
   mask?: Mask;
   /** If will add a basic margin bottom.
    * @default true */
@@ -41,12 +41,12 @@ export type TextInputUncontrolledProps = CommonTextInputPros & {
   hideCharacterCount?: boolean;
   error?: string;
   /** If you want to use a custom component. */
-  Component?: (p: CommonTextInputPros) => JSX.Element;
+  Component?: (p: CommonTextInputProps) => JSX.Element;
   kind?: Kind;
 };
 
 function TextInputUncontrolled(p: TextInputUncontrolledProps): JSX.Element {
-  const commonProps: CommonTextInputPros = {
+  const commonProps: CommonTextInputProps = {
     numberOfLines: 1,
     ...p, // defined props will overwrite above but not below
     accessibilityLabel: p.label,
@@ -59,7 +59,7 @@ function TextInputUncontrolled(p: TextInputUncontrolledProps): JSX.Element {
 
 type Id<T extends Control> = (keyof T['_defaultValues']) & string;
 
-export type TextInputControlledProps<T extends Control = Control> = Omit<CommonTextInputPros & {
+export type TextInputControlledProps<T extends Control = Control> = Omit<CommonTextInputProps & {
   control: T;
   /** How you will get it with react-hook-form */
   id: Id<T>;
@@ -136,7 +136,7 @@ export function TextInputControlled<T extends Control>({
     onChangeProp?.(masked, unmasked);
   };
 
-  const commonProps: CommonTextInputPros = {
+  const commonProps: CommonTextInputProps = {
     label,
     value: unmasked,
     numberOfLines: 1,
@@ -174,15 +174,15 @@ export function TextInput<T extends Control = Control>({
 function TextInputComponentSelector({
   Component, kind, commonProps,
 }: {
-  Component?: (p: CommonTextInputPros) => JSX.Element;
+  Component?: (p: CommonTextInputProps) => JSX.Element;
   kind?: Kind;
-  commonProps: CommonTextInputPros;
+  commonProps: CommonTextInputProps;
 }) {
   if (Component)
     return <Component {...commonProps}/>;
 
   switch (kind) {
-    case 'outline': return <TextInputOutline {...commonProps}/>;
+    case 'outline': return <TextInputOutline placeholder={commonProps.label} {...commonProps}/>;
     case 'formal':
     default: return <TextInputFormal {...commonProps}/>;
   }

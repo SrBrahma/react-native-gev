@@ -5,12 +5,12 @@ import {
 } from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { LogBox, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import type { MaskedTextInputProps } from 'react-native-mask-text';
 import { mask, unMask } from 'react-native-mask-text';
 import Animated, {
   Extrapolate, interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '../../../main';
+import type { CommonTextInputProps } from './TextInput';
 
 
 // color issue
@@ -28,7 +28,7 @@ export interface InputOutlineMethods {
   clear: () => void;
 }
 
-export type InputOutlineProps = Partial<MaskedTextInputProps> & {
+export type InputOutlineProps = Partial<CommonTextInputProps> & {
   containerStyle?: StyleProp<ViewStyle>;
   leftText?: string;
 
@@ -37,7 +37,7 @@ export type InputOutlineProps = Partial<MaskedTextInputProps> & {
   placeholder?: string;
 
   /** Vertical padding for TextInput Container. Used to calculate animations.
-   * @default 12 */
+   * @default 9 */
   paddingVertical?: number;
   /** Vertical padding for TextInput Container.
    * @default 16 */
@@ -103,10 +103,11 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
 
   // styling
   paddingHorizontal = 16,
-  paddingVertical = 11,
+  paddingVertical = 9,
 
   // features
-  placeholder = 'Placeholder',
+  label,
+  placeholder = label ?? 'Placeholder',
   trailingIcon,
 
   // others
@@ -123,14 +124,13 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
   ...inputProps
 }, ref) => {
   const theme = useTheme();
-
   const activeColor = activeColorProp ?? theme.colors.primary;
   const inactiveColor = inactiveColorProp ?? 'grey';
   const errorColor = errorColorProp ?? theme.colors.error;
   /** Can be overwritten in containerStyle */
   const borderRadius = theme.sizes.roundness;
   const maxLength = maxLengthProp ?? pattern?.length;
-  const errorState = error !== null && error !== undefined;
+  const errorState = !!error;
   const selectionColor = errorState ? errorColor : (selectionColorProp ?? activeColor);
 
   const { fontSize = 18, fontFamily } = StyleSheet.flatten(style ?? {});
@@ -281,14 +281,18 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
     clear,
   }));
 
+  const bottomTextDist = 12;
+
 
   const s = StyleSheet.create({
     container: {
+      flex: 1,
       borderWidth: 1,
       borderRadius,
       alignSelf: 'stretch',
       flexDirection: 'row',
       backgroundColor,
+      marginBottom: 32,
     },
     inputContainer: {
       flex: 1,
@@ -325,7 +329,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
     errorText: {
       position: 'absolute',
       color: errorColor,
-      bottom: -errorTextStyle.fontSize - 7,
+      bottom: -errorTextStyle.fontSize - bottomTextDist,
       left: paddingHorizontal,
     },
     trailingIcon: {
@@ -336,13 +340,13 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
     counterText: {
       position: 'absolute',
       color: errorState ? errorColor : counterColor,
-      bottom: -counterTextStyle.fontSize - 7,
+      bottom: -counterTextStyle.fontSize - bottomTextDist,
       right: paddingHorizontal,
     },
     assistiveText: {
       position: 'absolute',
       color: assistiveColor,
-      bottom: -assistiveStyle.fontSize - 7,
+      bottom: -assistiveStyle.fontSize - bottomTextDist,
       left: paddingHorizontal,
     },
     leftText: {

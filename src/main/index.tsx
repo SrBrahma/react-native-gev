@@ -3,7 +3,7 @@ export * from './theme';
 // Inputs
 export { Button, ButtonProps } from '../components/Inputs/Button';
 export { Switch, SwitchProps } from '../components/Inputs/Switch';
-export { CommonTextInputPros, TextInput, TextInputProps } from '../components/Inputs/TextInput/TextInput';
+export { CommonTextInputProps, TextInput, TextInputProps } from '../components/Inputs/TextInput/TextInput';
 export { TextInputFormal } from '../components/Inputs/TextInput/TextInputFormal';
 export { ScrollPicker, ScrollPickerProps } from '../components/Inputs/WheelPicker';
 export { addPortal, ModalsAndPortals, Portal, removePortal } from '../components/Modals/ModalBase';

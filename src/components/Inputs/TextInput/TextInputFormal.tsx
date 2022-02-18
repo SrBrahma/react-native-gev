@@ -3,15 +3,14 @@ import type { TextInput } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import { Text, useTheme } from '../../../main';
 import { MaskedTextInput } from './MaskedTextInput';
-import type { CommonTextInputPros } from './TextInput';
+import type { CommonTextInputProps } from './TextInput';
 
 
 
-export const TextInputFormal = forwardRef<TextInput, CommonTextInputPros>(({
+export const TextInputFormal = forwardRef<TextInput, CommonTextInputProps>(({
   label, error, containerStyle, errorStyle, inputRef, ...inputProps
 }, ref) => {
   const theme = useTheme();
-
   return (
     <View style={containerStyle}>
       {label && <Text t={label} s={[s.label, theme.fonts.medium]}/>}
