@@ -20,7 +20,7 @@
 
 ## This readme and the package itself are on heavy early dev stage. Don't use it yet.
 
-There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think it's that good.
+There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think they aren't that good for my cases.
 
 
 I don't aim to make this too much generic. This is actually very opinated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
@@ -44,7 +44,8 @@ The `/src` is intentionally shipped with the package.
 ## Expo users:
 ```
 expo install react-native-safe-area-context
-``` [add rest]
+```
+[add rest]
 
 ```bash
 npm install react-native-gev
