@@ -23,6 +23,7 @@ export type CommonTextInputProps = Partial<MaskedTextInputProps & {
   /** As our TextInput may have other refs in the future and ref forwarding is bad when having generics components,
    * the TextInput ref is used with this prop. */
   inputRef?: Ref<RnTextInput>;
+  leftText?: string;
 }>;
 
 
