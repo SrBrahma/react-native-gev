@@ -194,7 +194,7 @@ function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initial
 
 
 /** To be used only inside react-native-gev. To use in your app, use createThemes(). */
-export function useTheme<T>(): ThemeReturn<T> {
+export function useTheme<T extends Obj = EmptyObj>(): ThemeReturn<T> {
   return useGlobalState('useThemeData')[0] as ThemeReturn<T>; // [0] is the state. [1] is the setGlobalState.
 }
 

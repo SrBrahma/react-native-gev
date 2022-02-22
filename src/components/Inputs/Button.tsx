@@ -21,7 +21,7 @@ const iconPadding = 15;
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
 
-export type ButtonProps<T extends void | any | Promise<any>> = {
+export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
   text: string;
   /** Alias to `text`. */
   // t: string;
@@ -48,7 +48,7 @@ export type ButtonProps<T extends void | any | Promise<any>> = {
   /** Use it when to stretch inside a row view. */
   stretchRow?: boolean;
   /** If awaitOnPress, will set a fullscreen loading. */
-  onPress: (() => T);
+  onPress: (() => FunRtn);
   /** Triggered when pressing it while it is disabled. Useful for example to point out the user where the error is in a form. */
   onDisabledPress?: () => void;
   /** @default false */
@@ -81,7 +81,7 @@ export function Button<T extends(void | any | Promise<any>)>({
 }: ButtonProps<T>): JSX.Element {
 
   const text = uppercase ? textProp.toLocaleUpperCase() : textProp;
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const colorDefaultIsPrimary = invert ? colors._button.text : colors._button.action;
   const colorDefaultIsSecondary = invert ? colors._button.action : colors._button.text;
@@ -141,7 +141,7 @@ export function Button<T extends(void | any | Promise<any>)>({
           adjustsFontSizeToFit
           textBreakStrategy='simple' // https://stackoverflow.com/a/54750759
           numberOfLines={1}
-          style={[s.text, leftIcon && s.textWhenIcon, { color: colorDefaultIsSecondary }, textStyle]}
+          style={[s.text, fonts.bold, leftIcon && s.textWhenIcon, { color: colorDefaultIsSecondary }, textStyle]}
           t={text}
         />
       </Pressable>
@@ -190,18 +190,13 @@ const s = StyleSheet.create({
     left: 4,
   },
   text: {
-    paddingTop: 2,
     paddingHorizontal: buttonPaddingHorizontal,
     flexShrink: 1, // Also needed to make adjustsFontSizeToFit work
-    textShadowColor: '#0002',
-    textShadowRadius: 2,
     fontSize: 18.5,
-    letterSpacing: 0.3,
     textAlign: 'center',
     textAlignVertical: 'bottom',
     includeFontPadding: false,
-    fontWeight: 'bold',
-    ...(Platform.OS === 'web' && { paddingTop: 4 }), // It was for some reason a little to the top
+    paddingTop: Platform.OS === 'web' ? 4 : 2, // It was for some reason a little to the top
   },
   /** Do also use text */
   textWhenIcon: {
