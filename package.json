@@ -1,6 +1,6 @@
 {
   "name": "react-native-gev",
-  "version": "0.13.8",
+  "version": "0.14.0",
   "description": "RN components for quick and smart apps development",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/color": "^3.0.3",
     "@types/react-native": "^0.64.23",
-    "eslint-config-gev": "^2.28.0",
+    "eslint-config-gev": "2.32.2",
     "react": "*",
     "react-native": "^0.64.3",
     "react-native-reanimated": "^2.0.0",

@@ -33,6 +33,9 @@ type Colors = {
   placeholder: string;
   /** Color for backdrops of various components such as modals. */
   backdrop: string;
+  /** Similar to background, but for elements with content such as cards.
+   * @default background */
+  surface: string;
   // /** background color for snackbars */
   // onSurface: string
   // /** background color for badges */
@@ -158,6 +161,7 @@ function applyThemeFallbacks(theme: DeepPartial<Theme>): Theme {
         neutral: theme.colors?.background,
         textOnNeutral: theme.colors?.text,
       },
+      surface: theme.colors?.background,
     },
   } as DeepPartial<Theme>, theme]) as Theme;
 }
