@@ -13,6 +13,9 @@
 
 Changelog won't be updated at the current dev stage.
 
+## 0.13.8
+* Fixed `color` lib version, as v4 don't work on unsupported envs like Expo.
+
 ## 0.13.0
 * Added `Switch` to useForm's `components` prop.
 
