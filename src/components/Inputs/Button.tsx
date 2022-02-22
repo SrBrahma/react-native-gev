@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import type { GestureResponderEvent, PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
+import type { ShadowProps } from 'react-native-shadow-2';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../main/theme';
@@ -59,6 +60,8 @@ export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
   /** Converts the text to uppercase.
    * @default false */
   uppercase?: boolean;
+  /** react-native-shadow-2's props for the wrapping Shadow component. */
+  shadowProps?: ShadowProps;
 } & PressableProps;
 
 
@@ -77,6 +80,7 @@ export function Button<T extends(void | any | Promise<any>)>({
   invert,
   uppercase,
   style,
+  shadowProps,
   ...props
 }: ButtonProps<T>): JSX.Element {
 
@@ -119,9 +123,10 @@ export function Button<T extends(void | any | Promise<any>)>({
       distance={2} // cleaner without it.
       startColor='#0001'
       radius={buttonBorderRadius}
-      containerViewStyle={[s.shadowContainer, { marginTop }, stretchRow && s.shadowContainerStretchRow, props.containerStyle]}
-      viewStyle={s.shadowView}
       {...!hasShadow && { distance: 0, paintInside: false }}
+      {...shadowProps}
+      containerViewStyle={[s.shadowContainer, { marginTop }, stretchRow && s.shadowContainerStretchRow, props.containerStyle, shadowProps?.containerViewStyle]}
+      viewStyle={[s.shadowView, shadowProps?.viewStyle]}
     >
       <Pressable
         android_ripple={{ color: '#ffffff2f' }}

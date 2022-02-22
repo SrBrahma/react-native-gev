@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.14.5
+* Added `shadowProps` to `Button`
+
 ## 0.14.3
 * Added `uppercase` prop to `Button`
 
