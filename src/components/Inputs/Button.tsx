@@ -4,10 +4,15 @@ import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
 import type { ShadowProps } from 'react-native-shadow-2';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { colord, extend } from 'colord';
+import namesPlugin from 'colord/plugins/names';
 import { useTheme } from '../../main/theme';
 import { mLoading } from '../Modals/mLoading';
 import { Text } from '../Others/Text';
 
+
+// To support color names: https://github.com/omgovich/colord#plugins
+extend([namesPlugin]);
 
 
 const buttonBorderRadius = 4;
@@ -30,7 +35,8 @@ export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
   // Removes the function from the pressable style type. It messes the Shadow-roundness-obtaining
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-  /** Use this! */
+  /** The style of the wrapping shadow. Shortcut for shadowProps.containerViewStyle.
+   * Use this for margins. */
   containerStyle?: ViewStyle;
   leftIcon?: Icons | JSX.Element;
   iconContainerStyle?: ViewStyle;
@@ -81,12 +87,13 @@ export function Button<T extends(void | any | Promise<any>)>({
   textStyle,
   invert,
   uppercase,
-  style,
+  style: styleProp,
   shadowProps,
   ...props
 }: ButtonProps<T>): JSX.Element {
 
   const text = uppercase ? textProp.toLocaleUpperCase() : textProp;
+  const style = StyleSheet.flatten<ViewStyle>(styleProp || {});
   const { colors, fonts } = useTheme();
 
   const colorDefaultIsPrimary = invert ? colors._button.text : colors._button.action;
@@ -107,6 +114,16 @@ export function Button<T extends(void | any | Promise<any>)>({
     }</View>
   );
 
+  const backgroundColor = StyleSheet.flatten([
+    { backgroundColor: colorDefaultIsPrimary },
+    style,
+    disabled && { backgroundColor: colors.disabled },
+  ]).backgroundColor ?? '#449';
+
+  /** I like a light ripple even on light buttons, but there is a point where it can't be anymore noticeable, so we must use a dark ripple!
+   * https://github.com/omgovich/colord/issues/89 */
+  const rippleColor = colord(backgroundColor as any).brightness() > 0.8 ? '#0000001a' : '#ffffff2f';
+
   const onPress = useCallback(async (e: GestureResponderEvent) => {
     if (disabled) return onDisabledPress?.();
     // Don't trigger if already awaiting a previous press. pointerEvents on loading modal wouldn't work as it isn't the parent of this.
@@ -119,27 +136,33 @@ export function Button<T extends(void | any | Promise<any>)>({
     else void onPressProp(e);
   }, [awaitOnPress, disabled, onDisabledPress, onPressProp]);
 
+  /** We do this to remove the ripple overflow. The parent style must contain the radii.
+   * https://github.com/facebook/react-native/issues/6480 */
+  const { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius } = style;
+
   return (
     <Shadow
       offset={[0, 0.5]}
       distance={2} // cleaner without it.
       startColor='#0001'
-      radius={buttonBorderRadius}
       {...!hasShadow && { distance: 0, paintInside: false }}
       {...shadowProps}
       containerViewStyle={[s.shadowContainer, { marginTop }, stretchRow && s.shadowContainerStretchRow, props.containerStyle, shadowProps?.containerViewStyle]}
-      viewStyle={[s.shadowView, shadowProps?.viewStyle]}
+      viewStyle={[
+        s.shadowView,
+        { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius },
+        shadowProps?.viewStyle,
+      ]}
     >
       <Pressable
-        android_ripple={{ color: '#ffffff2f' }}
+        android_ripple={{ color: rippleColor }}
         onPress={onPress}
         {...props} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
         style={[
           s.pressable,
-          { backgroundColor: colorDefaultIsPrimary },
-          disabled && { backgroundColor: colors.disabled },
           stretch && s.pressableStretch,
           style,
+          { backgroundColor },
         ]}
       >
         {leftIcon}
@@ -181,7 +204,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     borderRadius: buttonBorderRadius,
     flexDirection: 'row',
-    minHeight: iconSize + iconPadding * 2,
+    minHeight: iconSize + (iconPadding * 2),
   },
   iconContainer: {
     flexDirection: 'row',

@@ -13,6 +13,10 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.15.0
+* Added `Button` automatic ripple color based on bg brightness.
+* Fixed `Button` ripple overflow.
+
 ## 0.14.5
 * Added `shadowProps` to `Button`
 
