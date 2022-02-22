@@ -18,6 +18,11 @@ export { mLoading, OnModalLoadingError } from '../components/Modals/mLoading';
 // export * from './components/Inputs/InputOutline';
 // export * from './components/Inputs/TextInput';
 
+// Views
+export { ImageBackground, ImageBackgroundProps } from '../components/Views/ImageBackground';
+export { ItemListItemProps, List, ListItem, ListItemProps, ListProps } from '../components/Views/List';
+export { PageScrollView, PageScrollViewProps } from '../components/Views/PageScrollView';
+
 // Others
 export { Badge, BadgeProps } from '../components/Others/Badge';
 export { Loading, LoadingProps } from '../components/Others/Loading';
@@ -25,8 +30,6 @@ export { RefreshControl, RefreshControlProps } from '../components/Others/Refres
 export { Snackbar, SnackbarProps } from '../components/Others/Snackbar';
 export { StatusBarProvider, StatusBarProviderProps } from '../components/Others/StatusBar';
 export { Text, TextProps } from '../components/Others/Text';
-export { ItemListItemProps, List, ListItem, ListItemProps, ListProps } from '../components/Views/List';
-export { PageScrollView, PageScrollViewProps } from '../components/Views/PageScrollView';
 
 // Hooks
 export { useForm } from '../hooks/useForm';

@@ -13,9 +13,8 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
-## 0.14.0
+## 0.14.0~1
 * Added `ImageBackground`, wrapper for the RN component of same name.
-* Added global.d.ts to allow .png importing as test. Ain't sure if it will work.
 
 ## 0.13.8
 * Fixed `color` lib version, as v4 don't work on unsupported envs like Expo.
