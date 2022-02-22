@@ -27,6 +27,8 @@ export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
   /** Alias to `text`. */
   // t: string;
   /** */
+  // Removes the function from the pressable style type. It messes the Shadow-roundness-obtaining
+  style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   /** Use this! */
   containerStyle?: ViewStyle;
@@ -132,12 +134,12 @@ export function Button<T extends(void | any | Promise<any>)>({
         android_ripple={{ color: '#ffffff2f' }}
         onPress={onPress}
         {...props} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
-        style={(e) => [
+        style={[
           s.pressable,
           { backgroundColor: colorDefaultIsPrimary },
           disabled && { backgroundColor: colors.disabled },
           stretch && s.pressableStretch,
-          typeof style === 'function' ? style(e) : style,
+          style,
         ]}
       >
         {leftIcon}
