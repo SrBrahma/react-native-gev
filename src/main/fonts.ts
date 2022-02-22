@@ -77,8 +77,8 @@ export const defaultFonts: Fonts = Platform.select({
       fontWeight: 'normal',
     },
     bold: {
-      fontFamily: 'sans-serif-bold',
-      fontWeight: 'normal',
+      fontFamily: 'Roboto',
+      fontWeight: '700',
     },
   },
 });
