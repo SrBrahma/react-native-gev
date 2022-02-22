@@ -122,7 +122,7 @@ export function Button<T extends(void | any | Promise<any>)>({
 
   /** I like a light ripple even on light buttons, but there is a point where it can't be anymore noticeable, so we must use a dark ripple!
    * https://github.com/omgovich/colord/issues/89 */
-  const rippleColor = colord(backgroundColor as any).brightness() > 0.8 ? '#0000001a' : '#ffffff2f';
+  const rippleColor = colord(backgroundColor as any).brightness() > 0.8 ? '#00000014' : '#ffffff2f';
 
   const onPress = useCallback(async (e: GestureResponderEvent) => {
     if (disabled) return onDisabledPress?.();
@@ -136,7 +136,7 @@ export function Button<T extends(void | any | Promise<any>)>({
     else void onPressProp(e);
   }, [awaitOnPress, disabled, onDisabledPress, onPressProp]);
 
-  /** We do this to remove the ripple overflow. The parent style must contain the radii.
+  /** We do this to remove the ripple overflow. The parent style must contain the radii (and also overflow: 'hidden').
    * https://github.com/facebook/react-native/issues/6480 */
   const { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius } = style;
 
@@ -190,6 +190,7 @@ const s = StyleSheet.create({
     flexGrow: 1, // No row grow without this
   },
   shadowView: {
+    overflow: 'hidden', // Remove ripple overflow.
     flexDirection: 'column',
     alignSelf: 'stretch',
   },

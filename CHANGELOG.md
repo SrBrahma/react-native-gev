@@ -13,7 +13,7 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
-## 0.15.0
+## 0.15.0~1
 * Added `Button` automatic ripple color based on bg brightness.
 * Fixed `Button` ripple overflow.
 
