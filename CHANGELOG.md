@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.14.3
+* Added `uppercase` prop to `Button`
+
 ## 0.14.0~2
 * Added `ImageBackground`, wrapper for the RN component of same name.
 

@@ -22,8 +22,10 @@ type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
 
 export type ButtonProps<T extends void | any | Promise<any>> = {
-  /** You may pass an array if you want to space between two texts. */
   text: string;
+  /** Alias to `text`. */
+  // t: string;
+  /** */
   textStyle?: StyleProp<TextStyle>;
   /** Use this! */
   containerStyle?: ViewStyle;
@@ -54,6 +56,9 @@ export type ButtonProps<T extends void | any | Promise<any>> = {
   /** Inverts the inner color. */
   invert?: boolean;
   // outlineOnInvert
+  /** Converts the text to uppercase.
+   * @default false */
+  uppercase?: boolean;
 } & PressableProps;
 
 
@@ -67,12 +72,15 @@ export function Button<T extends(void | any | Promise<any>)>({
   stretchRow,
   stretch = stretchRow,
   iconContainerStyle,
-  text, textStyle,
+  text: textProp,
+  textStyle,
   invert,
+  uppercase,
   style,
   ...props
 }: ButtonProps<T>): JSX.Element {
 
+  const text = uppercase ? textProp.toLocaleUpperCase() : textProp;
   const { colors } = useTheme();
 
   const colorDefaultIsPrimary = invert ? colors._button.text : colors._button.action;
