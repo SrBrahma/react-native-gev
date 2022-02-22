@@ -5,24 +5,24 @@ import { ImageBackground as RnImageBackground, StyleSheet } from 'react-native';
 
 
 export type ImageBackgroundProps = RnImageBackgroundProps & {
-  /** Shortcut for style={{opacity}} */
+  /** Shortcut for imageStyle={{opacity}} */
   opacity?: number;
 };
+
 
 /** Simple wrapper for React Native's <ImageBackground/> for a config-less usage.
  *
  * It applies a width/height style of '100%', resizeMode='cover' and `opacity` shortcut prop.
-*/
-export function ImageBackground({ opacity, style, ...rest }: ImageBackgroundProps): JSX.Element {
+ *
+ * The content to be above it need to be passed as children to it. */
+export const ImageBackground: React.FC<ImageBackgroundProps> = ({ opacity, style, ...rest }) => {
   return <RnImageBackground
     {...rest}
     resizeMode='cover'
-    style={[s.container, { opacity }, style]}
-    // source={background}
-    // resizeMode='cover'
-    // style={s.container}
+    style={[s.container, style]}
+    imageStyle={{ opacity }}
   />;
-}
+};
 
 const s = StyleSheet.create({
   container: {
