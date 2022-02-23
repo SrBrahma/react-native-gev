@@ -1,8 +1,10 @@
+import type { DeepPartial } from 'react-hook-form';
 import { createGlobalState } from 'react-hooks-global-state';
 import deepmerge from 'deepmerge';
-import type { TextInputUncontrolledProps } from '../components/Inputs/TextInput/TextInput';
+import type { ButtonPropsTheme } from '../components/Inputs/Button';
+import type { TextInputPropsTheme } from '../components/Inputs/TextInput/TextInput';
 import { TextInputOutline } from '../components/Inputs/TextInput/TextInputOutline';
-import type { ButtonProps } from '.';
+import type { DeepPartialAndExpandable, EmptyObj, Obj } from '../internalUtils/types';
 import type { Fonts } from './fonts';
 import { defaultFonts } from './fonts';
 import { TextInputFormal } from '.';
@@ -10,19 +12,6 @@ import { TextInputFormal } from '.';
 
 // Using interface when possible as it's said to have a better TS performance.
 // It's being an issue since the addition of `props` prop.
-
-
-// https://stackoverflow.com/a/61132308/10247962
-type DeepPartial<T> = T extends object ? {
-  [P in keyof T]?: DeepPartial<T[P]>;
-} : T;
-type DeepPartialAndExpandable<T> = T extends object ? {
-  [P in keyof T]?: DeepPartial<T[P]> & Record<string, any>;
-} : T;
-type Obj = Record<string, any>;
-type EmptyObj = Record<never, never>; // <string, never> would give a {[x: string]: never} in the Theme.
-
-
 
 
 // Some were based on https://callstack.github.io/react-native-paper/theming.html
@@ -91,9 +80,11 @@ type Common = typeof defaultSizes;
 
 
 interface Props {
-  TextInput: Partial<TextInputUncontrolledProps>;
-  Button?: Partial<ButtonProps>;
+  TextInput: TextInputPropsTheme;
+  Button?: ButtonPropsTheme;
 }
+
+
 
 interface Theme {
   colors: Colors;
@@ -154,7 +145,7 @@ type ThemeReturn<T extends Obj = EmptyObj> = Theme & T & {
 
 const { useGlobalState, setGlobalState } = createGlobalState<{useThemeData: ThemeReturn}>({
   useThemeData: createUseThemeData<Theme>({
-    themes: { common: defaultTheme },
+    themes: { light: defaultTheme },
     initialTheme: defaultInitialThemeId,
   }),
 });
@@ -162,7 +153,6 @@ const { useGlobalState, setGlobalState } = createGlobalState<{useThemeData: Them
 
 
 type Themes<T extends Obj = EmptyObj> = {
-  common: Theme;
   light: Theme;
   dark: Theme;
 } & T;
@@ -196,7 +186,6 @@ function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initial
 
   const theme = applyThemeFallbacks(deepmerge.all([
     defaultTheme,
-    themes['common'] ?? {},
     themes[currentTheme] ?? {},
   ])) as Theme & T;
 
@@ -238,7 +227,7 @@ interface CreateThemeRtn<T extends Obj = EmptyObj> {
  * You may also use the given colors in your app by using useTheme() hook.
  *
  * As it uses `react-hooks-global-state`, it doesn't need a context provider. */
-export function createTheme<T extends DeepPartialAndExpandableThemes, U extends Omit<T, 'props'>>(themes: T, opts?: CreateThemeOptions): CreateThemeRtn<U[keyof U]> {
+export function createTheme<T extends DeepPartialAndExpandableThemes>(themes: T, opts?: CreateThemeOptions): CreateThemeRtn<Omit<T, 'props'>[keyof Omit<T, 'props'>]> {
   setGlobalState('useThemeData', createUseThemeData({
     themes: themes as any,
     initialTheme: opts?.initialTheme,

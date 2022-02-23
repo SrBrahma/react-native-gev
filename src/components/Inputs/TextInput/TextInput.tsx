@@ -2,8 +2,9 @@ import type { Ref } from 'react';
 import { useMemo, useState } from 'react';
 import { useController } from 'react-hook-form';
 import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from 'react-native';
+import { propsMerger } from '../../../internalUtils/propsMerger';
+import type { OmitKey } from '../../../internalUtils/types';
 import { useTheme } from '../../../main';
-import { propsMerger } from '../../../utils/internal/propsMerger';
 import type { Control } from '../utils';
 import { isControlled } from '../utils';
 import type { PresetIds, TextInputPreset, Validations } from './presets/presets';
@@ -48,6 +49,9 @@ export interface TextInputUncontrolledProps extends CommonTextInputProps {
   typeProps?: TextInputTypeProps;
   type?: TextInputType;
 }
+
+export interface TextInputPropsTheme extends Partial<OmitKey<TextInputUncontrolledProps, 'inputRef' | 'testID' | 'nativeID' | 'defaultValue'>> {}
+
 function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
   const theme = useTheme();
   const type = props.type ?? theme.props.TextInput.type ?? 'formal';

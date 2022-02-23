@@ -6,8 +6,9 @@ import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colord, extend } from 'colord';
 import namesPlugin from 'colord/plugins/names';
+import { propsMerger } from '../../internalUtils/propsMerger';
+import type { OmitKey } from '../../internalUtils/types';
 import { useTheme } from '../../main/theme';
-import { propsMerger } from '../../utils/internal/propsMerger';
 import { mLoading } from '../Modals/mLoading';
 import { Text } from '../Others/Text';
 
@@ -75,6 +76,7 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   shadowProps?: ShadowProps;
 }
 
+export interface ButtonPropsTheme extends Partial<OmitKey<ButtonProps, 'testID' | 'nativeID' | 'text' | 'children'>> {}
 
 export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<T>): JSX.Element {
   const { colors, fonts, props: themeProps } = useTheme();
