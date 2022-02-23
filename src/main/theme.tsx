@@ -89,7 +89,10 @@ const defaultSizes = {
 type Common = typeof defaultSizes;
 
 
-
+type Props = {
+  TextInput: Partial<TextInputUncontrolledProps>;
+  Button?: Partial<ButtonProps>;
+};
 
 type Theme<T extends Obj = EmptyObj> = T & {
   colors: Colors;
@@ -97,10 +100,7 @@ type Theme<T extends Obj = EmptyObj> = T & {
   /** The fonts for basic texts. */
   fonts: Fonts;
   /** Default props for our components. Easier customization! */
-  props: {
-    TextInput: Partial<TextInputUncontrolledProps>;
-    Button?: Partial<ButtonProps>;
-  };
+  props: Props;
 };
 
 
@@ -222,8 +222,10 @@ export function useTheme<T extends Obj = EmptyObj>(): ThemeReturn<T> {
 
 
 
-/** It doesn't error when writing non-existing props. */
-type DeepPartialAndExpandableThemes<T extends Obj = EmptyObj> = DeepPartialAndExpandable<Themes<T>>;
+/** It doesn't error when writing non-existing props.
+ * It doesn't include the components props, as it was TS heavy and sometimes throw ts errors
+ * (Type instantiation is excessively deep and possibly infinite.ts(2589)) */
+type DeepPartialAndExpandableThemes<T extends Obj = EmptyObj> = Omit<DeepPartialAndExpandable<Themes<T>>, 'props'>;
 
 type CreateThemeOptions = {
   initialTheme?: string;
@@ -237,7 +239,7 @@ type CreateThemeRtn<T extends Obj = EmptyObj> = {
  * You may also use the given colors in your app by using useTheme() hook.
  *
  * As it uses `react-hooks-global-state`, it doesn't need a context provider. */
-export function createTheme<T extends DeepPartialAndExpandableThemes>(themes: T, opts?: CreateThemeOptions): Id<CreateThemeRtn<T[keyof T]>> {
+export function createTheme<T extends DeepPartialAndExpandableThemes>(themes: T & Partial<Props>, opts?: CreateThemeOptions): Id<CreateThemeRtn<T[keyof T]>> {
   setGlobalState('useThemeData', createUseThemeData({
     themes: themes as any,
     initialTheme: opts?.initialTheme,

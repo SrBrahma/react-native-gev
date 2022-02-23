@@ -13,7 +13,7 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
-## 0.16.0~1
+## 0.16.0~2
 * Added `props` prop to theme. Currently `TextInput` and `Button` but more to come. This allow easier customization of the components.
 * Fixed `Snackbar` being empty on fade out animation when `visible={!!text}`.
 
