@@ -8,9 +8,10 @@ import { defaultFonts } from './fonts';
 import { TextInputFormal } from '.';
 // import { useColorScheme } from 'react-native';
 
+// Using interface when possible as it's said to have a better TS performance.
+// It's being an issue since the addition of `props` prop.
 
-/** Prettyfies object type */
-type Id<T> = unknown & { [P in keyof T]: T[P] };
+
 // https://stackoverflow.com/a/61132308/10247962
 type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
@@ -25,7 +26,7 @@ type EmptyObj = Record<never, never>; // <string, never> would give a {[x: strin
 
 
 // Some were based on https://callstack.github.io/react-native-paper/theming.html
-type Colors = {
+interface Colors {
   primary: string;
   // primaryLighter1: in hsl() format, it shall have ~10% more lightness
   // secondary: string;
@@ -71,7 +72,7 @@ type Colors = {
     // TODO defaults to [?]
     neutral: string;
   };
-};
+}
 
 
 const defaultSizes = {
@@ -89,19 +90,19 @@ const defaultSizes = {
 type Common = typeof defaultSizes;
 
 
-type Props = {
+interface Props {
   TextInput: Partial<TextInputUncontrolledProps>;
   Button?: Partial<ButtonProps>;
-};
+}
 
-type Theme<T extends Obj = EmptyObj> = T & {
+interface Theme {
   colors: Colors;
   sizes: Common;
   /** The fonts for basic texts. */
   fonts: Fonts;
   /** Default props for our components. Easier customization! */
   props: Props;
-};
+}
 
 
 /** The colors that defaults to those ones are set in applyThemeFallbacks. */
@@ -141,7 +142,7 @@ const defaultTheme: DeepPartial<Theme> = {
 const defaultInitialThemeId = 'light';
 
 
-type ThemeReturn<T extends Obj = EmptyObj> = Theme<T> & {
+type ThemeReturn<T extends Obj = EmptyObj> = Theme & T & {
   $settings: {
     /** The themes that are available. */
     availableThemes: string[];
@@ -197,7 +198,7 @@ function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initial
     defaultTheme,
     themes['common'] ?? {},
     themes[currentTheme] ?? {},
-  ])) as Theme<T>;
+  ])) as Theme & T;
 
   function changeTheme(themeId: string) {
     setGlobalState('useThemeData', createUseThemeData({ themes, themeId, initialTheme }));
@@ -222,24 +223,22 @@ export function useTheme<T extends Obj = EmptyObj>(): ThemeReturn<T> {
 
 
 
-/** It doesn't error when writing non-existing props.
- * It doesn't include the components props, as it was TS heavy and sometimes throw ts errors
- * (Type instantiation is excessively deep and possibly infinite.ts(2589)) */
-type DeepPartialAndExpandableThemes<T extends Obj = EmptyObj> = Omit<DeepPartialAndExpandable<Themes<T>>, 'props'>;
+/** It doesn't error when writing non-existing props. */
+type DeepPartialAndExpandableThemes<T extends Obj = EmptyObj> = DeepPartialAndExpandable<Themes<T>>;
 
-type CreateThemeOptions = {
+interface CreateThemeOptions {
   initialTheme?: string;
-};
-type CreateThemeRtn<T extends Obj = EmptyObj> = {
+}
+interface CreateThemeRtn<T extends Obj = EmptyObj> {
   useTheme: () => ThemeReturn<T>;
-};
+}
 
 /** Changes the default colors of react-native-gev components.
  *
  * You may also use the given colors in your app by using useTheme() hook.
  *
  * As it uses `react-hooks-global-state`, it doesn't need a context provider. */
-export function createTheme<T extends DeepPartialAndExpandableThemes>(themes: T & Partial<Props>, opts?: CreateThemeOptions): Id<CreateThemeRtn<T[keyof T]>> {
+export function createTheme<T extends DeepPartialAndExpandableThemes, U extends Omit<T, 'props'>>(themes: T, opts?: CreateThemeOptions): CreateThemeRtn<U[keyof U]> {
   setGlobalState('useThemeData', createUseThemeData({
     themes: themes as any,
     initialTheme: opts?.initialTheme,

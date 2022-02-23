@@ -15,7 +15,7 @@ import { TextInputFormal } from './TextInputFormal';
 
 
 /** The TextInput components are given this. */
-export type CommonTextInputProps = Partial<MaskedTextInputProps & {
+export interface CommonTextInputProps extends Partial<MaskedTextInputProps> {
   containerStyle?: StyleProp<ViewStyle>;
   /** User-readable name of this input. */
   label?: string;
@@ -31,7 +31,7 @@ export type CommonTextInputProps = Partial<MaskedTextInputProps & {
   /** Hide char count, that is automatically displayed if maxLength is defined.
    * @default false */
   hideCharacterCount?: boolean;
-}>;
+}
 
 
 

@@ -27,10 +27,10 @@ const iconPadding = 15;
 
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
-// Based on https://reactnativeelements.com/docs/button#type
-export type ButtonType = 'solid' | 'clear' | 'outline'; // TODO
+// Based on https://reactnativeelements.com/docs/button#type, uikitten for filled
+export type ButtonType = 'filled' | 'clear' | 'outline'; // TODO
 
-export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
+export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown> extends PressableProps {
   text: string;
   /** Alias to `text`. */
   // t: string;
@@ -60,7 +60,7 @@ export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
   /** Use it when to stretch inside a row view. */
   stretchRow?: boolean;
   /** If awaitOnPress, will set a fullscreen loading. */
-  onPress: (() => FunRtn);
+  onPress: ((e: GestureResponderEvent) => FunRtn);
   /** Triggered when pressing it while it is disabled. Useful for example to point out the user where the error is in a form. */
   onDisabledPress?: () => void;
   /** @default false */
@@ -73,7 +73,7 @@ export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
   uppercase?: boolean;
   /** react-native-shadow-2's props for the wrapping Shadow component. */
   shadowProps?: ShadowProps;
-} & PressableProps;
+}
 
 
 export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<T>): JSX.Element {
