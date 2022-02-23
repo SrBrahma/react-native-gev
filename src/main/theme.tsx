@@ -186,6 +186,7 @@ function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initial
 
   const theme = applyThemeFallbacks(deepmerge.all([
     defaultTheme,
+    initialTheme ? (themes[initialTheme] ?? {}) : {},
     themes[currentTheme] ?? {},
   ])) as Theme & T;
 
