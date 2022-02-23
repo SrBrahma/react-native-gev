@@ -3,11 +3,11 @@ import { createGlobalState } from 'react-hooks-global-state';
 import deepmerge from 'deepmerge';
 import type { ButtonPropsTheme } from '../components/Inputs/Button';
 import type { TextInputPropsTheme } from '../components/Inputs/TextInput/TextInput';
+import { TextInputFormal } from '../components/Inputs/TextInput/TextInputFormal';
 import { TextInputOutline } from '../components/Inputs/TextInput/TextInputOutline';
 import type { DeepPartialAndExpandable, EmptyObj, Obj } from '../internalUtils/types';
 import type { Fonts } from './fonts';
 import { defaultFonts } from './fonts';
-import { TextInputFormal } from '.';
 // import { useColorScheme } from 'react-native';
 
 // Using interface when possible as it's said to have a better TS performance.
