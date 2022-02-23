@@ -117,7 +117,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
 
   // Mask
   mask: pattern,
-  type = 'custom',
+  maskType = 'custom',
   maxLength: maxLengthProp,
   options, // No default so it won't create a new obj each render
   selectionColor: selectionColorProp,
@@ -148,13 +148,13 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
 
 
   const getDefaultMaskedValue = useCallback((useValueProp: boolean) => {
-    const defaultValue = (useValueProp ? valueProp : undefined) ?? defaultValueProp ?? (type === 'currency' ? '0' : '');
-    return pattern ? mask(defaultValue, pattern, type, options) : defaultValue;
-  }, [defaultValueProp, options, pattern, type, valueProp]);
+    const defaultValue = (useValueProp ? valueProp : undefined) ?? defaultValueProp ?? (maskType === 'currency' ? '0' : '');
+    return pattern ? mask(defaultValue, pattern, maskType, options) : defaultValue;
+  }, [defaultValueProp, options, pattern, maskType, valueProp]);
   const getDefaultUnmaskedValue = useCallback((useValueProp: boolean) => {
-    const defaultValue = (useValueProp ? valueProp : undefined) ?? defaultValueProp ?? (type === 'currency' ? '0' : '');
+    const defaultValue = (useValueProp ? valueProp : undefined) ?? defaultValueProp ?? (maskType === 'currency' ? '0' : '');
     return defaultValue;
-  }, [defaultValueProp, type, valueProp]);
+  }, [defaultValueProp, maskType, valueProp]);
 
   /** If not using mask, this equals the input value. */
   const [maskedValue, setMaskedValue] = useState(() => getDefaultMaskedValue(true));
@@ -167,12 +167,12 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
       setMaskedValue(inputValue);
       setUnmaskedValue(inputValue);
     } else {
-      const newUnMaskedValue = mayBeMasked ? unMask(inputValue, type) : inputValue;
-      const newMaskedValue = mask(newUnMaskedValue, pattern, type, options);
+      const newUnMaskedValue = mayBeMasked ? unMask(inputValue, maskType) : inputValue;
+      const newMaskedValue = mask(newUnMaskedValue, pattern, maskType, options);
       setMaskedValue(newMaskedValue);
       setUnmaskedValue(newUnMaskedValue);
     }
-  }, [options, pattern, type]);
+  }, [options, pattern, maskType]);
 
   /** Callbacks on changes */
   useEffect(() => { onChangeTextProp?.(maskedValue, unMaskedValue); }, [maskedValue, onChangeTextProp, unMaskedValue]);

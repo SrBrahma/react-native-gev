@@ -2,65 +2,74 @@ import type { Ref } from 'react';
 import { useState } from 'react';
 import { useController } from 'react-hook-form';
 import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from 'react-native';
+import { useTheme } from '../../../main';
 import type { Control } from '../utils';
 import { isControlled } from '../utils';
-import type { Mask, PresetIds, TextInputPreset, Validations } from './presets/presets';
+import type { PresetIds, TextInputPreset, Validations } from './presets/presets';
 import { getPreset } from './presets/presets';
 import type { MaskedTextInputProps } from './MaskedTextInput';
 import { TextInputFormal } from './TextInputFormal';
-import { TextInputOutline } from './TextInputOutline';
 
 
 
 
-/** The TextInput custom components have this. */
+/** The TextInput components are given this. */
 export type CommonTextInputProps = Partial<MaskedTextInputProps & {
+  containerStyle?: StyleProp<ViewStyle>;
   /** User-readable name of this input. */
   label?: string;
+  /** Label's style */
+  labelStyle?: StyleProp<TextStyle>;
   error?: string;
-  containerStyle?: StyleProp<ViewStyle>;
   errorStyle?: StyleProp<TextStyle>;
   /** As our TextInput may have other refs in the future and ref forwarding is bad when having generics components,
    * the TextInput ref is used with this prop. */
   inputRef?: Ref<RnTextInput>;
   leftText?: string;
+  rightComponent?: JSX.Element;
+  /** Hide char count, that is automatically displayed if maxLength is defined.
+   * @default false */
+  hideCharacterCount?: boolean;
 }>;
 
 
 
-type Kind = 'formal' | 'outline';
+export type TextInputType = 'formal' | 'outline';
 
+type TextInputTypeProps = Record<TextInputType, Partial<Omit<TextInputUncontrolledProps, 'typeProps'>>>;
 
-export type TextInputUncontrolledProps = CommonTextInputProps & {
-  mask?: Mask;
-  /** If will add a basic margin bottom.
-   * @default true */
-  marginBottom?: boolean;
-  maxLength?: number;
-  /** Char count is shown if maxLength is defined.
-   * @default false */
-  hideCharacterCount?: boolean;
-  error?: string;
+export interface TextInputUncontrolledProps extends CommonTextInputProps {
   /** If you want to use a custom component. */
   Component?: (p: CommonTextInputProps) => JSX.Element;
-  kind?: Kind;
-};
+  /** A record to customize the props for the given TextInput type.
+   *
+   * Intended to be used by theme.props. */
+  typeProps?: TextInputTypeProps;
+  type?: TextInputType;
+}
+function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
+  const theme = useTheme();
+  const type = props.type ?? theme.props.TextInput.type ?? 'formal';
 
-function TextInputUncontrolled(p: TextInputUncontrolledProps): JSX.Element {
+  const {
+    Component = TextInputFormal,
+    type: _,
+    ...p
+  } = { ...theme.props.TextInput, ...theme.props.TextInput.typeProps?.[type], ...props };
+
   const commonProps: CommonTextInputProps = {
     numberOfLines: 1,
-    ...p, // defined props will overwrite above but not below
     accessibilityLabel: p.label,
+    ...p,
   };
 
-  return TextInputComponentSelector({ commonProps, Component: p.Component, kind: p.kind });
+  return <Component {...commonProps}/>;
+
 }
-
-
 
 type Id<T extends Control> = (keyof T['_defaultValues']) & string;
 
-export type TextInputControlledProps<T extends Control = Control> = Omit<CommonTextInputProps & {
+export type TextInputControlledProps<T extends Control = Control> = Omit<TextInputUncontrolledProps & {
   control: T;
   /** How you will get it with react-hook-form */
   id: Id<T>;
@@ -70,23 +79,25 @@ export type TextInputControlledProps<T extends Control = Control> = Omit<CommonT
   required?: boolean;
   preset?: PresetIds | TextInputPreset;
   validations?: Validations;
-} & TextInputUncontrolledProps,
-  'defaultValue'>; /** defaultValue unused as we at most will use hook-form defaultValues. It sets the field value. */
+}, 'defaultValue'>; /** defaultValue unused as we at most use hook-form defaultValues. It sets the field value. */
+export function TextInputControlled<T extends Control>(props: TextInputControlledProps<T>): JSX.Element {
+  const theme = useTheme();
+  const type = props.type ?? theme.props.TextInput.type ?? 'formal';
 
-export function TextInputControlled<T extends Control>({
-  id,
-  control,
-  /** @default false */
-  required = false,
-  preset,
-  label: labelProp,
-  idToLabel,
-  Component,
-  onChangeText: onChangeProp,
-  validations: validationsProp,
-  kind,
-  ...p
-}: TextInputControlledProps<T>): JSX.Element {
+  const {
+    id,
+    control,
+    required = false,
+    preset,
+    label: labelProp,
+    idToLabel,
+    Component = TextInputFormal,
+    onChangeText: onChangeProp,
+    validations: validationsProp,
+    type: _,
+    ...p
+  } = { ...theme.props.TextInput, ...theme.props.TextInput.typeProps?.[type], ...props };
+
   if (!id) throw new Error('id prop not set for controlled TextInput!');
 
   const label = labelProp ?? idToLabel?.[id] ?? id;
@@ -142,16 +153,16 @@ export function TextInputControlled<T extends Control>({
     value: unmasked,
     numberOfLines: 1,
     error: p.error ?? (fieldState.error ? String(fieldState.error.message) : undefined),
+    accessibilityLabel: label,
     ...inputProps, // by preset
     ...p, // defined props will overwrite above but not below
     onChangeText,
     onBlur,
     maxLength,
-    mask: typeof mask === 'function' ? mask({ unmasked }) : mask,
-    accessibilityLabel: label,
+    mask,
   };
 
-  return TextInputComponentSelector({ commonProps, Component, kind });
+  return <Component {...commonProps}/>;
 }
 
 
@@ -162,29 +173,8 @@ export type TextInputProps<T extends Control = Control> = TextInputUncontrolledP
  *
  * `accessibilityLabel` defaults to `label`, as it's useful for unit tests.
  */
-export function TextInput<T extends Control = Control>({
-  kind = 'formal',
-  ...p
-}: TextInputProps<T>): JSX.Element {
+export function TextInput<T extends Control = Control>(p: TextInputProps<T>): JSX.Element {
   return isControlled(p)
-    ? <TextInputControlled {...p as TextInputControlledProps<T>} kind={kind}/>
-    : <TextInputUncontrolled {...p} kind={kind}/>;
-}
-
-
-function TextInputComponentSelector({
-  Component, kind, commonProps,
-}: {
-  Component?: (p: CommonTextInputProps) => JSX.Element;
-  kind?: Kind;
-  commonProps: CommonTextInputProps;
-}) {
-  if (Component)
-    return <Component {...commonProps}/>;
-
-  switch (kind) {
-    case 'outline': return <TextInputOutline placeholder={commonProps.label} {...commonProps}/>;
-    case 'formal':
-    default: return <TextInputFormal {...commonProps}/>;
-  }
+    ? <TextInputControlled {...p}/>
+    : <TextInputUncontrolled {...p}/>;
 }

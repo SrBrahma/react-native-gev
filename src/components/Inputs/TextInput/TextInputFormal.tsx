@@ -6,21 +6,26 @@ import { MaskedTextInput } from './MaskedTextInput';
 import type { CommonTextInputProps } from './TextInput';
 
 
-
+/** Basic. Label on top, placeholder, error on bottom. */
 export const TextInputFormal = forwardRef<TextInput, CommonTextInputProps>(({
-  label, error, containerStyle, errorStyle, inputRef, ...inputProps
+  label, error, containerStyle, errorStyle, inputRef,
+  labelStyle, rightComponent,
+  ...inputProps
 }, ref) => {
   const theme = useTheme();
   return (
     <View style={containerStyle}>
-      {label && <Text t={label} s={[s.label, theme.fonts.medium]}/>}
-      <MaskedTextInput
-        ref={ref}
-        placeholderTextColor={theme.colors.placeholder}
-        selectionColor={theme.colors.primary}
-        {...inputProps}
-        style={[s.textInput, !!error && { borderColor: theme.colors.error }, inputProps.style]}
-      />
+      {label && <Text t={label} s={[s.label, theme.fonts.medium, labelStyle]}/>}
+      <View style={s.row}>
+        <MaskedTextInput
+          ref={ref}
+          placeholderTextColor={theme.colors.placeholder}
+          selectionColor={theme.colors.primary}
+          {...inputProps}
+          style={[s.textInput, !!error && { borderColor: theme.colors.error }, inputProps.style]}
+        />
+        {rightComponent}
+      </View>
       <Text t={error ?? ''} s={[s.errorMessage, { color: theme.colors.error }, theme.fonts.medium, errorStyle]}/>
     </View>
   );
@@ -31,6 +36,10 @@ const s = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 4,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   textInput: {
     flex: 1,

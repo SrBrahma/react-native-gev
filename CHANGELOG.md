@@ -13,6 +13,10 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.16.0
+* Added `props` prop to theme. Currently `TextInput` and `Button` but more to come. This allow easier customization of the components.
+* Fixed `Snackbar` being empty on fade out animation when `visible={!!text}`.
+
 ## 0.15.0~1
 * Added `Button` automatic ripple color based on bg brightness.
 * Fixed `Button` ripple overflow.

@@ -1,7 +1,11 @@
 import { createGlobalState } from 'react-hooks-global-state';
 import deepmerge from 'deepmerge';
+import type { TextInputUncontrolledProps } from '../components/Inputs/TextInput/TextInput';
+import { TextInputOutline } from '../components/Inputs/TextInput/TextInputOutline';
+import type { ButtonProps } from '.';
 import type { Fonts } from './fonts';
 import { defaultFonts } from './fonts';
+import { TextInputFormal } from '.';
 // import { useColorScheme } from 'react-native';
 
 
@@ -92,7 +96,11 @@ type Theme<T extends Obj = EmptyObj> = T & {
   sizes: Common;
   /** The fonts for basic texts. */
   fonts: Fonts;
-  // presets: Presets;
+  /** Default props for our components. Easier customization! */
+  props: {
+    TextInput: Partial<TextInputUncontrolledProps>;
+    Button?: Partial<ButtonProps>;
+  };
 };
 
 
@@ -116,6 +124,19 @@ const defaultTheme: DeepPartial<Theme> = {
       textOnError: '#fff',
     },
   },
+  props: {
+    TextInput: {
+      type: 'formal',
+      typeProps: {
+        formal: {
+          Component: TextInputFormal,
+        },
+        outline: {
+          Component: TextInputOutline,
+        },
+      },
+    },
+  },
 };
 const defaultInitialThemeId = 'light';
 
@@ -131,7 +152,7 @@ type ThemeReturn<T extends Obj = EmptyObj> = Theme<T> & {
 };
 
 const { useGlobalState, setGlobalState } = createGlobalState<{useThemeData: ThemeReturn}>({
-  useThemeData: createUseThemeData({
+  useThemeData: createUseThemeData<Theme>({
     themes: { common: defaultTheme },
     initialTheme: defaultInitialThemeId,
   }),
@@ -176,7 +197,7 @@ function createUseThemeData<T extends Obj = EmptyObj>({ themes, themeId, initial
     defaultTheme,
     themes['common'] ?? {},
     themes[currentTheme] ?? {},
-  ]) as Theme<T>) as Theme<T>;
+  ])) as Theme<T>;
 
   function changeTheme(themeId: string) {
     setGlobalState('useThemeData', createUseThemeData({ themes, themeId, initialTheme }));

@@ -1,5 +1,5 @@
 // Modified version of https://github.com/callstack/react-native-paper/blob/main/src/components/Snackbar.tsx
-import * as React from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type {
   PressableProps,
   StyleProp,
@@ -20,12 +20,15 @@ import { Text } from './Text';
 
 export type SnackbarTypes = 'neutral' | 'error';
 
+type Text = React.ReactNode;
+
 export type SnackbarProps = {
   distance?: number;
   /** @default 'bottom' */
   position?: 'top' | 'bottom';
-  /** Whether the Snackbar is currently visible. */
-  visible: boolean;
+  /** Whether the Snackbar is currently visible.
+   * @default !!text */
+  visible?: boolean;
   /** What is the purpose of this snackbar. It defines the colors and in the future the left icons.
    * @default neutral */
   type?: SnackbarTypes;
@@ -43,8 +46,7 @@ export type SnackbarProps = {
    * It has a false as argument so you can `onDismiss={setSnackbarVisible}`. */
   onDismiss: (v: false) => void;
   /** Text content of the Snackbar. */
-  text: React.ReactNode;
-  // children: React.ReactNode
+  text: Text;
   /** Style for the wrapper of the snackbar. */
   wrapperStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
@@ -57,26 +59,36 @@ const DURATION_LONG = 7000;
 
 export function Snackbar({
   distance = 60,
-  visible,
   type = 'error',
   position = 'bottom',
   // action,
   duration = DURATION_MEDIUM,
   onDismiss,
-  text,
+  text: textProp,
+  visible = !!textProp,
   wrapperStyle,
   contentStyle,
 }: SnackbarProps): JSX.Element | null {
-  const { current: opacity } = React.useRef<Animated.Value>(new Animated.Value(0.0));
-  const [hidden, setHidden] = React.useState<boolean>(!visible);
-  const hideTimeout = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const { current: opacity } = useRef<Animated.Value>(new Animated.Value(0.0));
+  const [hidden, setHidden] = useState<boolean>(!visible);
+  const hideTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
   const scale = 1; // used theme.animation;
 
-  React.useEffect(() => {
+  /** This is useful if the user used visible={!!text}. Being so, when the onDismiss is called, the text would
+   * be cleared and we would have on the fade animation an empty snackbar.
+   */
+  const lastTextWhenWasVisible = useRef<Text | null>(null);
+  useEffect(() => {
+    if (visible)
+      lastTextWhenWasVisible.current = textProp;
+  }, [textProp, visible]);
+  const text = visible ? textProp : lastTextWhenWasVisible;
+
+  useEffect(() => {
     return () => { if (hideTimeout.current) clearTimeout(hideTimeout.current); };
   }, []);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (visible) { // show
       if (hideTimeout.current) clearTimeout(hideTimeout.current);
       setHidden(false);

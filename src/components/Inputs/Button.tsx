@@ -26,6 +26,8 @@ const iconPadding = 15;
 
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
+// Based on https://reactnativeelements.com/docs/button#type
+export type ButtonType = 'solid' | 'clear' | 'outline'; // TODO
 
 export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
   text: string;
@@ -73,28 +75,33 @@ export type ButtonProps<FunRtn extends void | any | Promise<any> = unknown> = {
 } & PressableProps;
 
 
-export function Button<T extends(void | any | Promise<any>)>({
-  marginTop: marginTopArg = false,
-  leftIcon: leftIconProp,
-  onPress: onPressProp,
-  awaitOnPress = true,
-  hasShadow = false,
-  disabled, onDisabledPress,
-  stretchRow,
-  stretch = stretchRow,
-  iconContainerStyle,
-  text: textProp,
-  textStyle,
-  invert,
-  uppercase,
-  style: styleProp,
-  shadowProps,
-  ...props
-}: ButtonProps<T>): JSX.Element {
+export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<T>): JSX.Element {
+  const { colors, fonts, props: themeProps } = useTheme();
+
+  // ts strange error on stretch = strechRow if not doing this here separatedly
+  const mergedProps = { ...themeProps.Button, ...props };
+
+  const {
+    marginTop: marginTopArg = false,
+    leftIcon: leftIconProp,
+    onPress: onPressProp,
+    awaitOnPress = true,
+    hasShadow = false,
+    disabled, onDisabledPress,
+    stretchRow,
+    stretch = stretchRow,
+    iconContainerStyle,
+    text: textProp,
+    textStyle,
+    invert,
+    uppercase,
+    style: styleProp,
+    shadowProps,
+    ...p
+  } = mergedProps;
 
   const text = uppercase ? textProp.toLocaleUpperCase() : textProp;
   const style = StyleSheet.flatten<ViewStyle>(styleProp || {});
-  const { colors, fonts } = useTheme();
 
   const colorDefaultIsPrimary = invert ? colors._button.text : colors._button.action;
   const colorDefaultIsSecondary = invert ? colors._button.action : colors._button.text;
@@ -147,7 +154,7 @@ export function Button<T extends(void | any | Promise<any>)>({
       startColor='#0001'
       {...!hasShadow && { distance: 0, paintInside: false }}
       {...shadowProps}
-      containerViewStyle={[s.shadowContainer, { marginTop }, stretchRow && s.shadowContainerStretchRow, props.containerStyle, shadowProps?.containerViewStyle]}
+      containerViewStyle={[s.shadowContainer, { marginTop }, stretchRow && s.shadowContainerStretchRow, p.containerStyle, shadowProps?.containerViewStyle]}
       viewStyle={[
         s.shadowView,
         { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius },
@@ -157,7 +164,7 @@ export function Button<T extends(void | any | Promise<any>)>({
       <Pressable
         android_ripple={{ color: rippleColor }}
         onPress={onPress}
-        {...props} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
+        {...p} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
         style={[
           s.pressable,
           stretch && s.pressableStretch,

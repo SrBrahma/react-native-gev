@@ -3,13 +3,13 @@ import type { TextInputProps as RnTextInputProps } from 'react-native';
 import { cpf } from 'cpf-cnpj-validator';
 import type { ZodSchema } from 'zod';
 import { z } from 'zod';
+import type { Mask } from '../MaskedTextInput';
 
 
 
 export type Validations = Record<string, Validate<any>>;
 
-/** May be a function, where the param is the current value and it must return its mask. */
-export type Mask = string | ((p: {unmasked: string}) => string);
+
 
 
 // To be reused inside presets
@@ -62,18 +62,18 @@ export type TextInputPreset = {
   logicalToUnmasked?: (p: {logical: any}) => string;
 };
 const presets: Record<PresetIds, TextInputPreset> = {
-  'name': {
+  name: {
     inputProps: {
       textContentType: 'name',
       autoCompleteType: 'name', // Beware that in RN ~ >0.66 it's renamed to autoComplete. We're still in .64 in Expo.
     },
   },
-  'password': {
+  password: {
     inputProps: {
       secureTextEntry: true,
     },
   },
-  'email': {
+  email: {
     inputProps: {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
