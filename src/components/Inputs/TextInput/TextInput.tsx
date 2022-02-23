@@ -1,8 +1,9 @@
 import type { Ref } from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useController } from 'react-hook-form';
 import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from 'react-native';
 import { useTheme } from '../../../main';
+import { propsMerger } from '../../../utils/internal/propsMerger';
 import type { Control } from '../utils';
 import { isControlled } from '../utils';
 import type { PresetIds, TextInputPreset, Validations } from './presets/presets';
@@ -55,7 +56,10 @@ function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
     Component = TextInputFormal,
     type: _,
     ...p
-  } = { ...theme.props.TextInput, ...theme.props.TextInput.typeProps?.[type], ...props };
+  } = useMemo(() => propsMerger({
+    props: [theme.props.TextInput, theme.props.TextInput.typeProps?.[type], props],
+    stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle'],
+  }), [props, theme.props.TextInput, type]);
 
   const commonProps: CommonTextInputProps = {
     numberOfLines: 1,
@@ -96,7 +100,10 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
     validations: validationsProp,
     type: _,
     ...p
-  } = { ...theme.props.TextInput, ...theme.props.TextInput.typeProps?.[type], ...props };
+  } = useMemo(() => propsMerger<TextInputControlledProps>({
+    props: [theme.props.TextInput, theme.props.TextInput.typeProps?.[type], props],
+    stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle'],
+  }), [props, theme.props.TextInput, type]);
 
   if (!id) throw new Error('id prop not set for controlled TextInput!');
 

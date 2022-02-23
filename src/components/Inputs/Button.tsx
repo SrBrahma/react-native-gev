@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import type { GestureResponderEvent, PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
 import type { ShadowProps } from 'react-native-shadow-2';
@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colord, extend } from 'colord';
 import namesPlugin from 'colord/plugins/names';
 import { useTheme } from '../../main/theme';
+import { propsMerger } from '../../utils/internal/propsMerger';
 import { mLoading } from '../Modals/mLoading';
 import { Text } from '../Others/Text';
 
@@ -79,7 +80,10 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   const { colors, fonts, props: themeProps } = useTheme();
 
   // ts strange error on stretch = strechRow if not doing this here separatedly
-  const mergedProps = { ...themeProps.Button, ...props };
+  const mergedProps = useMemo(() => propsMerger<ButtonProps>({
+    props: [themeProps.Button, props],
+    stylesKeys: ['style', 'textStyle', 'iconContainerStyle', 'containerStyle'],
+  }), [props, themeProps.Button]);
 
   const {
     marginTop: marginTopArg = false,
