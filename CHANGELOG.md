@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.17.1
+* Fixed PageScrollView theme's background color overwriting user viewStyle.backgroundColor.
+
 ## 0.17.0
 * Renamed theme's `props` to `defaultProps`.
 * Each component `defaultProps` can now be a function, that will be run as a hook.
