@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.18.0
+* Added `Row` component
+
 ## 0.17.5~6
 * Fixed snackbar text
 
