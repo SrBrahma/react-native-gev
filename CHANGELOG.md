@@ -13,6 +13,10 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.17.0
+* Renamed theme's `props` to `defaultProps`.
+* Each component `defaultProps` can now be a function, that will be run as a hook.
+
 ## 0.16.0~6
 * Added `props` prop to theme. Currently `TextInput` and `Button` but more to come. This allow easier customization of the components.
 * Fixed `Snackbar` being empty on fade out animation when `visible={!!text}`.

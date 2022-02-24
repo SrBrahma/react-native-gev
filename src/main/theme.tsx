@@ -79,9 +79,9 @@ const defaultSizes = {
 type Common = typeof defaultSizes;
 
 
-interface Props {
+interface DefaultProps {
   TextInput: TextInputPropsTheme;
-  Button?: ButtonPropsTheme;
+  Button: ButtonPropsTheme;
 }
 
 
@@ -91,8 +91,16 @@ interface Theme {
   sizes: Common;
   /** The fonts for basic texts. */
   fonts: Fonts;
-  /** Default props for our components. Easier customization! */
-  props: Props;
+  /** Default props for our components. Easier customization!
+   *
+   * The styles are merged.
+   *
+   * It may either be the component props or a function that returns it.
+   *
+   * If it's a function, it's run like a React hook, so you may useTheme().
+   *
+   * Wrapping the function's object-props return in a useMemo is recommended for a better performance. */
+  defaultProps: DefaultProps;
 }
 
 
@@ -116,7 +124,7 @@ const defaultTheme: DeepPartial<Theme> = {
       textOnError: '#fff',
     },
   },
-  props: {
+  defaultProps: {
     TextInput: {
       type: 'formal',
       typeProps: {

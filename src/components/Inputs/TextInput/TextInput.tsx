@@ -2,7 +2,8 @@ import type { Ref } from 'react';
 import { useMemo, useState } from 'react';
 import { useController } from 'react-hook-form';
 import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from 'react-native';
-import { propsMerger } from '../../../internalUtils/propsMerger';
+import type { MayBeFunction } from '../../../internalUtils/defaultProps';
+import { propsMerger, useGetDefaultProps } from '../../../internalUtils/defaultProps';
 import type { OmitKey } from '../../../internalUtils/types';
 import { useTheme } from '../../../main';
 import type { Control } from '../utils';
@@ -50,20 +51,22 @@ export interface TextInputUncontrolledProps extends CommonTextInputProps {
   type?: TextInputType;
 }
 
-export interface TextInputPropsTheme extends Partial<OmitKey<TextInputUncontrolledProps, 'inputRef' | 'testID' | 'nativeID' | 'defaultValue'>> {}
+/** If a function, it's run as a React Hook. */
+export type TextInputPropsTheme = MayBeFunction<Partial<OmitKey<TextInputUncontrolledProps, 'inputRef' | 'testID' | 'nativeID' | 'defaultValue'>>>;
 
 function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
   const theme = useTheme();
-  const type = props.type ?? theme.props.TextInput.type ?? 'formal';
+  const defaultProps = useGetDefaultProps(theme.defaultProps.TextInput);
+  const type = props.type ?? defaultProps.type ?? 'formal';
 
   const {
     Component = TextInputFormal,
     type: _,
     ...p
   } = useMemo(() => propsMerger({
-    props: [theme.props.TextInput, theme.props.TextInput.typeProps?.[type], props],
+    props: [defaultProps, defaultProps.typeProps?.[type], props],
     stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle'],
-  }), [props, theme.props.TextInput, type]);
+  }), [props, defaultProps, type]);
 
   const commonProps: CommonTextInputProps = {
     numberOfLines: 1,
@@ -90,7 +93,9 @@ export type TextInputControlledProps<T extends Control = Control> = Omit<TextInp
 }, 'defaultValue'>; /** defaultValue unused as we at most use hook-form defaultValues. It sets the field value. */
 export function TextInputControlled<T extends Control>(props: TextInputControlledProps<T>): JSX.Element {
   const theme = useTheme();
-  const type = props.type ?? theme.props.TextInput.type ?? 'formal';
+  const defaultProps = useGetDefaultProps(theme.defaultProps.TextInput);
+
+  const type = props.type ?? defaultProps.type ?? 'formal';
 
   const {
     id,
@@ -105,9 +110,9 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
     type: _,
     ...p
   } = useMemo(() => propsMerger<TextInputControlledProps>({
-    props: [theme.props.TextInput, theme.props.TextInput.typeProps?.[type], props],
+    props: [defaultProps, defaultProps.typeProps?.[type], props],
     stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle'],
-  }), [props, theme.props.TextInput, type]);
+  }), [props, defaultProps, type]);
 
   if (!id) throw new Error('id prop not set for controlled TextInput!');
 
