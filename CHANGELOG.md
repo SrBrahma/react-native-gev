@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.19.0
+* Added `JustifyContent` props to `Row`
+
 ## 0.18.0
 * Added `Row` component
 
