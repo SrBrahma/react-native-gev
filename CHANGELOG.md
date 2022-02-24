@@ -13,6 +13,8 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.17.5
+* Fixed snackbar text
 
 ## 0.17.4
 * Added View wrapping TextInputFormal rightComponent
