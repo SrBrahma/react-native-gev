@@ -18,7 +18,10 @@ import { TextInputFormal } from './TextInputFormal';
 
 /** The TextInput components are given this. */
 export interface CommonTextInputProps extends Partial<MaskedTextInputProps> {
+  /** The style of the view that contains everything. */
   containerStyle?: StyleProp<ViewStyle>;
+  /** The style of the view that contains the TextInput and rightComponent. Set here the color and radius! */
+  contentStyle?: StyleProp<ViewStyle>;
   /** User-readable name of this input. */
   label?: string;
   /** Label's style */
@@ -65,7 +68,7 @@ function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
     ...p
   } = useMemo(() => propsMerger({
     props: [defaultProps, defaultProps.typeProps?.[type], props],
-    stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle'],
+    stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle', 'contentStyle'],
   }), [props, defaultProps, type]);
 
   const commonProps: CommonTextInputProps = {
@@ -75,7 +78,6 @@ function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
   };
 
   return <Component {...commonProps}/>;
-
 }
 
 type Id<T extends Control> = (keyof T['_defaultValues']) & string;
@@ -111,7 +113,7 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
     ...p
   } = useMemo(() => propsMerger<TextInputControlledProps>({
     props: [defaultProps, defaultProps.typeProps?.[type], props],
-    stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle'],
+    stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle', 'contentStyle'],
   }), [props, defaultProps, type]);
 
   if (!id) throw new Error('id prop not set for controlled TextInput!');

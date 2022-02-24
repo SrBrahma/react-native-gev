@@ -8,7 +8,7 @@ import type { CommonTextInputProps } from './TextInput';
 
 /** Basic. Label on top, placeholder, error on bottom. */
 export const TextInputFormal = forwardRef<TextInput, CommonTextInputProps>(({
-  label, error, containerStyle, errorStyle, inputRef,
+  label, error, containerStyle, contentStyle, errorStyle, inputRef,
   labelStyle, rightComponent,
   ...inputProps
 }, ref) => {
@@ -16,7 +16,7 @@ export const TextInputFormal = forwardRef<TextInput, CommonTextInputProps>(({
   return (
     <View style={containerStyle}>
       {label && <Text t={label} s={[s.label, theme.fonts.medium, labelStyle]}/>}
-      <View style={s.row}>
+      <View style={[s.row, contentStyle]}>
         <MaskedTextInput
           ref={ref}
           placeholderTextColor={theme.colors.placeholder}

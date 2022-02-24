@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.17.2
+* Added `contentStyle` to TextInput.
+
 ## 0.17.1
 * Fixed PageScrollView theme's background color overwriting user viewStyle.backgroundColor.
 
