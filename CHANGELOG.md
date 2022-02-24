@@ -13,7 +13,7 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
-## 0.17.5
+## 0.17.5~6
 * Fixed snackbar text
 
 ## 0.17.4

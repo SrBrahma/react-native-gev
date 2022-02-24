@@ -82,7 +82,7 @@ export function Snackbar({
     if (visible)
       lastTextWhenWasVisible.current = textProp;
   }, [textProp, visible]);
-  const text = visible ? textProp : lastTextWhenWasVisible.current;
+  const text = (visible ? textProp : lastTextWhenWasVisible.current) || '';
 
   useEffect(() => {
     return () => { if (hideTimeout.current) clearTimeout(hideTimeout.current); };
