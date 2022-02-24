@@ -14,8 +14,12 @@
 Changelog won't be updated frequently at the current dev stage.
 
 
+## 0.17.4
+* Added View wrapping TextInputFormal rightComponent
+* Fixed default TextInputFormal `contentStyle` not working
+
 ## 0.17.3
-* Moved some TextInput's styles of `style` to `contentStyle`
+* Moved some TextInputFormal's styles of `style` to `contentStyle`
 
 ## 0.17.2
 * Added `contentStyle` to TextInput.
