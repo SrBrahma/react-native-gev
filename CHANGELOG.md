@@ -13,6 +13,10 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+
+## 0.17.3
+* Moved some TextInput's styles of `style` to `contentStyle`
+
 ## 0.17.2
 * Added `contentStyle` to TextInput.
 

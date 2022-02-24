@@ -16,13 +16,13 @@ export const TextInputFormal = forwardRef<TextInput, CommonTextInputProps>(({
   return (
     <View style={containerStyle}>
       {label && <Text t={label} s={[s.label, theme.fonts.medium, labelStyle]}/>}
-      <View style={[s.row, contentStyle]}>
+      <View style={[s.row, !!error && { borderColor: theme.colors.error }, contentStyle]}>
         <MaskedTextInput
           ref={ref}
           placeholderTextColor={theme.colors.placeholder}
           selectionColor={theme.colors.primary}
           {...inputProps}
-          style={[s.textInput, !!error && { borderColor: theme.colors.error }, inputProps.style]}
+          style={[s.textInput, inputProps.style]}
         />
         {rightComponent}
       </View>
@@ -41,14 +41,16 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  textInput: {
-    flex: 1,
-    borderRadius: 1.5,
-    fontSize: 18,
+  content: {
     borderColor: '#bbb',
-    paddingVertical: 4,
     paddingHorizontal: 8,
     borderWidth: 1,
+    borderRadius: 1.5,
+  },
+  textInput: {
+    flex: 1,
+    paddingVertical: 4,
+    fontSize: 18,
   },
   errorMessage: {
     fontSize: 13,
