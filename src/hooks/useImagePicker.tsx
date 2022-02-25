@@ -3,21 +3,37 @@ import { Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 
+/** https://stackoverflow.com/a/18650249/10247962
+ * https://stackoverflow.com/a/33448478/10247962 */
+function blobToBase64(blob: any): Promise<any> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
 // https://docs.expo.dev/versions/latest/sdk/imagepicker/?redirected
 
-export function useImagePicker({ ratio, resetOnUpload = true }: {
+type UseImagePickerProps = {
   ratio: [width: number, height: number];
   /** If will resetImage on successful upload. Useful for disabling upload button and cleaning dirtiness.
    * @default true */
   resetOnUpload?: boolean;
-}): {
+};
+type UseImagePickerReturn = {
   pickImage: () => void;
   imageUri: string | null;
-  uploadImage: (fun: (data: any) => PromiseLike<any>) => Promise<any>;
+  uploadImage: (fun: (data: any) => PromiseLike<any>, opts?: {
+    /** @default 'blob' */
+    mode: 'blob' | 'base64';
+  }) => Promise<any>;
   pickedImage: boolean;
   /** Reset the imageUri (and pickedImaged). Automatically called if resetOnUpload. */
   resetImage: () => void;
-  } {
+};
+
+export function useImagePicker({ ratio, resetOnUpload = true }: UseImagePickerProps): UseImagePickerReturn {
   const [imageUri, setImage] = useState<null | string>(null);
 
   async function pickImage() {
@@ -25,7 +41,7 @@ export function useImagePicker({ ratio, resetOnUpload = true }: {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted')
-          alert('Nós precisamos da permissão às suas mídias para escolher uma imagem!'); // TODO i18n
+          Alert.alert('Nós precisamos da permissão às suas mídias para escolher uma imagem!');
       }
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -40,7 +56,9 @@ export function useImagePicker({ ratio, resetOnUpload = true }: {
     }
   }
 
-  async function uploadImage(fun: (data: any) => PromiseLike<any>) {
+  async function uploadImage(fun: (data: any) => PromiseLike<any>, opts?: {
+    mode: 'blob' | 'base64';
+  }) {
     if (!imageUri)
       throw new Error('Image not set!');
 
@@ -58,7 +76,13 @@ export function useImagePicker({ ratio, resetOnUpload = true }: {
       xhr.send(null);
     });
 
-    await fun(blob);
+    if (opts?.mode === 'base64') {
+      const base64 = await blobToBase64(blob);
+      await fun(base64);
+    }
+    else if (opts?.mode === 'blob') {
+      await fun(blob);
+    }
 
     // We're done with the blob, close and release it
     (blob as any).close();
