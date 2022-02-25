@@ -16,7 +16,7 @@ function blobToBase64(blob: any): Promise<any> {
 // https://docs.expo.dev/versions/latest/sdk/imagepicker/?redirected
 
 type UseImagePickerProps = {
-  ratio: [width: number, height: number];
+  ratio?: [width: number, height: number];
   /** If will resetImage on successful upload. Useful for disabling upload button and cleaning dirtiness.
    * @default true */
   resetOnUpload?: boolean;
@@ -33,7 +33,9 @@ type UseImagePickerReturn = {
   resetImage: () => void;
 };
 
-export function useImagePicker({ ratio, resetOnUpload = true }: UseImagePickerProps): UseImagePickerReturn {
+export function useImagePicker(opts: UseImagePickerProps = {}): UseImagePickerReturn {
+  const { ratio, resetOnUpload = true } = opts;
+
   const [imageUri, setImage] = useState<null | string>(null);
 
   async function pickImage() {
