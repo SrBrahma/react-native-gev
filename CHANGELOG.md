@@ -13,6 +13,11 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.23.0
+* Removed `Row`
+* Added `View`, with `row`, `justify`, and other utils props.
+* Added `textProps` to `Button`
+
 ## 0.22.0
 ### useImagePicker
 * Added `base64` mode.

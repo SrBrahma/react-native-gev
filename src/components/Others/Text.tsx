@@ -4,7 +4,7 @@ import { useTheme } from '../../main';
 
 
 
-export type TextProps = {
+export type TextProps = RnTextProps & {
   /** Shortcut prop instead using children to pass the text. */
   text?: React.ReactNode;
   /** Shortcut prop instead using children to pass the text. Alias to text prop. */
@@ -13,7 +13,7 @@ export type TextProps = {
   s?: StyleProp<TextStyle>;
   /** Besides numberOfLines: 1, will ellipsis and shrink the text if going outside the maximum size. */
   singlelineEllipsis?: boolean;
-} & RnTextProps;
+};
 
 export const Text: React.FC<TextProps> = ({
   t, text, children, s: sProp, singlelineEllipsis, style,

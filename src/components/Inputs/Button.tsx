@@ -11,6 +11,7 @@ import { propsMerger, useGetDefaultProps } from '../../internalUtils/defaultProp
 import type { OmitKey } from '../../internalUtils/types';
 import { useTheme } from '../../main/theme';
 import { mLoading } from '../Modals/mLoading';
+import type { TextProps } from '../Others/Text';
 import { Text } from '../Others/Text';
 
 
@@ -74,6 +75,7 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   uppercase?: boolean;
   /** react-native-shadow-2's props for the wrapping Shadow component. */
   shadowProps?: ShadowProps;
+  textProps?: TextProps;
 }
 
 /** If a function, it's run as a React Hook. */
@@ -102,7 +104,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     stretch = stretchRow,
     iconContainerStyle,
     text: textProp, t,
-    textStyle,
+    textStyle, textProps,
     invert,
     uppercase,
     style: styleProp,
@@ -191,8 +193,9 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
           adjustsFontSizeToFit
           textBreakStrategy='simple' // https://stackoverflow.com/a/54750759
           numberOfLines={1}
-          style={[s.text, fonts.bold, leftIcon && s.textWhenIcon, { color: colorDefaultIsSecondary }, textStyle]}
           t={text}
+          {...textProps}
+          style={[s.text, fonts.bold, leftIcon && s.textWhenIcon, { color: colorDefaultIsSecondary }, textStyle, textProps?.style]}
         />
       </Pressable>
     </Shadow>

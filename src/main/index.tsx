@@ -22,7 +22,7 @@ export { mLoading, OnModalLoadingError } from '../components/Modals/mLoading';
 export { ImageBackground, ImageBackgroundProps } from '../components/Views/ImageBackground';
 export { ItemListItemProps, List, ListItem, ListItemProps, ListProps } from '../components/Views/List';
 export { PageScrollView, PageScrollViewProps } from '../components/Views/PageScrollView';
-export { Row, RowProps } from '../components/Views/Row';
+export { View, ViewProps } from '../components/Views/View';
 
 // Others
 export { Badge, BadgeProps } from '../components/Others/Badge';

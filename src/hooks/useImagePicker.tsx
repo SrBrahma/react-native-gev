@@ -16,7 +16,7 @@ function blobToBase64(blob: any): Promise<any> {
 // TODO add just number
 type Ratio = [width: number, height: number];
 
-// https://docs.expo.dev/versions/latest/sdk/imagepicker/?redirected
+// https://docs.expo.dev/versions/latest/sdk/imagepicker
 
 type UseImagePickerProps = {
   ratio?: Ratio;
