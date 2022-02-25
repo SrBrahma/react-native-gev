@@ -13,6 +13,13 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.22.0
+### useImagePicker
+* Added `base64` mode.
+* Renamed `pickedImage` to `isImagePicked`
+* `pickImage` can now upload right after picking the image.
+* `pickImage` can now throw errors instead of alert()'ing.
+
 ## 0.21.1
 * Fixed useImagePicker opts being required
 
