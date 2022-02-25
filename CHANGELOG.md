@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.24.2
+* Removed `aspectRatio: 1` from `Button`'s `iconContainer` default style.
+
 ## 0.24.1
 * Fixed `Button` icon color
 

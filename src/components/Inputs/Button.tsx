@@ -248,7 +248,6 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    aspectRatio: 1,
     alignSelf: 'stretch',
     borderTopLeftRadius: buttonBorderRadius,
     borderBottomLeftRadius: buttonBorderRadius,
