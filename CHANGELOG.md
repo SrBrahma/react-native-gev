@@ -13,6 +13,10 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.24.0
+* Removed `stretch` and `stretchRow` from `Button`
+* Added `shrink` and `row` to `Button`
+
 ## 0.23.0
 * Removed `Row`
 * Added `View`, with `row`, `justify`, and other utils props.

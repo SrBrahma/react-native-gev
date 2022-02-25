@@ -55,12 +55,10 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   /** If should render a fullscreen Loading. Will also alert on error.
    * @default true */
   awaitOnPress?: boolean;
-  /** If should use all horizontal space.
-   *
-   * @default false */
-  stretch?: boolean;
-  /** Use it when to stretch inside a row view. */
-  stretchRow?: boolean;
+  /** If the button instead of using all the available space should use the least amount of space to fit its content. */
+  shrink?: boolean;
+  /** Use this when the button is inside a row view. */
+  row?: boolean;
   /** If awaitOnPress, will set a fullscreen loading. */
   onPress: ((e: GestureResponderEvent) => FunRtn);
   /** Triggered when pressing it while it is disabled. Useful for example to point out the user where the error is in a form. */
@@ -100,8 +98,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     awaitOnPress = true,
     hasShadow = false,
     disabled, onDisabledPress,
-    stretchRow,
-    stretch = stretchRow,
+    shrink, row,
     iconContainerStyle,
     text: textProp, t,
     textStyle, textProps,
@@ -169,7 +166,13 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
       startColor='#0001'
       {...!hasShadow && { distance: 0, paintInside: false }}
       {...shadowProps}
-      containerViewStyle={[s.shadowContainer, { marginTop }, stretchRow && s.shadowContainerStretchRow, p.containerStyle, shadowProps?.containerViewStyle]}
+      containerViewStyle={[
+        row
+          ? (shrink ? s.shadowContainerRowShrink : s.shadowContainerRow)
+          : (shrink ? s.shadowContainerColumnShrink : s.shadowContainerColumn),
+        { marginTop },
+        p.containerStyle, shadowProps?.containerViewStyle,
+      ]}
       viewStyle={[
         s.shadowView,
         { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius },
@@ -182,7 +185,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
         {...p} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
         style={[
           s.pressable,
-          stretch && s.pressableStretch,
+          shrink && s.pressableShrink,
           style,
           { backgroundColor },
         ]}
@@ -206,20 +209,21 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
 export const buttonPaddingHorizontal = 22;
 
 const s = StyleSheet.create({
-  shadowContainer: {
-    flexShrink: 1, // To make adjustsFontSizeToFit work
+  shadowContainerColumn: {
+    alignSelf: 'stretch',
   },
-  shadowContainerStretchRow: {
-    flexGrow: 1, // No row grow without this
+  shadowContainerColumnShrink: {
+    alignSelf: 'flex-start',
+  },
+  shadowContainerRow: {
+    flexGrow: 1,
+  },
+  shadowContainerRowShrink: {
   },
   shadowView: {
     overflow: 'hidden', // Remove ripple overflow.
     flexDirection: 'column',
     alignSelf: 'stretch',
-  },
-  pressableStretch: {
-    alignSelf: 'stretch',
-    flexGrow: 1,
   },
   pressable: {
     ...(Platform.OS === 'web' && { cursor: 'pointer' }),
@@ -229,6 +233,10 @@ const s = StyleSheet.create({
     borderRadius: buttonBorderRadius,
     flexDirection: 'row',
     minHeight: iconSize + (iconPadding * 2),
+    flexGrow: 1,
+  },
+  pressableShrink: {
+    flexGrow: 0,
   },
   iconContainer: {
     flexDirection: 'row',
