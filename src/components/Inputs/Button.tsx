@@ -33,10 +33,9 @@ type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 export type ButtonType = 'filled' | 'clear' | 'outline'; // TODO
 
 export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown> extends PressableProps {
-  text: string;
+  text?: string;
   /** Alias to `text`. */
-  // t: string;
-  /** */
+  t?: string;
   // Removes the function from the pressable style type. It messes the Shadow-roundness-obtaining
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -102,7 +101,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     stretchRow,
     stretch = stretchRow,
     iconContainerStyle,
-    text: textProp,
+    text: textProp, t,
     textStyle,
     invert,
     uppercase,
@@ -111,7 +110,10 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     ...p
   } = mergedProps;
 
-  const text = uppercase ? textProp.toLocaleUpperCase() : textProp;
+  let text = textProp ?? t ?? ' ';
+  if (uppercase)
+    text = text.toLocaleUpperCase();
+
   const style = StyleSheet.flatten<ViewStyle>(styleProp || {});
 
   const colorDefaultIsPrimary = invert ? colors._button.text : colors._button.action;

@@ -13,6 +13,10 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.21.0
+* Added `t` as alias to `text` to `Button`
+* Added `s` as alias to `style` to `Row`
+
 ## 0.20.0
 * Added `base64` option to `useImagePicker`
 

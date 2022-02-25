@@ -1,4 +1,4 @@
-import type { ViewProps } from 'react-native';
+import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 import { View } from 'react-native';
 
 
@@ -6,6 +6,8 @@ import { View } from 'react-native';
 export type RowProps = ViewProps & JustifyContent & {
   /** If shall use 'row-reverse' instead of 'row' */
   reverse?: boolean;
+  /** Alias to `style` */
+  s?: StyleProp<ViewStyle>;
 };
 
 type JustifyContent = {
@@ -43,7 +45,8 @@ function convertJustify(param: JustifyContent): JustifyContentValue {
 
 /** Simply applies `flexDirection: 'row'` or 'row-reverse' to the View's style if `reverse` prop is true. */
 export const Row: React.FC<RowProps> = ({
-  children, reverse, style,
+  children, reverse,
+  style, s,
   center, flexStart, flexEnd, spaceAround, spaceBetween, spaceEvenly,
   ...rest
 }) => {
@@ -51,7 +54,7 @@ export const Row: React.FC<RowProps> = ({
   return (
     <View
       {...rest}
-      style={[{ flexDirection: reverse ? 'row-reverse' : 'row', justifyContent }, style]}
+      style={[{ flexDirection: reverse ? 'row-reverse' : 'row', justifyContent }, s, style]}
     >
       {children}
     </View>
