@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.24.1
+* Fixed `Button` icon color
+
 ## 0.24.0
 * Removed `stretch` and `stretchRow` from `Button`
 * Added `shrink` and `row` to `Button`

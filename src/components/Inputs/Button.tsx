@@ -125,10 +125,16 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   /** Disables pressing while awaiting. */
   const isAwaitingPress = useRef(false);
 
+  const textColor = StyleSheet.flatten([
+    { color: colorDefaultIsSecondary },
+    textStyle,
+    textProps?.style,
+  ]).color;
+
   const leftIcon = leftIconProp && (
     <View style={[s.iconContainer, iconContainerStyle]}>{
       typeof leftIconProp === 'string'
-        ? <MaterialCommunityIcons name={leftIconProp} style={[s.icon, { color: colorDefaultIsSecondary }]}/>
+        ? <MaterialCommunityIcons name={leftIconProp} style={[s.icon, { color: textColor }]}/>
         : leftIconProp
     }</View>
   );
@@ -198,7 +204,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
           numberOfLines={1}
           t={text}
           {...textProps}
-          style={[s.text, fonts.bold, leftIcon && s.textWhenIcon, { color: colorDefaultIsSecondary }, textStyle, textProps?.style]}
+          style={[s.text, fonts.bold, leftIcon && s.textWhenIcon, { color: textColor }, textStyle, textProps?.style]}
         />
       </Pressable>
     </Shadow>
