@@ -13,7 +13,7 @@ export type PressableProps = RnPressableProps & ViewProps;
  * * Has all of our `View` properties.
  * * Automatic ripple color based on style.backgroundColor. */
 export const Pressable: React.FC<PressableProps> = ({
-  children, reverse,
+  reverse,
   style, s, row,
   justify, align, center,
   ...rest

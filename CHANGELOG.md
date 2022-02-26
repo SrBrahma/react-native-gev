@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.25.1
+* Fixed `View` and `Pressable` without children
+
 ## 0.25.0
 * Added `Pressable`
 * Added `getErrorMessage`.

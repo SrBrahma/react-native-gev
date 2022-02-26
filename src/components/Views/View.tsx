@@ -46,7 +46,7 @@ export function mergeViewStyles({ row, reverse, justify, align, center, s, style
  * * `onPress`, to use a Pressable instead of a View!
  * */
 export const View: React.FC<ViewProps> = ({
-  children, reverse,
+  reverse,
   style, s, row,
   justify, align, center,
   ...rest
