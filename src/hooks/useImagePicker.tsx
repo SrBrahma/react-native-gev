@@ -20,6 +20,9 @@ type Ratio = [width: number, height: number];
 
 type UseImagePickerProps = {
   ratio?: Ratio;
+  /** 0~1.
+   * @default 1 */
+  quality?: number;
   /** If will resetImage on successful upload. Useful for disabling upload button and cleaning dirtiness.
    * @default true */
   resetOnUpload?: boolean;
@@ -92,8 +95,10 @@ async function uploadImageByUri({ imageUri, fun, mode = 'blob' }: {
   }
 }
 
+
+
 export function useImagePicker(opts: UseImagePickerProps = {}): UseImagePickerReturn {
-  const { ratio, resetOnUpload = true } = opts;
+  const { ratio, resetOnUpload = true, quality = 1 } = opts;
 
   const [imageUri, setImage] = useState<null | string>(null);
 
@@ -109,7 +114,7 @@ export function useImagePicker(opts: UseImagePickerProps = {}): UseImagePickerRe
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: ratio,
-      quality: 1,
+      quality,
     });
 
     // Do nothing if cancelled
@@ -127,7 +132,7 @@ export function useImagePicker(opts: UseImagePickerProps = {}): UseImagePickerRe
     else
       setImage(imageUri);
 
-  }, [ratio]);
+  }, [quality, ratio]);
 
 
   const uploadImage = useCallback<UseImagePickerReturn['uploadImage']>(async (fun, opts) => {
