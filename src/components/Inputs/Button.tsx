@@ -37,6 +37,10 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   text?: string;
   /** Alias to `text`. */
   t?: string;
+  /** Converts the text to uppercase.
+   * @default false */
+  uppercase?: boolean;
+  textProps?: TextProps;
   // Removes the function from the pressable style type. It messes the Shadow-roundness-obtaining
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -67,13 +71,8 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   hasShadow?: boolean;
   /** Inverts the inner color. */
   invert?: boolean;
-  // outlineOnInvert
-  /** Converts the text to uppercase.
-   * @default false */
-  uppercase?: boolean;
   /** react-native-shadow-2's props for the wrapping Shadow component. */
   shadowProps?: ShadowProps;
-  textProps?: TextProps;
 }
 
 /** If a function, it's run as a React Hook. */

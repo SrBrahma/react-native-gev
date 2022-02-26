@@ -13,6 +13,10 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.25.0
+* Added `Pressable`
+* Added `getErrorMessage`.
+
 ## 0.24.2
 * Removed `aspectRatio: 1` from `Button`'s `iconContainer` default style.
 

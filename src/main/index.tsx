@@ -2,21 +2,18 @@ export * from './theme';
 
 // Inputs
 export { Button, ButtonProps, ButtonPropsTheme } from '../components/Inputs/Button';
+export { Pressable, PressableProps } from '../components/Inputs/Pressable';
 export { Switch, SwitchProps } from '../components/Inputs/Switch';
 export { CommonTextInputProps, TextInput, TextInputProps, TextInputPropsTheme } from '../components/Inputs/TextInput/TextInput';
 export { TextInputFormal } from '../components/Inputs/TextInput/TextInputFormal';
 export { ScrollPicker, ScrollPickerProps } from '../components/Inputs/WheelPicker';
-export { addPortal, ModalsAndPortals, Portal, removePortal } from '../components/Modals/ModalBase';
-export { ModalBottomView, ModalBottomViewProps } from '../components/Modals/ModalBottomView';
-export { ModalView, ModalViewProps } from '../components/Modals/ModalView';
 
 // Modals
 export { mError } from '../components/Modals/mError';
 export { mLoading, OnModalLoadingError } from '../components/Modals/mLoading';
-
-// export * from './components/Views/BottomView';
-// export * from './components/Inputs/InputOutline';
-// export * from './components/Inputs/TextInput';
+export { addPortal, ModalsAndPortals, Portal, removePortal } from '../components/Modals/ModalBase';
+export { ModalBottomView, ModalBottomViewProps } from '../components/Modals/ModalBottomView';
+export { ModalView, ModalViewProps } from '../components/Modals/ModalView';
 
 // Views
 export { ImageBackground, ImageBackgroundProps } from '../components/Views/ImageBackground';
@@ -37,6 +34,6 @@ export { useForm } from '../hooks/useForm';
 export { useImagePicker } from '../hooks/useImagePicker';
 export { usePreventCloseApp } from '../hooks/usePreventClose';
 
-
 // Utils
+export { getErrorMessage } from '../utils/utils';
 export { wait } from '../utils/wait';

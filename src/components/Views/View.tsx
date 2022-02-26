@@ -23,6 +23,18 @@ export type ViewProps = RnViewProps & {
 };
 
 
+
+export function mergeViewStyles({ row, reverse, justify, align, center, s, style }: ViewProps): StyleProp<ViewStyle> {
+  return [{
+    flexDirection: (row
+      ? (reverse ? 'row-reverse' : 'row')
+      : (reverse ? 'column-reverse' : 'column')),
+    justifyContent: justify,
+    alignItems: align,
+    ...center && { justifyContent: 'center', alignItems: 'center' },
+  }, s, style];
+}
+
 /** Simple wrapper for View component. It adds the properties:
  *
  * * `s`, alias to `style`
@@ -31,7 +43,8 @@ export type ViewProps = RnViewProps & {
  * * `center`, shortcut to style `style: {justifyContent: 'center', alignItems: 'center'}`
  * * `justify`, shortcut to `style: {justifyContent: X}`
  * * `align`, shortcut to `style: {alignItems: X}`
-*/
+ * * `onPress`, to use a Pressable instead of a View!
+ * */
 export const View: React.FC<ViewProps> = ({
   children, reverse,
   style, s, row,
@@ -42,16 +55,7 @@ export const View: React.FC<ViewProps> = ({
   return (
     <RnView
       {...rest}
-      style={[{
-        flexDirection: (row
-          ? (reverse ? 'row-reverse' : 'row')
-          : (reverse ? 'column-reverse' : 'column')),
-        justifyContent: justify,
-        alignItems: align,
-        ...center && { justifyContent: 'center', alignItems: 'center' },
-      }, s, style]}
-    >
-      {children}
-    </RnView>
+      style={mergeViewStyles({ row, reverse, justify, align, center, s, style })}
+    />
   );
 };
