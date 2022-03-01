@@ -258,10 +258,10 @@ const s = StyleSheet.create({
     alignSelf: 'stretch',
     borderTopLeftRadius: buttonBorderRadius,
     borderBottomLeftRadius: buttonBorderRadius,
+    paddingRight: buttonPaddingHorizontal,
   },
   icon: {
     fontSize: 28,
-    paddingRight: buttonPaddingHorizontal,
   },
   text: {
     flexShrink: 1, // Also needed to make adjustsFontSizeToFit work
