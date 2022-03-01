@@ -11,7 +11,11 @@
 *
 -->
 
-Changelog won't be updated frequently at the current dev stage.
+
+
+## 0.27.0
+* Renamed `ScrollPicker` to `WheelPicker`.
+* Now exporting `limitWheelIndex()`
 
 ## 0.26.0
 * Added `integerPrice` preset to TextInput
@@ -100,6 +104,8 @@ Changelog won't be updated frequently at the current dev stage.
 * Added `Button` automatic ripple color based on bg brightness.
 * Fixed `Button` ripple overflow.
 
+# Older changelogs weren't always being reported due to the high number of updates.
+
 ## 0.14.5
 * Added `shadowProps` to `Button`
 
@@ -114,8 +120,6 @@ Changelog won't be updated frequently at the current dev stage.
 
 ## 0.13.0
 * Added `Switch` to useForm's `components` prop.
-
-# Ok I think I can already start to fill this changelog
 
 ## 0.5.0 - 2022-02-07
 * Added `component`, `containerStyle` and `errorStyle` props to `TextInput`

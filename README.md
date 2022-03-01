@@ -68,6 +68,10 @@ expo install react-native-gev react-native-safe-area-context react-native-reanim
 * The `/src` is intentionally shipped with the package. This ensures you will always have access to the source code for your installed version.
 * Some patterns and components were based / built on top of others libs, so this has the best current practices. When they do, they have their source properly linked, with all the respect to the authors and to their licenses. This aims to improve them and make them fit better this project.
 
+
+## TODO
+* i18n maybe in Provider or via global state: `{currency: 'R$', decimalSeparator: ','}`
+
 ## Usage
 
 ## [Changelog](CHANGELOG.md)

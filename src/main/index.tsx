@@ -6,7 +6,7 @@ export { Pressable, PressableProps } from '../components/Inputs/Pressable';
 export { Switch, SwitchProps } from '../components/Inputs/Switch';
 export { CommonTextInputProps, TextInput, TextInputProps, TextInputPropsTheme } from '../components/Inputs/TextInput/TextInput';
 export { TextInputFormal } from '../components/Inputs/TextInput/TextInputFormal';
-export { ScrollPicker, ScrollPickerProps } from '../components/Inputs/WheelPicker';
+export { limitWheelIndex, WheelPicker, WheelPickerProps } from '../components/Inputs/WheelPicker';
 
 // Modals
 export { mError } from '../components/Modals/mError';

@@ -23,7 +23,7 @@ const isViewStyle = (style: ViewProps['style']): style is ViewStyle => {
   );
 };
 
-export type ScrollPickerProps<T = unknown> = {
+export type WheelPickerProps<T = unknown> = {
   /** @default [] */
   data?: T[];
   /** Style of the wrapping view. You may use this to set the backgroundColor. */
@@ -58,17 +58,18 @@ export type ScrollPickerProps<T = unknown> = {
   changeValueWhileDragging?: boolean;
 };
 
-/** Limits the index between 0 and data.length - 1. */
+/** Limits the index between 0 and data.length - 1. This may be useful to be called before entering the index in WheelPicker,
+ * although it's already used inside, but only applied after a render. */
 export function limitWheelIndex(index: number | undefined, dataLength: number): number {
   return Math.max(0, Math.min(index ?? 0, dataLength - 1));
 }
 
 const isIos = Platform.OS === 'ios';
 
-export function ScrollPicker<T>({
+export function WheelPicker<T>({
   itemHeight = 30, data = [], highlightColor = false,
   changeValueWhileDragging = true, onValueChange, selectedIndex: selectedIndexProp, ...p
-}: ScrollPickerProps<T>): JSX.Element {
+}: WheelPickerProps<T>): JSX.Element {
 
   const [_selectedIndex, setSelectedIndex] = useState(limitWheelIndex(selectedIndexProp, data.length));
   const scrollRef = useRef<ScrollView>(null);
