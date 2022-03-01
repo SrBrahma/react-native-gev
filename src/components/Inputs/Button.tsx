@@ -59,8 +59,15 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   /** If should render a fullscreen Loading. Will also alert on error.
    * @default true */
   awaitOnPress?: boolean;
-  /** If the button instead of using all the available space should use the least amount of space to fit its content. */
-  shrink?: boolean;
+  /** If the button should use the least amount of space to fit its content instead of using all the available space
+   * .
+   * If `row` is false, this changes the `alignSelf` of `containerStyle` from `'stretch'` to this property value.
+   *
+   * If `row` is true, this removes the `flexGrow` of `containerStyle`.
+   *
+   * If true, defaults to `'center'` if `row` is false.
+  */
+  shrink?: boolean | 'flex-start' | 'flex-end' | 'center' | 'baseline';
   /** Use this when the button is inside a row view. */
   row?: boolean;
   /** If awaitOnPress, will set a fullscreen loading. */
@@ -97,7 +104,8 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     awaitOnPress = true,
     hasShadow = false,
     disabled, onDisabledPress,
-    shrink, row,
+    shrink: shrinkProp,
+    row,
     iconContainerStyle,
     text: textProp, t,
     textStyle, textProps,
@@ -164,6 +172,8 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
    * https://github.com/facebook/react-native/issues/6480 */
   const { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius } = style;
 
+  const shrink = shrinkProp === true ? 'center' : shrinkProp;
+
   return (
     <Shadow
       offset={[0, 0.5]}
@@ -174,7 +184,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
       containerViewStyle={[
         row
           ? (shrink ? s.shadowContainerRowShrink : s.shadowContainerRow)
-          : (shrink ? s.shadowContainerColumnShrink : s.shadowContainerColumn),
+          : (shrink ? { alignSelf: shrink } : s.shadowContainerColumn),
         { marginTop },
         p.containerStyle, shadowProps?.containerViewStyle,
       ]}
@@ -217,9 +227,6 @@ const s = StyleSheet.create({
   shadowContainerColumn: {
     alignSelf: 'stretch',
   },
-  shadowContainerColumnShrink: {
-    alignSelf: 'flex-start',
-  },
   shadowContainerRow: {
     flexGrow: 1,
   },
@@ -239,6 +246,7 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     minHeight: iconSize + (iconPadding * 2),
     flexGrow: 1,
+    paddingHorizontal: buttonPaddingHorizontal,
   },
   pressableShrink: {
     flexGrow: 0,
@@ -253,10 +261,9 @@ const s = StyleSheet.create({
   },
   icon: {
     fontSize: 28,
-    left: 4,
+    paddingRight: buttonPaddingHorizontal,
   },
   text: {
-    paddingHorizontal: buttonPaddingHorizontal,
     flexShrink: 1, // Also needed to make adjustsFontSizeToFit work
     fontSize: 18.5,
     textAlign: 'center',
@@ -267,6 +274,5 @@ const s = StyleSheet.create({
   /** Do also use text */
   textWhenIcon: {
     fontSize: 17,
-    paddingLeft: 0,
   },
 });

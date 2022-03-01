@@ -13,6 +13,11 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.25.3
+#### Button
+* Added `'flex-start' | 'flex-end' | 'center' | 'baseline'` types to `shrink` property.
+* Horizontal padding moved from text to pressable, and added paddingRight to iconContainer.
+
 ## 0.25.2
 * `quality` to useImagePicker()
 
