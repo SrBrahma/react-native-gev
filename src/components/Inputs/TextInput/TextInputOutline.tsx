@@ -367,8 +367,8 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
   return (
     <Animated.View style={[s.container, animatedContainerStyle, containerStyle]}>
       <Pressable onPress={handleFocus} style={s.inputContainer}>
-        {/* Only show leftText if there is a input. Else placeholder would be on top of it. */}
-        {!!leftText && !!maskedValue && <Text style={s.leftText}>{leftText}</Text>}
+        {/* TODO only show leftText after placeholder animation to the top is finished */}
+        {!!leftText && <Text style={s.leftText}>{leftText}</Text>}
         <TextInput
           {...inputProps}
           ref={inputRef}
