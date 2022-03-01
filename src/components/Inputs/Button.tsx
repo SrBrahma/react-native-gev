@@ -230,9 +230,10 @@ const s = StyleSheet.create({
   },
   shadowContainerRow: {
     flexGrow: 1,
+    flexShrink: 1, // For adjustsFontSizeToFit.
   },
   shadowContainerRowShrink: {
-    flexShrink: 1, // For adjustsFontSizeToFit. Could be added to other styles?
+    flexShrink: 1, // For adjustsFontSizeToFit.
   },
   shadowView: {
     overflow: 'hidden', // Remove ripple overflow.
