@@ -232,6 +232,7 @@ const s = StyleSheet.create({
     flexGrow: 1,
   },
   shadowContainerRowShrink: {
+    flexShrink: 1, // For adjustsFontSizeToFit. Could be added to other styles?
   },
   shadowView: {
     overflow: 'hidden', // Remove ripple overflow.
