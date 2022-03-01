@@ -1,9 +1,9 @@
 import type { Validate, ValidateResult } from 'react-hook-form';
-import type { TextInputProps as RnTextInputProps } from 'react-native';
 import { cpf } from 'cpf-cnpj-validator';
 import type { ZodSchema } from 'zod';
 import { z } from 'zod';
 import type { Mask } from '../MaskedTextInput';
+import type { CommonTextInputProps } from '../TextInput';
 
 
 
@@ -35,7 +35,8 @@ export type PresetIds =
   | 'email'
   | 'password'
   | 'country.br.cpf'
-  | 'mm/yy';
+  | 'mm/yy'
+  | 'integerPrice';
 
 
 
@@ -44,20 +45,10 @@ export type TextInputPreset = {
   minLength?: number;
   maxLength?: number;
   mask?: Mask;
-  inputProps?: Partial<RnTextInputProps>;
+  inputProps?: Partial<CommonTextInputProps>;
   validations?: Validations;
-  /** Run on init and onBlur.
-   *
-   * On init, it's first called logicValueToDisplayValue.
-   *
-   * On blur, it's only called if there are no errors on the input.
-   *
-   * E.g.: If you have a text price of 01,5, it would return 1.50, for a price preset.
-   *
-   * If undefined or undefined return, won't change the display value.
-   *
-   * (Should it return mask or unmasked? Should we call mask on it?) If using a mask, your return should return the masked value to avoid a value change on next render. */
-  prettifyUnmasked?: (p: {unmasked: string}) => string | undefined;
+  // /** Is only called if there are no errors. */
+  // changeUnmaskedOnBlur?: (p: {unmasked: string}) => string;
   unmaskedToLogical?: (p: {unmasked: string}) => string | number;
   logicalToUnmasked?: (p: {logical: any}) => string;
 };
@@ -100,6 +91,15 @@ const presets: Record<PresetIds, TextInputPreset> = {
     mask: '99/99',
     validations: { 'mm/yy': (v: string) => (v.length === 4 && Number(v.slice(0, 2)) < 13) || 'Data inválida' },
     inputProps: { keyboardType: 'numeric' },
+  },
+  integerPrice: {
+    unmaskedToLogical: ({ unmasked }) => Number(unmasked),
+    inputProps: {
+      leftText: 'R$',
+      maskType: 'currency',
+      keyboardType: 'decimal-pad',
+      options: { precision: 2, groupSeparator: '.', decimalSeparator: ',' },
+    },
   },
 };
 

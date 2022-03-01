@@ -52,8 +52,8 @@ export function useForm<F extends FieldValues = FieldValues, C extends object = 
     //   invalid?.(e);
     // });
     const components: Components<F, C> = {
-      TextInput: function (p) { return <TextInput control={control} idToLabel={idToLabel} {...p}/>;},
-      Switch: function (p) { return <Switch control={control} {...p}/>;},
+      TextInput: function (p) { return <TextInput control={control} idToLabel={idToLabel} {...p}/>; },
+      Switch: function (p) { return <Switch control={control} {...p}/>; },
     };
     return {
       ...useFormReturn,

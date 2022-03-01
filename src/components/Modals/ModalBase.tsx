@@ -175,7 +175,7 @@ export function Portal({
 
 
   /** Set isUnmounting=true on unmount. */
-  useEffect(() => { return () => { isUnmounting.current = true;}; }, []);
+  useEffect(() => { return () => { isUnmounting.current = true; }; }, []);
 
 
   /** Update the portal on component change. Reuses the same key */
@@ -205,7 +205,7 @@ export function Portal({
 
 
   /** Animate on unmount */
-  useEffect(() => (() => { isUnmounting.current && animateToUnmount();}), [animateToUnmount]);
+  useEffect(() => (() => { isUnmounting.current && animateToUnmount(); }), [animateToUnmount]);
 
 
   /** Handle the back button press */

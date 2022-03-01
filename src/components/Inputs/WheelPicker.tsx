@@ -1,5 +1,3 @@
-// Based on https://github.com/rheng001/react-native-wheel-scrollview-picker but heavily changed.
-
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeScrollEvent, NativeSyntheticEvent, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import { Dimensions, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -61,7 +59,7 @@ export type ScrollPickerProps<T = unknown> = {
 };
 
 /** Limits the index between 0 and data.length - 1. */
-function constrainIndex(index: number | undefined, dataLength: number) {
+export function limitWheelIndex(index: number | undefined, dataLength: number): number {
   return Math.max(0, Math.min(index ?? 0, dataLength - 1));
 }
 
@@ -72,14 +70,13 @@ export function ScrollPicker<T>({
   changeValueWhileDragging = true, onValueChange, selectedIndex: selectedIndexProp, ...p
 }: ScrollPickerProps<T>): JSX.Element {
 
-  const [_selectedIndex, setSelectedIndex] = useState(constrainIndex(selectedIndexProp, data.length));
+  const [_selectedIndex, setSelectedIndex] = useState(limitWheelIndex(selectedIndexProp, data.length));
   const scrollRef = useRef<ScrollView>(null);
   const [isBeingDragged, setIsBeingDragged] = useState(false);
   const [isOnMomentum, setIsOnMomentum] = useState(false);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [isScrollingTo, setIsScrollingTo] = useState(false);
   const [isIosScrollingTo, setIsIosScrollingTo] = useState(false);
-
 
   const scrollToIndex = useCallback(({ index, animated, setState }: {index: number; animated: boolean;
     /** If shall setSelectedIndex to the index. */
@@ -96,18 +93,9 @@ export function ScrollPicker<T>({
   }, [itemHeight]);
 
 
-  // const [isProbablyMoving, setIsProbablyMoving] = useState(false)
-  // const timer2 = useRef<NodeJS.Timeout | null>(null)
-  // useEffect(() => {
-  //   if ()
-  //     setIsProbablyMoving(true)
-  // }, [])
-
   const isPossiblyMoving = isBeingDragged || isOnMomentum || timer || isScrollingTo;
 
-
-  const selectedIndex = constrainIndex((isPossiblyMoving) ? _selectedIndex : (selectedIndexProp ?? _selectedIndex), data.length);
-
+  const selectedIndex = limitWheelIndex((isPossiblyMoving) ? _selectedIndex : (selectedIndexProp ?? _selectedIndex), data.length);
 
   /** On data change. */
   const prevData = useRef<T[]>(data);
@@ -138,17 +126,15 @@ export function ScrollPicker<T>({
     || ((isViewStyle(p.style) && isNumeric(p.style.height)) ? Number(p.style.height) : 0)
     || itemHeight * 5; // To have 5 items being shown
 
-  const [initialized, setInitialized] = useState(false);
 
-
-
-
+  const initialized = useRef(false);
   /** On init */
   useEffect(() => {
-    if (initialized) return;
-    setInitialized(true);
-    // There was a setTimeout(x, 0) for some reason but doesn't seem to fix anything.
-    scrollToIndex({ index: selectedIndex, animated: false });
+    if (!initialized.current) {
+      initialized.current = true;
+      // There was a setTimeout(x, 0) for some reason but doesn't seem to fix anything.
+      scrollToIndex({ index: selectedIndex, animated: false });
+    }
     return () => { timer && clearTimeout(timer); };
   }, [initialized, scrollToIndex, selectedIndex, timer]);
 
@@ -224,7 +210,7 @@ export function ScrollPicker<T>({
         clearTimer();
         setIsScrollingTo(false);
         handleScrollPosition(eCopy);
-      }}, 100));
+      } }, 100));
   };
   const onMomentumScrollBegin = () => {
     setIsOnMomentum(true);
@@ -300,14 +286,8 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: '#999',
-    // textAlign: 'center',
-    // fontSize: 19,
-    // fontFamily: F.Inter_400Regular,
   },
   itemTextSelected: {
     color: '#333',
-    // fontSize: 21,
-    // color: C.mainDarker1,
-    // fontFamily: F.Inter_500Medium,
   },
 });

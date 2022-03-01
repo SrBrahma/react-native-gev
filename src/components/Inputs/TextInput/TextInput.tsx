@@ -128,7 +128,7 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
   const {
     maxLength, minLength,
     mask, validations, inputProps,
-    prettifyUnmasked, unmaskedToLogical, logicalToUnmasked,
+    unmaskedToLogical, logicalToUnmasked,
   } = {
     ...(typeof preset === 'string' ? getPreset(preset) : preset),
     ...(JSON.parse(JSON.stringify(overwriters)) as Partial<typeof overwriters>),
@@ -151,12 +151,13 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
   /** The display value. The TextInput component should mask it, if it's the case. */
   const [unmasked, setUnmasked] = useState<string>(() => {
     const unmasked: string = String(logicalToUnmasked?.({ logical: field.value }) ?? field.value ?? '');
-    return prettifyUnmasked?.({ unmasked }) ?? unmasked;
+    return unmasked;
+    // return prettifyUnmasked?.({ unmasked }) ?? unmasked;
   });
 
   const onBlur = (): void => {
-    if (prettifyUnmasked && !fieldState.error)
-      setUnmasked(prettifyUnmasked({ unmasked: unmasked }) ?? unmasked);
+    // if (prettifyUnmasked && !fieldState.error)
+    //   setUnmasked(prettifyUnmasked({ unmasked: unmasked }) ?? unmasked);
     field.onBlur();
   };
   const onChangeText = (masked: string, unmasked: string) => {

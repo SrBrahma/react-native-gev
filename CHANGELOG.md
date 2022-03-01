@@ -13,6 +13,9 @@
 
 Changelog won't be updated frequently at the current dev stage.
 
+## 0.26.0
+* Added `integerPrice` preset to TextInput
+
 ## 0.25.9~10
 * Fixed TextInput `logicalToUnmasked` preset prop.
 
