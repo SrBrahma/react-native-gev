@@ -150,7 +150,7 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
 
   /** The display value. The TextInput component should mask it, if it's the case. */
   const [unmasked, setUnmasked] = useState<string>(() => {
-    const unmasked: string = logicalToUnmasked?.({ logical: field.value }) ?? String(field.value ?? '');
+    const unmasked: string = String(logicalToUnmasked?.({ logical: field.value }) ?? field.value ?? '');
     return prettifyUnmasked?.({ unmasked }) ?? unmasked;
   });
 
