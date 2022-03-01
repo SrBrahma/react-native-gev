@@ -250,7 +250,7 @@ const s = StyleSheet.create({
     paddingHorizontal: buttonPaddingHorizontal,
   },
   pressableWhenLeftIcon: {
-
+    paddingLeft: 19,
   },
   pressableShrink: {
     flexGrow: 0,
