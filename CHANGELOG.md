@@ -11,7 +11,8 @@
 *
 -->
 
-
+## 0.27.1
+* Fixed `TextInput` mask for `maskType='currency'`
 
 ## 0.27.0
 * Renamed `ScrollPicker` to `WheelPicker`.

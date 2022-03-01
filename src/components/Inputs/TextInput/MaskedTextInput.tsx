@@ -35,17 +35,19 @@ export const MaskedTextInput = forwardRef<RnTextInput, MaskedTextInputProps>(({
 
   const defaultValue = defaultValueProp || (maskType === 'currency' ? '0' : '');
 
-  const [maskedValue, setMaskedValue] = useState(() => (pattern !== undefined ? mask(defaultValue, pattern, maskType, options) : defaultValue));
-  const [unMaskedValue, setUnmaskedValue] = useState(() => (pattern !== undefined ? unMask(defaultValue, maskType) : defaultValue));
+  const hasMask = (pattern !== undefined || maskType === 'currency');
+
+  const [maskedValue, setMaskedValue] = useState(() => (hasMask ? mask(defaultValue, pattern, maskType, options) : defaultValue));
+  const [unMaskedValue, setUnmaskedValue] = useState(() => (hasMask ? unMask(defaultValue, maskType) : defaultValue));
 
 
   const onChange = useCallback((value: string) => {
-    const newUnMaskedValue = pattern !== undefined ? unMask(value, maskType) : value;
-    const newMaskedValue = pattern !== undefined ? mask(newUnMaskedValue, pattern, maskType, options) : value;
+    const newUnMaskedValue = hasMask ? unMask(value, maskType) : value;
+    const newMaskedValue = hasMask ? mask(newUnMaskedValue, pattern, maskType, options) : value;
 
     setMaskedValue(newMaskedValue);
     setUnmaskedValue(newUnMaskedValue);
-  }, [options, pattern, maskType]);
+  }, [hasMask, maskType, pattern, options]);
 
   useEffect(() => {
     onChangeText?.(maskedValue, unMaskedValue);

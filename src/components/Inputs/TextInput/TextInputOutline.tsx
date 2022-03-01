@@ -146,11 +146,12 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
   }, assistiveTextStyleProp]) as TextStyle & {fontSize: number};
 
 
+  const hasMask = (pattern !== undefined || maskType === 'currency');
 
   const getDefaultMaskedValue = useCallback((useValueProp: boolean) => {
     const defaultValue = (useValueProp ? valueProp : undefined) ?? defaultValueProp ?? (maskType === 'currency' ? '0' : '');
-    return pattern ? mask(defaultValue, pattern, maskType, options) : defaultValue;
-  }, [defaultValueProp, options, pattern, maskType, valueProp]);
+    return hasMask ? mask(defaultValue, pattern, maskType, options) : defaultValue;
+  }, [valueProp, defaultValueProp, maskType, hasMask, pattern, options]);
   const getDefaultUnmaskedValue = useCallback((useValueProp: boolean) => {
     const defaultValue = (useValueProp ? valueProp : undefined) ?? defaultValueProp ?? (maskType === 'currency' ? '0' : '');
     return defaultValue;
@@ -163,7 +164,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
 
 
   const onChangeText = useCallback((inputValue: string, mayBeMasked: boolean) => {
-    if (!pattern) {
+    if (!hasMask) {
       setMaskedValue(inputValue);
       setUnmaskedValue(inputValue);
     } else {
@@ -172,7 +173,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
       setMaskedValue(newMaskedValue);
       setUnmaskedValue(newUnMaskedValue);
     }
-  }, [options, pattern, maskType]);
+  }, [hasMask, maskType, pattern, options]);
 
   /** Callbacks on changes */
   useEffect(() => { onChangeTextProp?.(maskedValue, unMaskedValue); }, [maskedValue, onChangeTextProp, unMaskedValue]);
