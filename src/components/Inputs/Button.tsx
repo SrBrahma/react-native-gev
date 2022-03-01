@@ -201,6 +201,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
         style={[
           s.pressable,
           shrink && s.pressableShrink,
+          leftIcon && s.pressableWhenLeftIcon,
           style,
           { backgroundColor },
         ]}
@@ -221,7 +222,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
 }
 
 /** Useful when having a leftIcon with background color, so you want to paddingLeft the text. */
-export const buttonPaddingHorizontal = 22;
+export const buttonPaddingHorizontal = 28;
 
 const s = StyleSheet.create({
   shadowContainerColumn: {
@@ -248,6 +249,9 @@ const s = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: buttonPaddingHorizontal,
   },
+  pressableWhenLeftIcon: {
+
+  },
   pressableShrink: {
     flexGrow: 0,
   },
@@ -258,7 +262,7 @@ const s = StyleSheet.create({
     alignSelf: 'stretch',
     borderTopLeftRadius: buttonBorderRadius,
     borderBottomLeftRadius: buttonBorderRadius,
-    paddingRight: buttonPaddingHorizontal,
+    paddingRight: 11,
   },
   icon: {
     fontSize: 28,
