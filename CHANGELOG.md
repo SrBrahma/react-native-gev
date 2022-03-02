@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.27.2
+* Fixed `List` firstItemPadTop not being applied.
+
 ## 0.27.1
 * Fixed `TextInput` mask for `maskType='currency'`
 

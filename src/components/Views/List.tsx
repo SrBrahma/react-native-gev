@@ -83,13 +83,14 @@ export function List<Nav extends NavBase = NavBase>({
     refreshControl={onRefresh ? <RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/> : undefined}
     data={items}
     keyExtractor={(i) => (i.key ?? i.title ?? i.pretitle) as string}
-    renderItem={({ item: i }) => {
+    renderItem={({ item: i, index }) => {
+      // FIXME if omit and first item, the next item that will so be the first, won't have firstItemPadTop as index is 1.
       if (i.omit === true || i.show === false) return null;
       if (i.onPressNav && !navigation) throw new Error ('onPressNav is defined but navigation is not!');
       return <ListItem
         chevron={i.onPressNav && chevronOnNavTo}
-        firstItemPadTop={i === 0}
-        lastItemPadBottom={i === items.length - 1}
+        firstItemPadTop={index === 0}
+        lastItemPadBottom={index === items.length - 1}
         {...(i.onPressNav && { onPress: () => navigation?.navigate && i.onPressNav?.(navigation.navigate) })}
         {...i}
       />;
