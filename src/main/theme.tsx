@@ -10,8 +10,26 @@ import type { Fonts } from './fonts';
 import { defaultFonts } from './fonts';
 // import { useColorScheme } from 'react-native';
 
-// Using interface when possible as it's said to have a better TS performance.
+// Using interface when possible as it's said to have a better TS performance. (does it really improve?)
 // It's being an issue since the addition of `props` prop.
+
+
+interface Theme {
+  colors: Colors;
+  sizes: Common;
+  /** The fonts for basic texts. */
+  fonts: Fonts;
+  /** Default props for our components. Easier customization!
+   *
+   * The styles are merged.
+   *
+   * It may either be the component props or a function that returns it.
+   *
+   * If it's a function, it's run like a React hook, so you may useTheme().
+   *
+   * Wrapping the function's object-props return in a useMemo is recommended for a better performance. */
+  defaultProps: DefaultProps;
+}
 
 
 // Some were based on https://callstack.github.io/react-native-paper/theming.html
@@ -61,6 +79,16 @@ interface Colors {
     // TODO defaults to [?]
     neutral: string;
   };
+  _list: {
+    /** @default '#869286' (TODO replace, old app value) */
+    pretitle: string;
+    /** @default '#111' */
+    title: string;
+    /** @default '#777' */
+    subtitle: string;
+    /** @default _list.title, '#111' */
+    icon: string;
+  };
 }
 
 
@@ -85,25 +113,6 @@ interface DefaultProps {
 }
 
 
-
-interface Theme {
-  colors: Colors;
-  sizes: Common;
-  /** The fonts for basic texts. */
-  fonts: Fonts;
-  /** Default props for our components. Easier customization!
-   *
-   * The styles are merged.
-   *
-   * It may either be the component props or a function that returns it.
-   *
-   * If it's a function, it's run like a React hook, so you may useTheme().
-   *
-   * Wrapping the function's object-props return in a useMemo is recommended for a better performance. */
-  defaultProps: DefaultProps;
-}
-
-
 /** The colors that defaults to those ones are set in applyThemeFallbacks. */
 const defaultTheme: DeepPartial<Theme> = {
   sizes: defaultSizes,
@@ -113,7 +122,7 @@ const defaultTheme: DeepPartial<Theme> = {
     background: '#fff',
     text: '#000',
     backdrop: '#00000056',
-    disabled: '#dadada',
+    disabled: '#dbdbdb',
     error: '#dd0020',
     placeholder: '#aaa',
     _button: {
@@ -122,6 +131,11 @@ const defaultTheme: DeepPartial<Theme> = {
     _snackbar: {
       error: '#dd464bfa',
       textOnError: '#fff',
+    },
+    _list: {
+      title: '#111',
+      subtitle: '#777',
+      pretitle: '#869286',
     },
   },
   defaultProps: {
@@ -180,6 +194,9 @@ function applyThemeFallbacks(theme: DeepPartial<Theme>): Theme {
       _snackbar: {
         neutral: theme.colors?.background,
         textOnNeutral: theme.colors?.text,
+      },
+      _list: {
+        icon: theme.colors?._list?.title,
       },
       surface: theme.colors?.background,
     },

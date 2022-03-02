@@ -11,6 +11,12 @@
 *
 -->
 
+## 0.28.0
+* Added theme for List's `icon`, `title`, `pretitle`, `subtitle`. Later more to come.
+
+## 0.27.3
+* Changed theme's default `disabled` from '#dadada' to '#dbdbdb'. Noticeable!
+
 ## 0.27.2
 * Fixed `List` firstItemPadTop not being applied.
 

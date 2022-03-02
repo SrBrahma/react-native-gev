@@ -28,11 +28,7 @@ type HideableItems = 'subtitle' | 'rightIcon' | 'switch';
 type GreyableItems = 'title' | 'background';
 
 
-const colors = {
-  pretitle: '#869286',
-  subtitle: '#777',
-  title: '#111',
-  icon: '#111',
+const listColors = {
   chevron: '#aaa',
   /** For android_ripple */
   onPress: '#0002',
@@ -156,7 +152,7 @@ export type ListItemProps = {
 
 
 export const ListItem: React.FC<ListItemProps> = (props) => {
-  const theme = useTheme();
+  const { fonts, colors } = useTheme();
 
   const result = useMemo(() => {
     const {
@@ -171,8 +167,6 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       switch: switchProp, // cant use switch as it is a reserved word
       greyIfDisabled: greyIfDisabledProp,
       greyTitle,
-      // hideItemIfDisabled: hideItemIfDisabledProp,
-      // hideItemIfEnabled: hideItemIfEnabledProp,
       disabled,
       pretitle, pretitleStyle, pretitleProps,
       title, titleProps, titleStyle: titleStyleProp,
@@ -185,19 +179,12 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       ? [greyIfDisabledProp]
       : greyIfDisabledProp;
 
-    // const hideItemIfDisabled = (hideItemIfDisabledProp && !Array.isArray(hideItemIfDisabledProp))
-    //   ? [hideItemIfDisabledProp]
-    //   : hideItemIfDisabledProp;
-    // const hideItemIfEnabled = (hideItemIfEnabledProp && !Array.isArray(hideItemIfEnabledProp))
-    //   ? [hideItemIfEnabledProp]
-    //   : hideItemIfEnabledProp;
-
     const left: JSX.Element | undefined = (() => {
       if (blankLeftIcon)
         return <MaterialCommunityIcons name='account' style={[s.leftIcon, s.blankIcon]}/>;
       if (leftIconProp) {
         if (typeof leftIconProp === 'string')
-          return <MaterialCommunityIcons name={leftIconProp as any} style={[s.leftIcon, leftIconStyle]}/>;
+          return <MaterialCommunityIcons name={leftIconProp as any} style={[s.leftIcon, { color: colors._list.icon }, leftIconStyle]}/>;
         else
           return React.cloneElement(leftIconProp, { style: s.leftIcon });
       }
@@ -208,7 +195,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
         return <MaterialCommunityIcons name='account' style={[s.rightIcon, s.blankIcon]}/>;
       if (rightIconProp) {
         if (typeof rightIconProp === 'string')
-          return <MaterialCommunityIcons name={rightIconProp as any} style={[s.rightIcon, rightIconStyle]}/>;
+          return <MaterialCommunityIcons name={rightIconProp as any} style={[s.rightIcon, { color: colors._list.icon }, rightIconStyle]}/>;
         else
           return React.cloneElement(rightIconProp, { style: s.rightIcon });
       }
@@ -227,7 +214,8 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
 
     const titleStyle = StyleSheet.flatten([
       s.title,
-      theme.fonts.medium,
+      fonts.medium,
+      { color: colors._list.title },
       titleStyleProp,
       (greyTitle || (disabled && greyIfDisabled?.includes('title'))) && s.greyTitle,
     ]);
@@ -240,7 +228,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       <Pressable
         disabled={!onPress}
         onPress={onPress}
-        android_ripple={{ color: colors.onPress }}
+        android_ripple={{ color: listColors.onPress }}
         style={[
           { paddingLeft: defaultPaddingLeft + extraLeftPadding },
           s.content,
@@ -254,10 +242,10 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
           {leftComponent}
           {left}
           <View style={s.textsView}>
-            {pretitle !== undefined && <Text {...pretitleProps} style={[s.pretitle, pretitleStyle]}>{String(pretitle)}</Text>}
+            {pretitle !== undefined && <Text {...pretitleProps} style={[s.pretitle, { color: colors._list.pretitle }, pretitleStyle]}>{String(pretitle)}</Text>}
             {/* The titleStyle is composed above */}
             {title !== undefined && <Text {...titleProps} style={titleStyle}>{String(title)}</Text>}
-            {subtitle !== undefined && <Text {...subtitleProps} style={[s.subtitle, subtitleStyle]}>{String(subtitle)}</Text>}
+            {subtitle !== undefined && <Text {...subtitleProps} style={[s.subtitle, { color: colors._list.subtitle }, subtitleStyle]}>{String(subtitle)}</Text>}
           </View>
           {right}
           {right2}
@@ -279,7 +267,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       </Pressable>
       {divider(bottomDivider)}
     </View>);
-  }, [props, theme.fonts.medium]);
+  }, [props, fonts.medium, colors._list.title, colors._list.pretitle, colors._list.subtitle, colors._list.icon]);
 
   return result;
 };
@@ -299,19 +287,19 @@ const s = ScaledSheet.create({
   },
   dividerFull: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.divider,
+    backgroundColor: listColors.divider,
   },
   divider: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.divider,
+    backgroundColor: listColors.divider,
     marginRight: Web ? 30 : moderateScale(30, scale),
     marginLeft: Web ? 30 : moderateScale(36, scale),
   },
   backgroundDisabled: {
-    backgroundColor: colors.disabledBackground,
+    backgroundColor: listColors.disabledBackground,
   },
   greyTitle: {
-    color: colors.greyTitle,
+    color: listColors.greyTitle,
   },
   noHorizontalPadding: {
     paddingHorizontal: 0, // Looks like ListItem uses this (edit: ? maybe when it used rn-elements)
@@ -326,29 +314,23 @@ const s = ScaledSheet.create({
   },
   pretitle: {
     fontWeight: 'bold',
-    color: colors.pretitle,
     fontSize: Web ? 18 : moderateScale(13.5, scale),
   },
   title: {
-    color: colors.title,
     fontSize: Web ? 20 : moderateScale(15, scale),
   },
   subtitle: {
-    color: colors.subtitle,
     fontSize: Web ? 15 : moderateScale(13.5, scale),
   },
   leftIcon: {
-    color: colors.icon,
     fontSize: iconDefaultSize,
     marginRight: Web ? 18 : moderateScale(17, scale),
-    // height: '100%', // was here. remove it if doesn't fix anything.
   },
   rightIcon: {
-    color: colors.icon,
     fontSize: iconDefaultSize,
   },
   chevron: {
-    color: colors.chevron,
+    color: listColors.chevron,
     fontSize: iconDefaultSize - 4,
   },
   blankIcon: {
