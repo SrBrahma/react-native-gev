@@ -3,14 +3,16 @@ import type { FlatListProps, StyleProp, TextProps, TextStyle, ViewStyle } from '
 import {
   FlatList,
   Platform,
-  Pressable,
-  StyleSheet, Text, View,
+  StyleSheet,
 } from 'react-native';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RefreshControl, useTheme } from '../../main';
+import { Pressable } from '../Inputs/Pressable';
 import type { SwitchProps } from '../Inputs/Switch';
 import { Switch } from '../Inputs/Switch';
+import { Text } from '../Others/Text';
+import { View } from '../Views/View';
 
 
 
@@ -63,7 +65,6 @@ export type ListProps<Nav extends NavBase = NavBase> = {
   chevronOnNavTo?: boolean;
   items: ItemListItemProps<Nav>[];
   flatListProps?: FlatListProps<unknown>;
-
   refreshing?: boolean;
   onRefresh?: () => void;
   // divider // TODO
@@ -98,6 +99,14 @@ export function List<Nav extends NavBase = NavBase>({
     keyboardShouldPersistTaps='handled'
     contentContainerStyle={[{ flex: 1, backgroundColor: theme.colors.background }, flatListProps?.contentContainerStyle]}
   />;
+}
+
+
+
+function divider(divider: DividerType): JSX.Element | null {
+  return divider
+    ? <View s={divider === 'full' ? s.dividerFull : s.divider}/>
+    : null;
 }
 
 
@@ -152,7 +161,7 @@ export type ListItemProps = {
 
 
 export const ListItem: React.FC<ListItemProps> = (props) => {
-  const { fonts, colors } = useTheme();
+  const theme = useTheme();
 
   const result = useMemo(() => {
     const {
@@ -168,12 +177,14 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       greyIfDisabled: greyIfDisabledProp,
       greyTitle,
       disabled,
-      pretitle, pretitleStyle, pretitleProps,
+      pretitle, pretitleProps, pretitleStyle: pretitleStyleProp,
       title, titleProps, titleStyle: titleStyleProp,
-      subtitle, subtitleProps, subtitleStyle,
+      subtitle, subtitleProps, subtitleStyle: subtitleStyleProp,
       onPress: onPressProp,
       leftComponent, rightComponent,
     } = props;
+
+    const { fonts, colors } = theme;
 
     const greyIfDisabled = (greyIfDisabledProp && !Array.isArray(greyIfDisabledProp))
       ? [greyIfDisabledProp]
@@ -186,7 +197,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
         if (typeof leftIconProp === 'string')
           return <MaterialCommunityIcons name={leftIconProp as any} style={[s.leftIcon, { color: colors._list.icon }, leftIconStyle]}/>;
         else
-          return React.cloneElement(leftIconProp, { style: s.leftIcon });
+          return React.cloneElement(leftIconProp, { style: [s.leftIcon, { color: colors._list.icon }, leftIconStyle] });
       }
     })();
 
@@ -204,14 +215,26 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
     /** To allow a right icon and then a chevron. */
     const right2 = chevron && <MaterialCommunityIcons name='chevron-right' style={s.chevron}/>;
 
+    const onPress = onPressProp
+    ?? (switchProp ? (() => switchProp.onValueChange?.(!switchProp.value)) : null);
+
     // Add an extra left padding when there is no left stuff (icon, component). Looks better!
     const extraLeftPadding = (left || leftComponent) ? 0 : noIconExtraPadLeft;
 
-    function divider(divider: DividerType) {
-      if (divider)
-        return <View style={divider === 'full' ? s.dividerFull : s.divider}/>;
-    }
-
+    const pressableStyle = StyleSheet.flatten<ViewStyle>([ // error without explicit generic
+      { paddingLeft: defaultPaddingLeft + extraLeftPadding },
+      s.content,
+      firstItemPadTop && s.firstItemPadTop,
+      lastItemPadBottom && s.lastItemPadBottom,
+      disabled && greyIfDisabled?.includes('background') && s.backgroundDisabled,
+      noHorizontalPadding && s.noHorizontalPadding,
+    ]);
+    const pretitleStyle = StyleSheet.flatten([
+      s.pretitle,
+      { color: colors._list.pretitle },
+      fonts.bold,
+      pretitleStyleProp,
+    ]);
     const titleStyle = StyleSheet.flatten([
       s.title,
       fonts.medium,
@@ -219,40 +242,36 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       titleStyleProp,
       (greyTitle || (disabled && greyIfDisabled?.includes('title'))) && s.greyTitle,
     ]);
+    const subtitleStyle = StyleSheet.flatten([
+      s.subtitle,
+      { color: colors._list.subtitle },
+      subtitleStyleProp,
+    ]);
 
-    const onPress = onPressProp
-      ?? (switchProp ? (() => switchProp.onValueChange?.(!switchProp.value)) : null);
-
-    return (<View style={containerStyle}>
-      {divider(topDivider)}
-      <Pressable
-        disabled={!onPress}
-        onPress={onPress}
-        android_ripple={{ color: listColors.onPress }}
-        style={[
-          { paddingLeft: defaultPaddingLeft + extraLeftPadding },
-          s.content,
-          firstItemPadTop && s.firstItemPadTop,
-          lastItemPadBottom && s.lastItemPadBottom,
-          disabled && greyIfDisabled?.includes('background') && s.backgroundDisabled,
-          noHorizontalPadding && s.noHorizontalPadding,
-        ]}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {leftComponent}
-          {left}
-          <View style={s.textsView}>
-            {pretitle !== undefined && <Text {...pretitleProps} style={[s.pretitle, { color: colors._list.pretitle }, pretitleStyle]}>{String(pretitle)}</Text>}
-            {/* The titleStyle is composed above */}
-            {title !== undefined && <Text {...titleProps} style={titleStyle}>{String(title)}</Text>}
-            {subtitle !== undefined && <Text {...subtitleProps} style={[s.subtitle, { color: colors._list.subtitle }, subtitleStyle]}>{String(subtitle)}</Text>}
+    return (
+      <View s={containerStyle}>
+        {divider(topDivider)}
+        <Pressable
+          disabled={!onPress}
+          onPress={onPress}
+          android_ripple={{ color: listColors.onPress }}
+          s={pressableStyle}
+        >
+          <View s={{ flexDirection: 'row', alignItems: 'center' }}>
+            {leftComponent}
+            {left}
+            <View s={s.textsView}>
+              {pretitle !== undefined && <Text {...pretitleProps} s={pretitleStyle} t={String(pretitle)}/>}
+              {/* The titleStyle is composed above */}
+              {title !== undefined && <Text {...titleProps} s={titleStyle} t={String(title)}/>}
+              {subtitle !== undefined && <Text {...subtitleProps} s={subtitleStyle} t={String(subtitle)}/>}
+            </View>
+            {right}
+            {right2}
+            {rightComponent}
+            {switchProp && <Switch {...switchProp}/>}
           </View>
-          {right}
-          {right2}
-          {rightComponent}
-          {switchProp && <Switch {...switchProp}/>}
-        </View>
-        {/* // FIXME: not allowing just switch without onPress.
+          {/* // FIXME: not allowing just switch without onPress.
         // Fix those conditionals or Maybe omit onValueChange and only allow onPress? <-
         // TODO my own switch
         {...switchProps && {
@@ -264,10 +283,11 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
             ...(rest.onPress && { onValueChange: () => rest.onPress && rest.onPress(undefined as any) }),
           },
         }} */}
-      </Pressable>
-      {divider(bottomDivider)}
-    </View>);
-  }, [props, fonts.medium, colors._list.title, colors._list.pretitle, colors._list.subtitle, colors._list.icon]);
+        </Pressable>
+        {divider(bottomDivider)}
+      </View>
+    );
+  }, [props, theme]);
 
   return result;
 };
@@ -313,7 +333,6 @@ const s = ScaledSheet.create({
     paddingRight: 10, // Don't touch right stuff like switches.
   },
   pretitle: {
-    fontWeight: 'bold',
     fontSize: Web ? 18 : moderateScale(13.5, scale),
   },
   title: {
@@ -321,6 +340,7 @@ const s = ScaledSheet.create({
   },
   subtitle: {
     fontSize: Web ? 15 : moderateScale(13.5, scale),
+    // maybe add flexWrap: 1 to avoid text not properly overlapping?
   },
   leftIcon: {
     fontSize: iconDefaultSize,

@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.28.1
+* `ListItem` subtitle now using theme.fonts.bold
+
 ## 0.28.0
 * Added theme for List's `icon`, `title`, `pretitle`, `subtitle`. Later more to come.
 
