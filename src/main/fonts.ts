@@ -13,10 +13,10 @@ export type Font = {
 
 // If we used Record instead of this object, createTheme({x: {fonts: { }}}) wouldn't have autocomplete inside the fonts prop.
 export type Fonts = {
+  thin: Font;
+  light: Font;
   regular: Font;
   medium: Font;
-  light: Font;
-  thin: Font;
   bold: Font;
 };
 

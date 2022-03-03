@@ -1,12 +1,14 @@
-import type { PressableProps as RnPressableProps } from 'react-native';
+import type { PressableProps as RnPressableProps, StyleProp, ViewStyle } from 'react-native';
 import { Pressable as RnPressable, StyleSheet } from 'react-native';
 import { colord } from 'colord';
-import type { ViewProps } from '../Views/View';
+import type { NewViewProps } from '../Views/View';
 import { mergeViewStyles } from '../Views/View';
 
 
 
-export type PressableProps = RnPressableProps & ViewProps;
+export interface PressableProps extends RnPressableProps, NewViewProps {
+  style: StyleProp<ViewStyle>; // Remove the function type from style
+}
 
 // TODO add onPress mLoading wrapper?
 /** Wrapper for Pressable.

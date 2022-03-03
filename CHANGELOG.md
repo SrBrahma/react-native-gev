@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.28.3
+* Fixed PressableProps. Some props like hitSlop were ViewProps['hitSlop'] & PressableProps['hitSlop'], resulting in unusable or wrong types.
+
 ## 0.28.2
 * Fixed ~`createTheme({x: {fonts: { y }}})` y Intellisense/autocomplete.
 

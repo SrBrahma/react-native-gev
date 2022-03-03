@@ -5,7 +5,8 @@ import { View as RnView } from 'react-native';
 
 type JustifyContent = 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly' | undefined;
 
-export type ViewProps = RnViewProps & {
+
+export type NewViewProps = {
   /** Alias to `style` */
   s?: StyleProp<ViewStyle>;
   /** Shortcut to `style: {flexDirection: 'row'}` */
@@ -22,6 +23,7 @@ export type ViewProps = RnViewProps & {
   center?: boolean;
 };
 
+export interface ViewProps extends RnViewProps, NewViewProps {}
 
 
 export function mergeViewStyles({ row, reverse, justify, align, center, s, style }: ViewProps): StyleProp<ViewStyle> {
