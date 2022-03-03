@@ -7,7 +7,7 @@ import { mergeViewStyles } from '../Views/View';
 
 
 export interface PressableProps extends RnPressableProps, NewViewProps {
-  style: StyleProp<ViewStyle>; // Remove the function type from style
+  style?: StyleProp<ViewStyle>; // Remove the function type from style
 }
 
 // TODO add onPress mLoading wrapper?
