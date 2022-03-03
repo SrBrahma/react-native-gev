@@ -15,8 +15,10 @@ export type NewViewProps = {
   reverse?: boolean;
   /** Shortcut to `style: {justifyContent: X}` */
   justify?: JustifyContent;
-  /** Shortcut to `style: {alignItems: X}` */
-  align?: FlexAlignType;
+  /** Shortcut to `style: {alignItems: X}`.
+   *
+   * If **true**, defaults to `'center'`. */
+  align?: true | FlexAlignType;
   /** Centers children in main and cross axis.
    *
    * Shortcut to style `style: {justifyContent: 'center', alignItems: 'center'}` */
@@ -26,7 +28,9 @@ export type NewViewProps = {
 export interface ViewProps extends RnViewProps, NewViewProps {}
 
 
-export function mergeViewStyles({ row, reverse, justify, align, center, s, style }: ViewProps): StyleProp<ViewStyle> {
+export function mergeViewStyles({ row, reverse, justify, align: alignProp, center, s, style }: ViewProps): StyleProp<ViewStyle> {
+  const align = alignProp === true ? 'center' : alignProp;
+
   return [{
     flexDirection: (row
       ? (reverse ? 'row-reverse' : 'row')
@@ -44,7 +48,7 @@ export function mergeViewStyles({ row, reverse, justify, align, center, s, style
  * * `reversed`, to concatenate '-reversed' to 'row' or 'column' in flexDirection.
  * * `center`, shortcut to style `style: {justifyContent: 'center', alignItems: 'center'}`
  * * `justify`, shortcut to `style: {justifyContent: X}`
- * * `align`, shortcut to `style: {alignItems: X}`
+ * * `align`, shortcut to `style: {alignItems: X}`. If true, it defaults to `'center'`.
  * * `onPress`, to use a Pressable instead of a View!
  * */
 export const View: React.FC<ViewProps> = ({

@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.28.4
+* `align` property of `View`-like components can now be true, defaulting to `'center'`.
+
 ## 0.28.3
 * Fixed PressableProps. Some props like hitSlop were ViewProps['hitSlop'] & PressableProps['hitSlop'], resulting in unusable or wrong types.
 
