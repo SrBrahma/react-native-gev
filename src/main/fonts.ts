@@ -11,7 +11,14 @@ export type Font = {
   fontWeight?: FontValue;
 };
 
-export type Fonts = Record<'regular' | 'medium' | 'light' | 'thin' | 'bold', Font>;
+// If we used Record instead of this object, createTheme({x: {fonts: { }}}) wouldn't have autocomplete inside the fonts prop.
+export type Fonts = {
+  regular: Font;
+  medium: Font;
+  light: Font;
+  thin: Font;
+  bold: Font;
+};
 
 
 export const defaultFonts: Fonts = Platform.select({

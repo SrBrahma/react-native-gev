@@ -15,6 +15,11 @@ export type TextProps = RnTextProps & {
   singlelineEllipsis?: boolean;
 };
 
+/** Wrapper for Text component:
+ *
+ * * Adds `text` (and `t` alias) property to be used instead of children. Smaller code and more readable.
+ * * `includeFontPadding: false` style by default. It is usually just bad for vertical centering.
+ */
 export const Text: React.FC<TextProps> = ({
   t, text, children, s: sProp, singlelineEllipsis, style,
   ...rest

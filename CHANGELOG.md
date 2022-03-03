@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.28.2
+* Fixed ~`createTheme({x: {fonts: { y }}})` y Intellisense/autocomplete.
+
 ## 0.28.1
 * `ListItem` subtitle now using theme.fonts.bold
 
