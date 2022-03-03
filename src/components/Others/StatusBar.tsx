@@ -29,15 +29,18 @@ export type StatusBarProviderProps = {
   // etc add other StaturBar props here, and then add them in the hook/component to mirror the StatusBar behavior.
 };
 
-/** You shall add it before any SafeArea Provider. */
+/** You shall add it before any SafeArea Provider, and have your content inside this. */
 export const StatusBarProvider: React.FC<StatusBarProviderProps> = ({
   children, backgroundColor = '#fff',
 }) => {
   // const colorR = useRef(backgroundColor).current
+  // TODO check if already applied in a parent via context, if so don't add the View again.
+  // - Use both ref and state, as two Providers may be applied on the same render.
   const height = useSafeAreaInsets().top;
   return (<Context.Provider value={{}}>
     <StatusBar translucent backgroundColor='#0000'/>
-    <View style={{ position: 'absolute', height, backgroundColor, width: '100%' }}/>
+    {/* Absolute positioning was causing a vertical movement on 1st->2nd render. */}
+    <View style={{ height, backgroundColor, width: '100%' }}/>
     {children}
   </Context.Provider>
   );

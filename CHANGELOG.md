@@ -11,6 +11,10 @@
 *
 -->
 
+## 0.29.0
+* `StatusBarProvider` no longer has absolute positioning, it was causing a movement in vertical positioning in 1st->2nd render.
+* Refactored `ModalBottomView`.
+
 ## 0.28.4
 * `align` property of `View`-like components can now be true, defaulting to `'center'`.
 
