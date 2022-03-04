@@ -14,22 +14,17 @@ export interface PressableProps extends RnPressableProps, NewViewProps {
 /** Wrapper for Pressable.
  * * Has all of our `View` properties.
  * * Automatic ripple color based on style.backgroundColor. */
-export const Pressable: React.FC<PressableProps> = ({
-  reverse,
-  style, s, row,
-  justify, align, center,
-  ...rest
-}) => {
+export const Pressable: React.FC<PressableProps> = (props) => {
 
-  const mergedStyle = StyleSheet.flatten(mergeViewStyles({ row, reverse, justify, align, center, s, style }));
+  const mergedStyle = StyleSheet.flatten(mergeViewStyles(props));
   const rippleColor = colord(mergedStyle.backgroundColor ?? '#000' as any).brightness() > 0.8 ? '#00000014' : '#ffffff2f';
 
   return (
     <RnPressable
-      {...rest}
+      {...props}
       android_ripple={{
         color: rippleColor,
-        ...rest.android_ripple,
+        ...props.android_ripple,
       }}
       style={mergedStyle}
     />

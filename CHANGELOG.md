@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.30.0
+* Added `flex` property to View-like components.
+
 ## 0.29.0
 * `StatusBarProvider` no longer has absolute positioning, it was causing a movement in vertical positioning in 1st->2nd render.
 * Refactored `ModalBottomView`.

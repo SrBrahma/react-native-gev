@@ -23,15 +23,22 @@ export type NewViewProps = {
    *
    * Shortcut to style `style: {justifyContent: 'center', alignItems: 'center'}` */
   center?: boolean;
+  /** Shortcut to `style: {flex: 1}`. You may also pass a number to be used instead of the default 1, when **true**. */
+  flex?: true | number;
 };
 
 export interface ViewProps extends RnViewProps, NewViewProps {}
 
+/** ViewProps with some problematic props like hitSlop omitted. Pressable hitSlop type def is different. */
+type MergeViewStylesProps = Omit<ViewProps, 'hitSlop'>;
 
-export function mergeViewStyles({ row, reverse, justify, align: alignProp, center, s, style }: ViewProps): StyleProp<ViewStyle> {
+export function mergeViewStyles({
+  row, reverse, justify, align: alignProp, center, s, style, flex: flexProp,
+}: MergeViewStylesProps): StyleProp<ViewStyle> {
   const align = alignProp === true ? 'center' : alignProp;
-
+  const flex = flexProp === true ? 1 : flexProp;
   return [{
+    flex,
     flexDirection: (row
       ? (reverse ? 'row-reverse' : 'row')
       : (reverse ? 'column-reverse' : 'column')),
@@ -51,17 +58,12 @@ export function mergeViewStyles({ row, reverse, justify, align: alignProp, cente
  * * `align`, shortcut to `style: {alignItems: X}`. If true, it defaults to `'center'`.
  * * `onPress`, to use a Pressable instead of a View!
  * */
-export const View: React.FC<ViewProps> = ({
-  reverse,
-  style, s, row,
-  justify, align, center,
-  ...rest
-}) => {
+export const View: React.FC<ViewProps> = (props) => {
 
   return (
     <RnView
-      {...rest}
-      style={mergeViewStyles({ row, reverse, justify, align, center, s, style })}
+      {...props}
+      style={mergeViewStyles(props)}
     />
   );
 };
