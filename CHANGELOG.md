@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.31.0
+* Refactored `ModalView` and `ModalBottomView`. `ModalView` still used actual Modal instead of Portal, and `ModalBottomView` is now using `ModalView`.
+
 ## 0.30.1
 * Added `style` property to StatusBarProvider
 

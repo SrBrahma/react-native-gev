@@ -188,9 +188,9 @@ export function Portal({
             { opacity: fadeAnim },
             darken && { backgroundColor: colors.backdrop },
             viewStyle,
-          ]}
-          children={children}
-        />
+          ]}>
+          {children}
+        </Animated.View>
       </Pressable>
     );
     portalId.current = addPortal(component, { id: portalId.current });

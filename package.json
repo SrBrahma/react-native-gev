@@ -1,6 +1,6 @@
 {
   "name": "react-native-gev",
-  "version": "0.30.1",
+  "version": "0.31.0",
   "description": "RN components for quick and smart apps development",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
