@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.30.1
+* Added `style` property to StatusBarProvider
+
 ## 0.30.0
 * Added `flex` property to View-like components.
 

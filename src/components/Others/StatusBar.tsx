@@ -3,6 +3,7 @@
 
 
 import { createContext } from 'react';
+import type { StyleProp, ViewStyle } from 'react-native';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // From expo as it has some better default values.
@@ -27,11 +28,13 @@ export type StatusBarProviderProps = {
   /** Set the statusBar text color */
   // barStyle
   // etc add other StaturBar props here, and then add them in the hook/component to mirror the StatusBar behavior.
+  /** Style for the View that simulates the StatusBar. */
+  style?: StyleProp<ViewStyle>;
 };
 
 /** You shall add it before any SafeArea Provider, and have your content inside this. */
 export const StatusBarProvider: React.FC<StatusBarProviderProps> = ({
-  children, backgroundColor = '#fff',
+  children, backgroundColor = '#fff', style,
 }) => {
   // const colorR = useRef(backgroundColor).current
   // TODO check if already applied in a parent via context, if so don't add the View again.
@@ -40,7 +43,7 @@ export const StatusBarProvider: React.FC<StatusBarProviderProps> = ({
   return (<Context.Provider value={{}}>
     <StatusBar translucent backgroundColor='#0000'/>
     {/* Absolute positioning was causing a vertical movement on 1st->2nd render. */}
-    <View style={{ height, backgroundColor, width: '100%' }}/>
+    <View style={[{ height, backgroundColor, width: '100%' }, style]}/>
     {children}
   </Context.Provider>
   );
