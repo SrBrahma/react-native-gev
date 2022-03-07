@@ -14,7 +14,7 @@ import {
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../main';
-import { Text } from './Text';
+import { Text } from '../Simple/Text';
 
 
 

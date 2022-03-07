@@ -11,6 +11,11 @@
 *
 -->
 
+## 0.32.0
+* Added `FlatList`.
+* Upgraded dependencies.
+* Chore: Moved simple components wrapper as `View`, `Pressable`, `Text` to `Simple` dir.
+
 ## 0.31.0
 * Refactored `ModalView` and `ModalBottomView`. `ModalView` still used actual Modal instead of Portal, and `ModalBottomView` is now using `ModalView`.
 

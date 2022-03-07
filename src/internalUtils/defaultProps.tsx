@@ -19,7 +19,7 @@ export function propsMerger<T extends Record<string, any>>({ props, stylesKeys =
 
 /** If defaultProp it's a function, then returns its return. */
 export function useGetDefaultProps<T extends Obj>(param: T | (() => T)): T {
-  return typeof param === 'function' ? param() : param;
+  return typeof param === 'function' ? (param as any)() : param;
 }
 
 /** For T, returns T | (() => T) */

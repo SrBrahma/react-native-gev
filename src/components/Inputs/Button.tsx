@@ -11,8 +11,8 @@ import { propsMerger, useGetDefaultProps } from '../../internalUtils/defaultProp
 import type { OmitKey } from '../../internalUtils/types';
 import { useTheme } from '../../main/theme';
 import { mLoading } from '../Modals/mLoading';
-import type { TextProps } from '../Others/Text';
-import { Text } from '../Others/Text';
+import type { TextProps } from '../Simple/Text';
+import { Text } from '../Simple/Text';
 
 
 // To support color names: https://github.com/omgovich/colord#plugins

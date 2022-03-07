@@ -1,7 +1,7 @@
 import type { PageScrollViewProps as OriginalPageScrollViewProps } from 'pagescrollview';
 import { PageScrollView as OriginalPageScrollView } from 'pagescrollview';
 import { useTheme } from '../../main/theme';
-import { RefreshControl } from '../Others/RefreshControl';
+import { RefreshControl } from './RefreshControl';
 
 
 

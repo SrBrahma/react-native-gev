@@ -8,11 +8,11 @@ import {
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RefreshControl, useTheme } from '../../main';
-import { Pressable } from '../Inputs/Pressable';
 import type { SwitchProps } from '../Inputs/Switch';
 import { Switch } from '../Inputs/Switch';
-import { Text } from '../Others/Text';
-import { View } from '../Views/View';
+import { Pressable } from '../Simple/Pressable';
+import { Text } from '../Simple/Text';
+import { View } from '../Simple/View';
 
 
 
