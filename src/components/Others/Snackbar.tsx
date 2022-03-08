@@ -1,16 +1,7 @@
 // Modified version of https://github.com/callstack/react-native-paper/blob/main/src/components/Snackbar.tsx
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import type {
-  PressableProps,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
-import {
-  Animated,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
+import { Animated, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../main';
@@ -23,32 +14,34 @@ export type SnackbarTypes = 'neutral' | 'error';
 type Text = React.ReactNode;
 
 export type SnackbarProps = {
+  /** The vertical distance from top or bottom.
+   * @default 60 */
   distance?: number;
-  /** @default 'bottom' */
+  /** If it will be positioned on 'top' or 'bottom'
+   * @default 'bottom' */
   position?: 'top' | 'bottom';
   /** Whether the Snackbar is currently visible.
    * @default !!text */
   visible?: boolean;
   /** What is the purpose of this snackbar. It defines the colors and in the future the left icons.
-   * @default neutral */
+   * @default 'error' */
   type?: SnackbarTypes;
-  /**
-   * Label and press callback for the action button. It should contain the following properties:
-   * - `label` - Label of the action button
-   * - `onPress` - Callback that is called when action button is pressed.
-   */
-  action?: PressableProps & {
-    label: string;
-  };
-  /** The duration for which the Snackbar is shown. */
+  /** How long it will be shown before calling `onTimeout`.
+   * @default DURATION_MEDIUM = 5000ms */
   duration?: number;
-  /** Callback called when Snackbar is dismissed. The `visible` prop needs to be updated when this is called.
-   * It has a false as argument so you can `onDismiss={setSnackbarVisible}`. */
-  onDismiss: (v: false) => void;
+  /** Callback called when the `duration` time is ellapsed, after `visible` is true.
+   *
+   * The `visible` prop should be set to false when this is called, so the fade animation begins.
+   *
+   * It has a false as argument so you can `onTimeout={setSnackbarVisible}`. */
+  onTimeout: (v: false) => void;
+  /** Called when the fade animation finishes and the Snackbar is no longer visible. */
+  onDisappear?: () => void;
   /** Text content of the Snackbar. */
   text: Text;
   /** Style for the wrapper of the snackbar. */
   wrapperStyle?: StyleProp<ViewStyle>;
+  /** Style of the View wrapping the icon and the text. */
   contentStyle?: StyleProp<ViewStyle>;
 };
 
@@ -61,9 +54,8 @@ export function Snackbar({
   distance = 60,
   type = 'error',
   position = 'bottom',
-  // action,
   duration = DURATION_MEDIUM,
-  onDismiss,
+  onTimeout, onDisappear,
   text: textProp,
   visible = !!textProp,
   wrapperStyle,
@@ -98,7 +90,7 @@ export function Snackbar({
         if (finished) {
           const isInfinity = duration === Number.POSITIVE_INFINITY || duration === Number.NEGATIVE_INFINITY;
           if (!isInfinity)
-            hideTimeout.current = setTimeout(() => onDismiss(false), duration) as unknown as NodeJS.Timeout;
+            hideTimeout.current = setTimeout(() => onTimeout(false), duration) as unknown as NodeJS.Timeout;
         }
       });
     } else { // hide
@@ -108,21 +100,19 @@ export function Snackbar({
         toValue: 0,
         duration: 100 * scale,
         useNativeDriver: true,
-      }).start(({ finished }) => { if (finished) setHidden(true); });
+      }).start(({ finished }) => {
+        if (finished) {
+          setHidden(true);
+          onDisappear?.();
+        }
+      });
     }
-  }, [visible, duration, opacity, scale, onDismiss]);
+  }, [visible, duration, opacity, scale, onTimeout, onDisappear]);
 
 
   const theme = useTheme();
 
   if (hidden) return null;
-
-  // const {
-  //   style: actionStyle,
-  //   label: actionLabel,
-  //   onPress: onPressAction,
-  //   ...actionProps
-  // } = action || {};
 
   const { textColor, backgroundColor, icon } = (() => {
     switch (type) {
@@ -146,7 +136,7 @@ export function Snackbar({
       <Animated.View pointerEvents='box-none' style={{
         position: 'relative',
         opacity,
-        // transform: [{ scale: visible ? opacity.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] }) : 1 }],
+        transform: [{ scale: visible ? opacity.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] }) : 1 }],
       }}>
         <Shadow
           startColor='#00000028'
@@ -195,7 +185,6 @@ const s = StyleSheet.create({
   // The painted box
   content: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 26,
     borderRadius: 4,
@@ -212,25 +201,4 @@ const s = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
-  // button: {
-  //   marginHorizontal: 8,
-  //   marginVertical: 6,
-  // },
 });
-
-
-// {action ? (
-// <Button
-//   onPress={() => {
-//     onPressAction?.();
-//     onDismiss();
-//   }}
-//   style={[styles.button, actionStyle]}
-//   color={colors.accent}
-//   compact
-//   mode='text'
-//   {...actionProps}
-// >
-//   {actionLabel}
-// </Button>
-// ) : null}

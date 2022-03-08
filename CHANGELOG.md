@@ -11,6 +11,11 @@
 *
 -->
 
+## 0.33.0
+* `Snackbar` `onDismiss` renamed to `onTimeout`.
+* Added `mSnackbar`.
+
+
 ## 0.32.0
 * Added `FlatList`.
 * Upgraded dependencies.
