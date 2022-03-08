@@ -11,10 +11,13 @@
 *
 -->
 
+
+## 0.34.0
+* Added `smartHandleSubmit` to useForm.
+
 ## 0.33.0
 * `Snackbar` `onDismiss` renamed to `onTimeout`.
 * Added `mSnackbar`.
-
 
 ## 0.32.0
 * Added `FlatList`.
