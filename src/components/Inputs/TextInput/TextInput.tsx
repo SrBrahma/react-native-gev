@@ -133,7 +133,7 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
   const {
     maxLength, minLength,
     mask, validations, inputProps,
-    unmaskedToLogical, logicalToUnmasked,
+    textToLogical, logicalToUnmasked,
   } = {
     ...(typeof preset === 'string' ? getPreset(preset) : preset),
     ...(JSON.parse(JSON.stringify(overwriters)) as Partial<typeof overwriters>),
@@ -166,7 +166,7 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
     field.onBlur();
   };
   const onChangeText = (masked: string, unmasked: string) => {
-    const logicalValue: string | number = unmaskedToLogical?.({ unmasked }) ?? unmasked;
+    const logicalValue: string | number = textToLogical?.({ masked, unmasked }) ?? unmasked;
     field.onChange(logicalValue);
     setUnmasked(unmasked);
     onChangeProp?.(masked, unmasked);

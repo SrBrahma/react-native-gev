@@ -36,7 +36,8 @@ export type PresetIds =
   | 'password'
   | 'country.br.cpf'
   | 'mm/yy'
-  | 'integerPrice';
+  | 'integerPrice'
+  | 'floatPrice';
 
 
 
@@ -47,9 +48,7 @@ export type TextInputPreset = {
   mask?: Mask;
   inputProps?: Partial<CommonTextInputProps>;
   validations?: Validations;
-  // /** Is only called if there are no errors. */
-  // changeUnmaskedOnBlur?: (p: {unmasked: string}) => string;
-  unmaskedToLogical?: (p: {unmasked: string}) => string | number;
+  textToLogical?: (p: {masked: string; unmasked: string}) => string | number;
   logicalToUnmasked?: (p: {logical: any}) => string;
 };
 const presets: Record<PresetIds, TextInputPreset> = {
@@ -93,10 +92,24 @@ const presets: Record<PresetIds, TextInputPreset> = {
     inputProps: { keyboardType: 'numeric' },
   },
   integerPrice: {
-    unmaskedToLogical: ({ unmasked }) => Number(unmasked),
+    textToLogical: ({ unmasked }) => Number(unmasked),
     inputProps: {
       leftText: 'R$',
-      maskType: 'currency',
+      maskType: 'currency', // No need to logicalToUnmasked when using this
+      keyboardType: 'decimal-pad',
+      options: { precision: 2, groupSeparator: '.', decimalSeparator: ',' },
+    },
+  },
+  floatPrice: {
+    textToLogical: ({ masked }) => {
+      let value = masked;
+      // Remove groupSeparator
+      value = value.replace(/\./g, '');
+      return Number(value);
+    },
+    inputProps: {
+      leftText: 'R$',
+      maskType: 'currency', // No need to logicalToUnmasked when using this
       keyboardType: 'decimal-pad',
       options: { precision: 2, groupSeparator: '.', decimalSeparator: ',' },
     },

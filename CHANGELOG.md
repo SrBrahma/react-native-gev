@@ -11,6 +11,8 @@
 *
 -->
 
+## 0.36.0
+* Added 'floatPrice' to `TextInput` preset.
 
 ## 0.35.0
 * If a prop in `theme.props` is a function, it now receives the component props as argument.
