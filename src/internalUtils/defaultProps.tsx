@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import type { Obj } from './types';
+import type { MayBeFunction, Obj, OmitKey } from './types';
 
 
 
@@ -18,12 +19,19 @@ export function propsMerger<T extends Record<string, any>>({ props, stylesKeys =
 }
 
 /** If defaultProp it's a function, then returns its return. */
-export function useGetDefaultProps<T extends Obj>(param: T | (() => T)): T {
-  return typeof param === 'function' ? (param as any)() : param;
+export function useGetThemeDefaultProps<T extends Obj, C extends Obj>({ themeProps, componentProps }: {
+  /** If `themeProps` is a function, this will be passed as argument to it. */
+  componentProps: C;
+  themeProps: T | ((componentProps: C) => T);
+}): T {
+  return useMemo(() => {
+    return typeof themeProps === 'function'
+      ? (themeProps as any)(componentProps)
+      : themeProps;
+  }, [componentProps, themeProps]);
 }
 
-/** For T, returns T | (() => T) */
-export type MayBeFunction<T> = T | (() => T);
+export type ThemeProps<ComponentProps extends Obj, KeysToOmit extends string> = MayBeFunction<Partial<OmitKey<ComponentProps, KeysToOmit>>, ComponentProps>;
 
 // export function usePropsMerger<T extends Record<string, unknown>>({ props, stylesKeys }: {
 //   props: (T | null | undefined)[];

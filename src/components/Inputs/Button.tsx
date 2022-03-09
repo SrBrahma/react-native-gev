@@ -6,9 +6,8 @@ import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colord, extend } from 'colord';
 import namesPlugin from 'colord/plugins/names';
-import type { MayBeFunction } from '../../internalUtils/defaultProps';
-import { propsMerger, useGetDefaultProps } from '../../internalUtils/defaultProps';
-import type { OmitKey } from '../../internalUtils/types';
+import type { ThemeProps } from '../../internalUtils/defaultProps';
+import { propsMerger, useGetThemeDefaultProps } from '../../internalUtils/defaultProps';
 import { useTheme } from '../../main/theme';
 import { mLoading } from '../Modals/mLoading';
 import type { TextProps } from '../Simple/Text';
@@ -83,13 +82,16 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
 }
 
 /** If a function, it's run as a React Hook. */
-export type ButtonPropsTheme = MayBeFunction<Partial<OmitKey<ButtonProps, 'testID' | 'nativeID' | 'text' | 'children'>>>;
+export type ButtonPropsTheme = ThemeProps<ButtonProps, 'testID' | 'nativeID' | 'text' | 'children'>;
 
 
 export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<T>): JSX.Element {
   const { colors, fonts, defaultProps: themeProps } = useTheme();
 
-  const defaultProps = useGetDefaultProps(themeProps.Button);
+  const defaultProps = useGetThemeDefaultProps({
+    themeProps: themeProps.Button,
+    componentProps: props,
+  });
 
   // ts strange error on stretch = strechRow if not doing this here separatedly
   const mergedProps = useMemo(() => propsMerger<ButtonProps>({

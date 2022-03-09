@@ -2,9 +2,8 @@ import type { Ref } from 'react';
 import { useMemo, useState } from 'react';
 import { useController } from 'react-hook-form';
 import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from 'react-native';
-import type { MayBeFunction } from '../../../internalUtils/defaultProps';
-import { propsMerger, useGetDefaultProps } from '../../../internalUtils/defaultProps';
-import type { OmitKey } from '../../../internalUtils/types';
+import type { ThemeProps } from '../../../internalUtils/defaultProps';
+import { propsMerger, useGetThemeDefaultProps } from '../../../internalUtils/defaultProps';
 import { useTheme } from '../../../main';
 import type { Control } from '../utils';
 import { isControlled } from '../utils';
@@ -55,11 +54,14 @@ export interface TextInputUncontrolledProps extends CommonTextInputProps {
 }
 
 /** If a function, it's run as a React Hook. */
-export type TextInputPropsTheme = MayBeFunction<Partial<OmitKey<TextInputUncontrolledProps, 'inputRef' | 'testID' | 'nativeID' | 'defaultValue'>>>;
+export type TextInputPropsTheme = ThemeProps<TextInputUncontrolledProps, 'inputRef' | 'testID' | 'nativeID' | 'defaultValue'>;
 
 function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
   const theme = useTheme();
-  const defaultProps = useGetDefaultProps(theme.defaultProps.TextInput);
+  const defaultProps = useGetThemeDefaultProps({
+    componentProps: props,
+    themeProps: theme.defaultProps.TextInput,
+  });
   const type = props.type ?? defaultProps.type ?? 'formal';
 
   const {
@@ -95,7 +97,10 @@ export type TextInputControlledProps<T extends Control = Control> = Omit<TextInp
 }, 'defaultValue'>; /** defaultValue unused as we at most use hook-form defaultValues. It sets the field value. */
 export function TextInputControlled<T extends Control>(props: TextInputControlledProps<T>): JSX.Element {
   const theme = useTheme();
-  const defaultProps = useGetDefaultProps(theme.defaultProps.TextInput);
+  const defaultProps = useGetThemeDefaultProps({
+    themeProps: theme.defaultProps.TextInput,
+    componentProps: props,
+  });
 
   const type = props.type ?? defaultProps.type ?? 'formal';
 

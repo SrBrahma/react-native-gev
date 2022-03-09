@@ -12,6 +12,9 @@
 -->
 
 
+## 0.35.0
+* If a prop in `theme.props` is a function, it now receives the component props as argument.
+
 ## 0.34.0
 * Added `smartHandleSubmit` to useForm.
 

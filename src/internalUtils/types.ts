@@ -13,3 +13,6 @@ export type OmitKey<T extends Obj, K extends keyof T> = Omit<T, K>;
 
 // https://stackoverflow.com/a/59846133
 export type Optional<T, K extends keyof T> = Partial<Pick<T, K>> & Omit<T, K>;
+
+/** For T, returns T | (() => T) */
+export type MayBeFunction<T, Param = any> = T | ((params: Param) => T);
