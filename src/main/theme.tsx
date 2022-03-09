@@ -35,6 +35,9 @@ interface Theme {
 // Some were based on https://callstack.github.io/react-native-paper/theming.html
 interface Colors {
   primary: string;
+  /** For primary colored texts above background.
+   * @default primary */
+  primaryDarkerText: string;
   // primaryLighter1: in hsl() format, it shall have ~10% more lightness
   // secondary: string;
   background: string;
@@ -74,6 +77,8 @@ interface Colors {
     text: string;
     /** @default primary */
     action: string;
+    /** @default primaryDarkerText */
+    actionTextInverted: string;
     /** @default error */
     destructive: string;
     // TODO defaults to [?]
@@ -184,11 +189,14 @@ type Themes<T extends Obj = EmptyObj> = {
 function applyThemeFallbacks(theme: DeepPartial<Theme>): Theme {
   return deepmerge.all([{
     colors: {
+      primaryDarkerText: theme.colors?.primary,
       badge: theme.colors?.primary,
       header: theme.colors?.primary,
       _button: {
         text: theme.colors?.background,
         action: theme.colors?.primary,
+        // Sure?
+        actionTextInverted: theme.colors?.primaryDarkerText ?? theme.colors?._button?.action ?? theme.colors?.primary,
         destructive: theme.colors?.error,
       },
       _snackbar: {

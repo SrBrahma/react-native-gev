@@ -30,9 +30,20 @@ const iconPadding = 15;
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
 // Based on https://reactnativeelements.com/docs/button#type, uikitten for filled
-export type ButtonType = 'filled' | 'clear' | 'outline'; // TODO
+export type ButtonType = 'solid' | 'clear' | 'outline'; // TODO
 
 export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown> extends PressableProps {
+  /** TODO improve this comment
+   * * `'solid'` - Paint inside with theme.primary a
+   * * `'outline'` - Paints the border (with `outlineWidth`) with the text color and sets the background to transparent.
+   * * `'clear'` same as 'outline' but without the border colored.
+   * @default 'solid' */
+  type?: ButtonType;
+  /** Switches the background color and the text color. */
+  invert?: boolean;
+  /** The borderWidth when `type === 'outline'`.
+   * @default 1 */
+  outlineWidth?: number;
   text?: string;
   /** Alias to `text`. */
   t?: string;
@@ -75,8 +86,7 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   onDisabledPress?: () => void;
   /** @default false */
   hasShadow?: boolean;
-  /** Inverts the inner color. */
-  invert?: boolean;
+
   /** react-native-shadow-2's props for the wrapping Shadow component. */
   shadowProps?: ShadowProps;
 }
@@ -115,6 +125,8 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     uppercase,
     style: styleProp,
     shadowProps,
+    type = 'solid',
+    outlineWidth = 1,
     ...p
   } = mergedProps;
 
@@ -124,8 +136,8 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
 
   const style = StyleSheet.flatten<ViewStyle>(styleProp || {});
 
-  const colorDefaultIsPrimary = invert ? colors._button.text : colors._button.action;
-  const colorDefaultIsSecondary = invert ? colors._button.action : colors._button.text;
+  const backgroundColorTemp = invert ? colors._button.text : colors._button.action;
+  const textColorTemp = invert ? colors._button.actionTextInverted : colors._button.text;
 
   const marginTop = marginTopArg
     ? (typeof marginTopArg === 'number' ? marginTopArg : buttonMargin)
@@ -135,10 +147,15 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   const isAwaitingPress = useRef(false);
 
   const textColor = StyleSheet.flatten([
-    { color: colorDefaultIsSecondary },
+    { color: textColorTemp },
     textStyle,
     textProps?.style,
   ]).color;
+  const backgroundColor = StyleSheet.flatten([
+    { backgroundColor: backgroundColorTemp },
+    style,
+    disabled && { backgroundColor: colors.disabled },
+  ]).backgroundColor ?? '#449';
 
   const leftIcon = leftIconProp && (
     <View style={[s.iconContainer, iconContainerStyle]}>{
@@ -148,11 +165,31 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     }</View>
   );
 
-  const backgroundColor = StyleSheet.flatten([
-    { backgroundColor: colorDefaultIsPrimary },
+
+
+
+  const hasOutline = type === 'outline';
+
+  const shrink = shrinkProp === true ? 'center' : shrinkProp;
+
+  const sPressable = StyleSheet.flatten<ViewStyle>([
+    s.pressable,
+    shrink && s.pressableShrink,
+    leftIcon && s.pressableWhenLeftIcon,
     style,
-    disabled && { backgroundColor: colors.disabled },
-  ]).backgroundColor ?? '#449';
+    { backgroundColor },
+  ]);
+
+  // TODO will break on string paddings
+  if (hasOutline) {
+    sPressable.paddingLeft = (sPressable.paddingLeft ?? sPressable.paddingHorizontal ?? sPressable.padding ?? 0) as number - outlineWidth;
+    sPressable.paddingRight = (sPressable.paddingRight ?? sPressable.paddingHorizontal ?? sPressable.padding ?? 0) as number - outlineWidth;
+    sPressable.paddingTop = (sPressable.paddingTop ?? sPressable.paddingVertical ?? sPressable.padding ?? 0) as number - outlineWidth;
+    sPressable.paddingBottom = (sPressable.paddingBottom ?? sPressable.paddingVertical ?? sPressable.padding ?? 0) as number - outlineWidth;
+    sPressable.borderWidth = outlineWidth;
+    sPressable.borderColor = textColor;
+    sPressable.backgroundColor = 'transparent';
+  }
 
   /** I like a light ripple even on light buttons, but there is a point where it can't be anymore noticeable, so we must use a dark ripple!
    * https://github.com/omgovich/colord/issues/89 */
@@ -174,7 +211,8 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
    * https://github.com/facebook/react-native/issues/6480 */
   const { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius } = style;
 
-  const shrink = shrinkProp === true ? 'center' : shrinkProp;
+
+
 
   return (
     <Shadow
@@ -200,13 +238,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
         android_ripple={{ color: rippleColor }}
         onPress={onPress}
         {...p} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
-        style={[
-          s.pressable,
-          shrink && s.pressableShrink,
-          leftIcon && s.pressableWhenLeftIcon,
-          style,
-          { backgroundColor },
-        ]}
+        style={sPressable}
       >
         {leftIcon}
         <Text

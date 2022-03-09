@@ -11,6 +11,9 @@
 *
 -->
 
+## 0.37.0
+* Added `type` and `outlineWidth` to `Button`.
+
 ## 0.36.0
 * Added 'floatPrice' to `TextInput` preset.
 
