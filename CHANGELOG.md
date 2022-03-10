@@ -11,11 +11,13 @@
 *
 -->
 
+## 0.37.1
+* Fixed `floatPrice` preset.
 ## 0.37.0
 * Added `type` and `outlineWidth` to `Button`.
 
 ## 0.36.0
-* Added 'floatPrice' to `TextInput` preset.
+* Added `TextInput` `'floatPrice'` preset.
 
 ## 0.35.0
 * If a prop in `theme.props` is a function, it now receives the component props as argument.

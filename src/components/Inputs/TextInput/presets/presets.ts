@@ -101,11 +101,11 @@ const presets: Record<PresetIds, TextInputPreset> = {
     },
   },
   floatPrice: {
-    textToLogical: ({ masked }) => {
-      let value = masked;
-      // Remove groupSeparator
-      value = value.replace(/\./g, '');
-      return Number(value);
+    textToLogical: ({ unmasked }) => {
+      // let value = masked;
+      // // Remove groupSeparator
+      // value = value.replace(/\./g, '');
+      return Number(unmasked) / 100;
     },
     inputProps: {
       leftText: 'R$',
