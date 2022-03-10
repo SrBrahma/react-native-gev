@@ -11,8 +11,9 @@
 *
 -->
 
-## 0.37.2
-* `react-native-svg` is now a peer dep. If we had different versions we would have errors.
+## 0.37.2~3
+* ~`react-native-svg` is now a peer dep. If we had different versions we would have errors.~
+* Removed `react-native-svg`. We don't actually use this (but is required by `react-native-shadow-2`).
 
 ## 0.37.1
 * Fixed `floatPrice` preset.
