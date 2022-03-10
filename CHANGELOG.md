@@ -11,8 +11,12 @@
 *
 -->
 
+## 0.37.2
+* `react-native-svg` is now a peer dep. If we had different versions we would have errors.
+
 ## 0.37.1
 * Fixed `floatPrice` preset.
+
 ## 0.37.0
 * Added `type` and `outlineWidth` to `Button`.
 
