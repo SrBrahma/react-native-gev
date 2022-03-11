@@ -10,7 +10,9 @@ export { limitWheelIndex, WheelPicker, WheelPickerProps } from '../components/In
 // Modals
 export { mError } from '../components/Modals/mError';
 export { mLoading, OnModalLoadingError } from '../components/Modals/mLoading';
-export { addPortal, ModalsAndPortals, Portal, removePortal } from '../components/Modals/ModalBase';
+export {
+  addPortal, addPortalMeta, askPortalMetaRemoval, ModalsAndPortals, Portal, removePortal, removePortalMeta,
+} from '../components/Modals/ModalBase';
 export { ModalBottomView, ModalBottomViewProps } from '../components/Modals/ModalBottomView';
 export { ModalView, ModalViewProps } from '../components/Modals/ModalView';
 
