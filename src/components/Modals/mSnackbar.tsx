@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { OmitKey, Optional } from '../../internalUtils/types';
 import type { SnackbarProps } from '../Others/Snackbar';
 import { Snackbar } from '../Others/Snackbar';
-import { addPortal, removePortal } from './ModalBase';
+import { addToPortalsAndModals, removeFromPortalsAndModals } from './ModalBase';
 
 
 
@@ -16,6 +16,6 @@ function ModalSnackbar(p: ModalSnackbarProps): JSX.Element {
 }
 export function mSnackbar(p: ModalSnackbarProps): void {
   let key = '';
-  const remove = () => removePortal(key);
-  key = addPortal(<ModalSnackbar {...p} onDisappear={() => { remove(); p.onDisappear?.(); }}/>);
+  const remove = () => removeFromPortalsAndModals(key);
+  key = addToPortalsAndModals(<ModalSnackbar {...p} onDisappear={() => { remove(); p.onDisappear?.(); }}/>);
 }

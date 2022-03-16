@@ -1,6 +1,6 @@
 {
   "name": "react-native-gev",
-  "version": "0.37.4",
+  "version": "0.38.0",
   "description": "RN components for quick and smart apps development",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
@@ -51,6 +51,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
+    "react-native-svg": "*",
     "react-native-reanimated": "^2.0.0",
     "react-native-safe-area-context": "^3.0.0"
   }

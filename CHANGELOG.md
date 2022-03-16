@@ -1,15 +1,15 @@
 # Changelog
 
-<!-- Template, # for major version, ## for minor and patch
 
-# 1.0.0 (YYYY-MM-DD)
-### Added
-*
-### Changed
-*
-### Fixed
-*
--->
+## 0.38.0 - 2022-03-15
+* Renamed `ModalsAndPortals` to `PortalsAndModals`. Portals! 😍
+* Renamed `addPortal` to `addToPortalsAndModals`.
+* Renamed `removePortal` to `removeFromPortalsAndModals`.
+* Removed `askPortalMetaRemoval`.
+* Renamed `addPortalMeta` to `addPortal`.
+* Renamed `removePortalMeta` to `removePortal`.
+* `removePortal` now has a second parameter, the `mode`. It can be either 'now' or 'animation' (default). 'animation' have the same behavior of the removed `askPortalMetaRemoval`, 'now' keeps its old behavior.
+* Readded `"react-native-svg": "*"` to peerDeps.
 
 ## 0.37.4
 * Added missing Portal Meta functions.

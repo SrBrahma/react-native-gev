@@ -11,7 +11,7 @@ export { limitWheelIndex, WheelPicker, WheelPickerProps } from '../components/In
 export { mError } from '../components/Modals/mError';
 export { mLoading, OnModalLoadingError } from '../components/Modals/mLoading';
 export {
-  addPortal, addPortalMeta, askPortalMetaRemoval, ModalsAndPortals, Portal, removePortal, removePortalMeta,
+  addPortal, addToPortalsAndModals, Portal, PortalsAndModals, removeFromPortalsAndModals, removePortal,
 } from '../components/Modals/ModalBase';
 export { ModalBottomView, ModalBottomViewProps } from '../components/Modals/ModalBottomView';
 export { ModalView, ModalViewProps } from '../components/Modals/ModalView';
@@ -32,6 +32,7 @@ export { useImagePicker } from '../hooks/useImagePicker';
 export { usePreventCloseApp } from '../hooks/usePreventClose';
 
 // Utils
+export { PartialBy } from '../utils/types';
 export { getErrorMessage } from '../utils/utils';
 export { wait } from '../utils/wait';
 

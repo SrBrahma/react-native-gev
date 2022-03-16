@@ -8,20 +8,16 @@ import { useTheme } from '../../main/theme';
 // To avoid state loss - https://github.com/callstack/react-native-paper/issues/736#issuecomment-455678596
 
 
-
-// https://stackoverflow.com/a/54178819/10247962
-export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-
-type Item = {element: JSX.Element; id: string};
+type ElementAndId = {element: JSX.Element; id: string};
 
 const { useGlobalState, setGlobalState } = createGlobalState({
-  modals: [] as Item[],
-  modalsMeta: [] as Item[],
+  components: [] as ElementAndId[],
+  portals: [] as ElementAndId[],
   metaIdsAskedToRetire: {} as Record<string, true>,
 });
 
 
-// No need at all to have it on a state.
+// No need to have it on a state.
 let counter = 0;
 function generateId() {
   return String(counter++);
@@ -29,14 +25,16 @@ function generateId() {
 
 
 
-/** Global state. It can both add Modals and Portals.
+/** Use this instead of `addPortal` if your component already knows how to position itself etc (TODO improve this etc).
  *
- * You shouldn't manually create the key.
+ * This will simply add the given component to
+ *
+ * Pass the key if you are updating an already added compononent.
  *
  * Returns the modal/portal key. */
-export function addPortal(component: JSX.Element | ((key: string) => JSX.Element), o?: {id?: string}): string {
+export function addToPortalsAndModals(component: JSX.Element | ((key: string) => JSX.Element), o?: {id?: string}): string {
   const id = o?.id ?? generateId();
-  setGlobalState('modals', (items) => {
+  setGlobalState('components', (items) => {
     // Replace if key already exists
     const newItems = [...items];
     const element = typeof component === 'function' ? component(id) : component;
@@ -52,31 +50,37 @@ export function addPortal(component: JSX.Element | ((key: string) => JSX.Element
   return id;
 }
 
-/** Global state */
-export function removePortal(id: React.Key): void {
-  setGlobalState('modals', (items) => items.filter((m: Item) => id !== m.id));
-}
-
-/** Lets the portal to do its removal animation and then remove itself. */
-export function askPortalMetaRemoval(id: React.Key): void {
-  setGlobalState('metaIdsAskedToRetire', (ids) => ({
-    ...ids,
-    ...{ [id]: true as const },
-  }));
+/** Removes Portals added by `addPortal`.
+ *
+ * The `id` argument must be the same as the one returned by addPortalComponent. */
+export function removeFromPortalsAndModals(id: string | number): void {
+  setGlobalState('components', (items) => items.filter((m: ElementAndId) => id !== m.id));
 }
 
 
-
-export function addPortalMeta(element: JSX.Element): string {
+/** Use this if your component is already wrapped by a Portal but not being rendered directly.
+ *
+ * This will add it to the <PortalsAndModals/> and make all the logics to make it work. */
+export function addPortal(element: JSX.Element): string {
   const id = generateId();
-  setGlobalState('modalsMeta', (items) => [...items, { element, id }]);
+  setGlobalState('portals', (items) => [...items, { element, id }]);
   return id;
 }
 
-
-/** Global state */
-export function removePortalMeta(id: React.Key): void {
-  setGlobalState('modalsMeta', (items) => items.filter((m: Item) => id !== m.id));
+/** Use this to remove portals added by addPortalComponent.
+ *
+ * The second paramenter, mode, can be either 'animation' (default) or 'now'. 'animation' will let
+ * the Portal component to do its animation before being removed, unlike 'now'.
+ *
+ * The `id` argument must be the same as the one returned by addPortalComponent. */
+export function removePortal(id: string | number, mode: 'now' | 'animation' = 'animation'): void {
+  if (mode === 'animation')
+    setGlobalState('metaIdsAskedToRetire', (ids) => ({
+      ...ids,
+      ...{ [id]: true as const },
+    }));
+  else
+    setGlobalState('portals', (items) => items.filter((m: ElementAndId) => id !== m.id));
 }
 
 
@@ -85,16 +89,16 @@ type MetaContext = { id: string } | undefined;
 const MetaContext = createContext<MetaContext>(undefined);
 
 /** Global state */
-// TODO add way to select the ModalsAndPortals component, like target: string.
-// This way, we can have like <ModalsAndPortals id='snackbar'/>, and addSnackbar({}: {id?: string})
+// TODO add way to select the PortalsAndModals component, like target: string.
+// This way, we can have like <PortalsAndModals id='snackbar'/>, and addSnackbar({}: {id?: string})
 // Add someway to stack them https://material.io/archive/guidelines/components/snackbars-toasts.html
-export function ModalsAndPortals(): JSX.Element {
-  const [modals] = useGlobalState('modals');
-  const [modalsMeta] = useGlobalState('modalsMeta');
+export function PortalsAndModals(): JSX.Element {
+  const [components] = useGlobalState('components');
+  const [portals] = useGlobalState('portals');
   return (<>
     {/* meta won't render anything but controls the modals */}
-    {modalsMeta.map((m) => <MetaContext.Provider value={{ id: m.id }} key={m.id}>{m.element}</MetaContext.Provider>)}
-    {modals.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
+    {portals.map((m) => <MetaContext.Provider value={{ id: m.id }} key={m.id}>{m.element}</MetaContext.Provider>)}
+    {components.map((m) => <Fragment key={m.id}>{m.element}</Fragment>)}
   </>);
 }
 
@@ -153,8 +157,8 @@ export function Portal({
     if (!isAnimatingToUnmount.current) {
       isAnimatingToUnmount.current = true;
       Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
-        portalId.current && removePortal(portalId.current); // No need to !== undefined, it's a string not number (won't be 0)
-        metaData?.id && removePortalMeta(metaData.id);
+        portalId.current && removeFromPortalsAndModals(portalId.current); // No need to !== undefined, it's a string not number (won't be 0)
+        metaData?.id && removePortal(metaData.id, 'now');
       });
     }
   }, [fadeAnim, fadeDuration, metaData]);
@@ -193,7 +197,7 @@ export function Portal({
         </Animated.View>
       </Pressable>
     );
-    portalId.current = addPortal(component, { id: portalId.current });
+    portalId.current = addToPortalsAndModals(component, { id: portalId.current });
   }, [children, colors.backdrop, darken, fadeAnim, onRequestClose, requestCloseOnOutsidePress, viewStyle]);
 
 
