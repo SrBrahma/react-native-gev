@@ -13,8 +13,8 @@
 <br/>
 
 <div align="center">
+  <h4>The smartest UI/DX kit for React Native!</h4>
   <h3> 🏗 ❗ Work In Progress ❗🛠 </h3>
-<h4>The smartest UI/DX kit for React Native!</h4>
 </div>
 
 <br/>
