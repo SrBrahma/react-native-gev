@@ -1,6 +1,10 @@
 # Changelog
 
 
+## 0.38.1
+* `Portal` can now accept multiple children.
+* Now exporting `PortalProps`.
+
 ## 0.38.0 - 2022-03-15
 * Renamed `ModalsAndPortals` to `PortalsAndModals`. Portals! 😍
 * Renamed `addPortal` to `addToPortalsAndModals`.

@@ -11,7 +11,8 @@ export { limitWheelIndex, WheelPicker, WheelPickerProps } from '../components/In
 export { mError } from '../components/Modals/mError';
 export { mLoading, OnModalLoadingError } from '../components/Modals/mLoading';
 export {
-  addPortal, addToPortalsAndModals, Portal, PortalsAndModals, removeFromPortalsAndModals, removePortal,
+  addPortal, addToPortalsAndModals, Portal, PortalProps,
+  PortalsAndModals, removeFromPortalsAndModals, removePortal,
 } from '../components/Modals/ModalBase';
 export { ModalBottomView, ModalBottomViewProps } from '../components/Modals/ModalBottomView';
 export { ModalView, ModalViewProps } from '../components/Modals/ModalView';
