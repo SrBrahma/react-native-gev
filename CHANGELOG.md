@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.38.2
+* `Pressable` automatic ripple is now only applied when onPress is defined.
 
 ## 0.38.1
 * `Portal` can now accept multiple children.

@@ -13,7 +13,7 @@ export interface PressableProps extends RnPressableProps, NewViewProps {
 // TODO add onPress mLoading wrapper?
 /** Wrapper for Pressable.
  * * Has all of our `View` properties.
- * * Automatic ripple color based on style.backgroundColor. */
+ * * Automatic ripple color based on style.backgroundColor. The automatic ripple is only applied when onPress is defined. */
 export const Pressable: React.FC<PressableProps> = (props) => {
 
   const mergedStyle = StyleSheet.flatten(mergeViewStyles(props));
@@ -23,7 +23,10 @@ export const Pressable: React.FC<PressableProps> = (props) => {
     <RnPressable
       {...props}
       android_ripple={{
-        color: rippleColor,
+        // Only apply automatic ripple when onPress is defined.
+        // We use 'transparent' instead of undefined as unsetting the color
+        // also removes the pressable background for some weird reason.
+        color: props.onPress ? rippleColor : 'transparent',
         ...props.android_ripple,
       }}
       style={mergedStyle}
