@@ -17,7 +17,7 @@ export interface PressableProps extends RnPressableProps, NewViewProps {
 export const Pressable: React.FC<PressableProps> = (props) => {
 
   const mergedStyle = StyleSheet.flatten(mergeViewStyles(props));
-  const rippleColor = colord(mergedStyle.backgroundColor ?? '#000' as any).brightness() > 0.8 ? '#00000014' : '#ffffff2f';
+  const rippleColor = colord(mergedStyle.backgroundColor ?? '#000' as any).brightness() > 0.8 ? '#0000000d' : '#ffffff14';
 
   return (
     <RnPressable

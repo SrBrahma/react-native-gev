@@ -1,9 +1,11 @@
 # Changelog
 
+## 0.38.3
+* `Pressable` ripple is now more subtle. Changed from `'#00000014' : '#ffffff2f'` to `'#0000000d' : '#ffffff14'`
 ## 0.38.2
 * `Pressable` automatic ripple is now only applied when onPress is defined.
 
-## 0.38.1
+## 0.38.1 - 2022-03-16
 * `Portal` can now accept multiple children.
 * Now exporting `PortalProps`.
 
