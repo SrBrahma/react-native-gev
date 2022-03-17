@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import type { MayBeFunction, Obj, OmitKey } from './types';
 
@@ -24,11 +23,9 @@ export function useGetThemeDefaultProps<T extends Obj, C extends Obj>({ themePro
   componentProps: C;
   themeProps: T | ((componentProps: C) => T);
 }): T {
-  return useMemo(() => {
-    return typeof themeProps === 'function'
-      ? (themeProps as any)(componentProps)
-      : themeProps;
-  }, [componentProps, themeProps]);
+  return typeof themeProps === 'function'
+    ? (themeProps as any)(componentProps)
+    : themeProps;
 }
 
 export type ThemeProps<ComponentProps extends Obj, KeysToOmit extends string> = MayBeFunction<Partial<OmitKey<ComponentProps, KeysToOmit>>, ComponentProps>;

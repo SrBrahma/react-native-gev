@@ -19,16 +19,13 @@ export const PortalBottomView: React.FC<PortalBottomViewProps> = ({
   );
 };
 
-
 const s = StyleSheet.create({
   portal: {
     justifyContent: 'flex-end',
   },
   container: {
-    borderRadius: 0,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 9,
+    borderBottomRightRadius: 0,
     width: '100%',
-    // maxHeight: '70%',
   },
 });
