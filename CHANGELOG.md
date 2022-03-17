@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.41.0
+* Trying out `pagescrollview@2.0.0-beta.0.`
+
 ## 0.40.1
 * Changed `useGetThemeDefaultProps`: It no longer uses useMemo on it. If our component defaultProp is a hook, it would complain hooks can't be inside useMemo().
 * Changed `PortalBottomView`: Now zeroes bottomLeft and Right radii instead of zeroing borderRadius and setting topLeft and Right.

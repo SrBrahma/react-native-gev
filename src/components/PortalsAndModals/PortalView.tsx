@@ -21,7 +21,8 @@ export type PortalViewProps = {
   /** The ScrollView props when using the innerScroll prop. */
   scrollViewProps?: ScrollViewProps;
 };
-
+// TODO can use header and footer from PageScrollView, now a FlatList.
+// Actually it uses Footer. Maybe convert it to use children to allow us to use those two?
 export const PortalView: React.FC<PortalViewProps> = ({
   onCancel, children,
   containerStyle, portalStyle, contentStyle,
@@ -33,7 +34,7 @@ export const PortalView: React.FC<PortalViewProps> = ({
     <Portal onRequestClose={onCancel} viewStyle={portalStyle}>
       <Pressable style={[s.container, { backgroundColor: colors.background }, containerStyle]} onPress={() => Keyboard.dismiss()}>
         {Header && (typeof Header === 'function' ? <Header/> : Header)}
-        <PageScrollView flatList viewStyle={[s.content, contentStyle]} {...scrollViewProps}>
+        <PageScrollView viewStyle={[s.content, contentStyle]} {...scrollViewProps}>
           <Pressable onPress={() => Keyboard.dismiss()}>
             {children}
           </Pressable>
