@@ -64,6 +64,23 @@ expo install react-native-gev react-native-safe-area-context react-native-reanim
 * Follows [Semantic Versioning](https://semver.org/), breaking / UI changes are majors. (Not yet on v0), future proof
 
 
+## Best practices
+
+> Over the time I developed my own practices that aims to improve my DX. And they do!
+
+* When defining a StyleSheet, call it `s` instead of calling it `styles`. Less useless letters, better readability and faster typing.
+```
+  <View s={s.container}/>
+  ...
+  const s = StyleSheet.create({...}) 
+```
+
+* When using our `<Text/>`, have `t` (`text`) as the last property, and `s` (`style`) before it. Faster to find out the text in this way.
+```
+  <Text anyOtherProp s={s.text} t='Hi, Earth!'/>
+```
+
+
 ## Info
 * The `/src` is intentionally shipped with the package. This ensures you will always have access to the source code for your installed version.
 * Some patterns and components were based / built on top of others libs, so this has the best current practices. When they do, they have their source properly linked, with all the respect to the authors and to their licenses. This aims to improve them and make them fit better this project.
