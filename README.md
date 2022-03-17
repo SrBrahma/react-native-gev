@@ -25,6 +25,7 @@
 
 There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think they don't exactly fit my use cases.
 
+This both improves some React Natives components like `View` and add many other useful components. They are all easily customizable and fast to catch up on how to use it.
 
 This is opinionated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
 
@@ -62,6 +63,23 @@ expo install react-native-gev react-native-safe-area-context react-native-reanim
 * Easy customization
 * Powerful theming
 * Follows [Semantic Versioning](https://semver.org/), breaking / UI changes are majors. (Not yet on v0), future proof
+
+
+## Best practices
+
+> Over the time I developed my own practices that aims to improve my DX. And they do!
+
+* When defining a StyleSheet, call it `s` instead of calling it `styles`. Less useless letters, better readability and faster typing.
+```
+  <View s={s.container}/>
+  ...
+  const s = StyleSheet.create({...}) 
+```
+
+* When using our `<Text/>`, have `t` (`text`) as the last property, and `s` (`style`) before it. Faster to find out the text in this way.
+```
+  <Text anyOtherProp s={s.text} t='Hi, Earth!'/>
+```
 
 
 ## Info
