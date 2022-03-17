@@ -9,7 +9,7 @@ import namesPlugin from 'colord/plugins/names';
 import type { ThemeProps } from '../../internalUtils/defaultProps';
 import { propsMerger, useGetThemeDefaultProps } from '../../internalUtils/defaultProps';
 import { useTheme } from '../../main/theme';
-import { mLoading } from '../Modals/mLoading';
+import { mLoading } from '../PortalsAndModals/mLoading';
 import type { TextProps } from '../Simple/Text';
 import { Text } from '../Simple/Text';
 

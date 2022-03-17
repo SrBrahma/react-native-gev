@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { OmitKey, Optional } from '../../internalUtils/types';
 import type { SnackbarProps } from '../Others/Snackbar';
 import { Snackbar } from '../Others/Snackbar';
-import { addToPortalsAndModals, removeFromPortalsAndModals } from './ModalBase';
+import { addToPortalsAndModals, removeFromPortalsAndModals } from './PortalsAndModals';
 
 
 

@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.40.0
+* Renamed `ModalView` to `PortalView` (and its params prop).
+* Renamed `ModalBottomView` to `PortalBottomView` (and its params prop).
+
 ## 0.39.0
-* Reworked theme.sizes:
-* * react-native-gev components no longer uses it, so you are now totally free to change it and set it up to suit your application needs and styles.
+* Reworked `theme.sizes`:
+* * react-native-gev components no longer uses it (but maybe ModalView should use it?), so you are now totally free to change it and set it up to suit your application needs and styles.
 * * Changed the old ~`theme.sizes.borderRadiusSmall` style to `theme.sizes.small.borderRadius`. Cleaner, more meaningful and prettier. Less garbage.
 
 Nice! :) Spent some hours trying to get this result, which is probably the best way to have a centralized styles control.

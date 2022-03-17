@@ -5,7 +5,7 @@ import {} from 'react-native';
 import type { SwitchControlledProps } from '../components/Inputs/Switch';
 import type { TextInputControlledProps } from '../components/Inputs/TextInput/TextInput';
 import { TextInput } from '../components/Inputs/TextInput/TextInput';
-import { mSnackbar } from '../components/Modals/mSnackbar';
+import { mSnackbar } from '../components/PortalsAndModals/mSnackbar';
 import { getErrorMessage, Switch } from '../main';
 
 

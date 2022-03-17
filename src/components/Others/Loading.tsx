@@ -1,7 +1,7 @@
 import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { useTheme } from '../../main/theme';
-import { Portal } from '../Modals/ModalBase';
+import { Portal } from '../PortalsAndModals/PortalsAndModals';
 import { Text } from '../Simple/Text';
 import { View } from '../Simple/View';
 

@@ -8,14 +8,14 @@ export { TextInputFormal } from '../components/Inputs/TextInput/TextInputFormal'
 export { limitWheelIndex, WheelPicker, WheelPickerProps } from '../components/Inputs/WheelPicker';
 
 // Modals
-export { mError } from '../components/Modals/mError';
-export { mLoading, OnModalLoadingError } from '../components/Modals/mLoading';
+export { mError } from '../components/PortalsAndModals/mError';
+export { mLoading, OnModalLoadingError } from '../components/PortalsAndModals/mLoading';
+export { PortalBottomView, PortalBottomViewProps } from '../components/PortalsAndModals/PortalBottomView';
 export {
   addPortal, addToPortalsAndModals, Portal, PortalProps,
   PortalsAndModals, removeFromPortalsAndModals, removePortal,
-} from '../components/Modals/ModalBase';
-export { ModalBottomView, ModalBottomViewProps } from '../components/Modals/ModalBottomView';
-export { ModalView, ModalViewProps } from '../components/Modals/ModalView';
+} from '../components/PortalsAndModals/PortalsAndModals';
+export { PortalView, PortalViewProps } from '../components/PortalsAndModals/PortalView';
 
 // Views
 export { ImageBackground, ImageBackgroundProps } from '../components/Views/ImageBackground';

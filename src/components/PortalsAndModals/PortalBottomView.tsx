@@ -1,17 +1,17 @@
 import { StyleSheet } from 'react-native';
-import type { ModalViewProps } from './ModalView';
-import { ModalView } from './ModalView';
+import type { PortalViewProps } from './PortalView';
+import { PortalView } from './PortalView';
 
 
 
-export type ModalBottomViewProps = ModalViewProps;
+export type PortalBottomViewProps = PortalViewProps;
 
 
-export const ModalBottomView: React.FC<ModalBottomViewProps> = ({
+export const PortalBottomView: React.FC<PortalBottomViewProps> = ({
   containerStyle, portalStyle, contentStyle, ...props
 }) => {
   return (
-    <ModalView
+    <PortalView
       {...props}
       portalStyle={[s.portal, portalStyle]}
       containerStyle={[s.container, containerStyle]}

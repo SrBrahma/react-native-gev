@@ -73,7 +73,7 @@ expo install react-native-gev react-native-safe-area-context react-native-reanim
 ```
   <View s={s.container}/>
   ...
-  const s = StyleSheet.create({...}) 
+  const s = StyleSheet.create({...})
 ```
 
 * When using our `<Text/>`, have `t` (`text`) as the last property, and `s` (`style`) before it. Faster to find out the text in this way.
@@ -85,7 +85,7 @@ expo install react-native-gev react-native-safe-area-context react-native-reanim
 ## Info
 * The `/src` is intentionally shipped with the package. This ensures you will always have access to the source code for your installed version.
 * Some patterns and components were based / built on top of others libs, so this has the best current practices. When they do, they have their source properly linked, with all the respect to the authors and to their licenses. This aims to improve them and make them fit better this project.
-
+* We use Portals instead of native Modals. Modals have a good amount of issues and limitations. However, our mFunctions like mSnackbar etc have the m for Modal instead of p for Portal as pSnackbar wouldn't look too good. Maybe I will change it later?
 
 ## TODO
 * i18n maybe in Provider or via global state: `{currency: 'R$', decimalSeparator: ','}`

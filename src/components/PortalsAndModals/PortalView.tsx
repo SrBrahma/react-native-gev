@@ -2,11 +2,11 @@ import type { ScrollViewProps, StyleProp, ViewStyle } from 'react-native';
 import { Keyboard, Pressable, StyleSheet } from 'react-native';
 import { PageScrollView } from 'pagescrollview';
 import { useTheme } from '../../main';
-import { Portal } from './ModalBase';
+import { Portal } from './PortalsAndModals';
 
 
 
-export type ModalViewProps = {
+export type PortalViewProps = {
   onCancel: () => void;
   /** The style of the wrapping Portal' View. Useful to change the backdrop color or the ModalView flex position. */
   portalStyle?: StyleProp<ViewStyle>;
@@ -22,16 +22,16 @@ export type ModalViewProps = {
   scrollViewProps?: ScrollViewProps;
 };
 
-export const ModalView: React.FC<ModalViewProps> = ({
+export const PortalView: React.FC<PortalViewProps> = ({
   onCancel, children,
   containerStyle, portalStyle, contentStyle,
   scrollViewProps,
   Header, Footer,
 }) => {
-  const { colors, sizes } = useTheme();
+  const { colors } = useTheme();
   return (
     <Portal onRequestClose={onCancel} viewStyle={portalStyle}>
-      <Pressable style={[s.container, sizes.screen, { backgroundColor: colors.background }, containerStyle]} onPress={() => Keyboard.dismiss()}>
+      <Pressable style={[s.container, { backgroundColor: colors.background }, containerStyle]} onPress={() => Keyboard.dismiss()}>
         {Header && (typeof Header === 'function' ? <Header/> : Header)}
         <PageScrollView flatList viewStyle={[s.content, contentStyle]} {...scrollViewProps}>
           <Pressable onPress={() => Keyboard.dismiss()}>
@@ -50,6 +50,8 @@ const s = StyleSheet.create({
     borderRadius: 12,
     maxHeight: '80%',
     width: '80%', // TODO?
+    paddingVertical: 40,
+    paddingHorizontal: 32,
   },
   content: {
     // This padding because absolute stuff were being cropped

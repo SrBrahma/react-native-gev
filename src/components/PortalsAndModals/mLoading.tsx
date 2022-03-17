@@ -1,7 +1,7 @@
 import is from '@sindresorhus/is';
 import { Loading } from '../Others/Loading';
 import { mError } from './mError';
-import { addPortal, removePortal } from './ModalBase';
+import { addPortal, removePortal } from './PortalsAndModals';
 
 
 
