@@ -14,12 +14,12 @@ export type PageScrollViewProps = OriginalPageScrollViewProps & {
  * * Applies the theme's backgroundColor.
  * * Adds `refreshing` and `onRefresh` props as shortcut to RefreshControl, with themes's primaryColor as its color.
  */
-export const PageScrollView: React.FC<PageScrollViewProps> = ({ refreshing, onRefresh, viewStyle, ...p }) => {
+export const PageScrollView: React.FC<PageScrollViewProps> = ({ refreshing, onRefresh, backgroundColor: backgroundColorProp, ...p }) => {
   const theme = useTheme();
-  const backgroundColor = theme.colors.background;
+  const backgroundColor = backgroundColorProp ?? theme.colors.background;
   return <OriginalPageScrollView
     refreshControl={onRefresh ? (<RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/>) : undefined}
-    viewStyle={[{ backgroundColor }, viewStyle]}
+    backgroundColor={backgroundColor}
     {...p}
   />;
 };

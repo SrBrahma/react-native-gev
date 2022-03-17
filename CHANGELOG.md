@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 0.41.1
+* Fixed `PageScrollView` backgroundColor property.
+
 ## 0.41.0
 * Trying out `pagescrollview@2.0.0-beta.0.`
 
