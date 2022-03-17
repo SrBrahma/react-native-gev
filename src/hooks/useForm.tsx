@@ -68,8 +68,8 @@ export function useForm<F extends FieldValues = FieldValues, C extends object = 
     });
 
     const components: Components<F, C> = {
-      TextInput: function (p) { return <TextInput control={control} idToLabel={idToLabel} {...p}/>; },
-      Switch: function (p) { return <Switch control={control} {...p}/>; },
+      TextInput(p) { return <TextInput control={control} idToLabel={idToLabel} {...p}/>; },
+      Switch(p) { return <Switch control={control} {...p}/>; },
     };
 
     return {

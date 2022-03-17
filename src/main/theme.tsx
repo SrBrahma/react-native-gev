@@ -14,24 +14,6 @@ import { defaultFonts } from './fonts';
 // It's being an issue since the addition of `props` prop.
 
 
-interface Theme {
-  colors: Colors;
-  sizes: Common;
-  /** The fonts for basic texts. */
-  fonts: Fonts;
-  /** Default props for our components. Easier customization!
-   *
-   * The styles are merged.
-   *
-   * It may either be the component props or a function that returns it.
-   *
-   * If it's a function, it's run like a React hook, so you may useTheme().
-   *
-   * Wrapping the function's object-props return in a useMemo is recommended for a better performance. */
-  defaultProps: DefaultProps;
-}
-
-
 // Some were based on https://callstack.github.io/react-native-paper/theming.html
 interface Colors {
   primary: string;
@@ -98,23 +80,64 @@ interface Colors {
 
 
 const defaultSizes = {
-  borderRadius: 4,
-  screen: {
-    paddingVertical: 40,
-    paddingHorizontal: 32,
+  medium: {
+    borderRadius: 12,
+    screen: {
+      paddingVertical: 40,
+      paddingHorizontal: 32,
+    },
   },
-  screenShort: {
-    paddingVerticalShort: 20,
-    paddingHorizontalShort: 16,
+  small: {
+    borderRadius: 9,
+    screen: {
+      paddingVertical: 30,
+      paddingHorizontal: 26,
+    },
+  },
+  smaller: {
+    borderRadius: 4,
+    screen: {
+      paddingVertical: 20,
+      paddingHorizontal: 16,
+    },
+  },
+  tiny: {
+    borderRadius: 2,
+    screen: {
+      paddingVertical: 8,
+      paddingHorizontal: 6,
+    },
   },
 };
-// Not hard typed as it is boring to set it up .
-type Common = typeof defaultSizes;
+
+/** Those aren't used by any react-native-gev's component, so you can feel free to use, add and customize whatever values suits your application,
+ * and even add other sizes levels. What I suggest is `tiny, smaller, small, medium, large, larger, huge`,
+ * but hardly you will need more than 2-3. */
+export type Sizes = typeof defaultSizes;
+
 
 
 interface DefaultProps {
   TextInput: TextInputPropsTheme;
   Button: ButtonPropsTheme;
+}
+
+
+interface Theme {
+  colors: Colors;
+  sizes: Sizes;
+  /** The fonts for basic texts. */
+  fonts: Fonts;
+  /** Default props for our components. Easier customization!
+   *
+   * The styles are merged.
+   *
+   * It may either be the component props or a function that returns it.
+   *
+   * If it's a function, it's run like a React hook, so you may useTheme().
+   *
+   * Wrapping the function's object-props return in a useMemo is recommended for a better performance. */
+  defaultProps: DefaultProps;
 }
 
 

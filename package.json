@@ -1,6 +1,6 @@
 {
   "name": "react-native-gev",
-  "version": "0.38.5",
+  "version": "0.39.0",
   "description": "RN components for quick and smart apps development",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@types/color": "^3.0.3",
     "@types/react-native": "^0.64.23",
-    "eslint-config-gev": "2.32.3",
+    "eslint-config-gev": "2.33.0",
     "react": "*",
     "react-native": "^0.64.3",
     "react-native-reanimated": "^2.0.0",
@@ -51,8 +51,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-svg": "*",
     "react-native-reanimated": "^2.0.0",
-    "react-native-safe-area-context": "^3.0.0"
+    "react-native-safe-area-context": "^3.0.0",
+    "react-native-svg": "*"
   }
 }

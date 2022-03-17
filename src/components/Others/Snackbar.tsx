@@ -146,7 +146,7 @@ export function Snackbar({
         >
           <View pointerEvents='none' style={[
             s.content, {
-              borderRadius: theme.sizes.roundness,
+              borderRadius: 4,
               backgroundColor,
             },
             contentStyle,

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.39.0
+* Reworked theme.sizes:
+* * react-native-gev components no longer uses it, so you are now totally free to change it and set it up to suit your application needs and styles.
+* * Changed the old ~`theme.sizes.borderRadiusSmall` style to `theme.sizes.small.borderRadius`. Cleaner, more meaningful and prettier. Less garbage.
+
+Nice! :) Spent some hours trying to get this result, which is probably the best way to have a centralized styles control.
+
 ## 0.38.5
 * Renamed Theme's `sizes.roundness` to `sizes.borderRadius`.
 

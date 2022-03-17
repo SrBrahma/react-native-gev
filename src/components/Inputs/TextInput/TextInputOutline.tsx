@@ -127,8 +127,6 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
   const activeColor = activeColorProp ?? theme.colors.primary;
   const inactiveColor = inactiveColorProp ?? 'grey';
   const errorColor = errorColorProp ?? theme.colors.error;
-  /** Can be overwritten in containerStyle */
-  const borderRadius = theme.sizes.roundness;
   const maxLength = maxLengthProp ?? pattern?.length;
   const errorState = !!error;
   const selectionColor = errorState ? errorColor : (selectionColorProp ?? activeColor);
@@ -289,7 +287,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
     container: {
       flex: 1,
       borderWidth: 1,
-      borderRadius,
+      borderRadius: 4,
       alignSelf: 'stretch',
       flexDirection: 'row',
       backgroundColor,
