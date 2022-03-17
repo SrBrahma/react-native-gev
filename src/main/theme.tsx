@@ -98,7 +98,7 @@ interface Colors {
 
 
 const defaultSizes = {
-  roundness: 4,
+  borderRadius: 4,
   screen: {
     paddingVertical: 40,
     paddingHorizontal: 32,

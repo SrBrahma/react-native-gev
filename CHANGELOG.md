@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.38.5
+* Renamed Theme's `sizes.roundness` to `sizes.borderRadius`.
+
 ## 0.38.4
 * Added `color` and `style` properties to `Loading`.
 * Changed `flex` property of View-based components - now it can be false.
