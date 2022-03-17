@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.38.4
+* Added `color` and `style` properties to `Loading`.
+* Changed `flex` property of View-based components - now it can be false.
+
 ## 0.38.3
 * `Pressable` ripple is now more subtle. Changed from `'#00000014' : '#ffffff2f'` to `'#0000000d' : '#ffffff14'`
 ## 0.38.2

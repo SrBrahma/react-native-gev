@@ -24,7 +24,7 @@ export type NewViewProps = {
    * Shortcut to style `style: {justifyContent: 'center', alignItems: 'center'}` */
   center?: boolean;
   /** Shortcut to `style: {flex: 1}`. You may also pass a number to be used instead of the default 1, when **true**. */
-  flex?: true | number;
+  flex?: boolean | number;
 };
 
 export interface ViewProps extends RnViewProps, NewViewProps {}
@@ -36,7 +36,7 @@ export function mergeViewStyles({
   row, reverse, justify, align: alignProp, center, s, style, flex: flexProp,
 }: MergeViewStylesProps): StyleProp<ViewStyle> {
   const align = alignProp === true ? 'center' : alignProp;
-  const flex = flexProp === true ? 1 : flexProp;
+  const flex = flexProp === true ? 1 : (typeof flexProp === 'number' ? flexProp : undefined);
   return [{
     flex,
     flexDirection: (row
