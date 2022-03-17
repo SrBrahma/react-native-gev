@@ -25,6 +25,7 @@
 
 There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think they don't exactly fit my use cases.
 
+This both improves some React Natives components like `View` and add many other useful components. They are all easily customizable and fast to catch up on how to use it.
 
 This is opinionated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
 
