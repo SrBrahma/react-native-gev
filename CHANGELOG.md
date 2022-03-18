@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.43.0
+* Changed `Button`'s `'outline' type`: It's now painted.
+* Added to `Button`: `'outlineClear'` as a new `type`. It's the same as the previous `'outline'`
 
 ## 0.42.5
 * Changed `TextInput` when `type === 'outline'`: `style.borderColor` may be overwritten.

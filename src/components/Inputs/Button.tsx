@@ -30,13 +30,14 @@ const iconPadding = 15;
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
 
 // Based on https://reactnativeelements.com/docs/button#type, uikitten for filled
-export type ButtonType = 'solid' | 'clear' | 'outline'; // TODO
+export type ButtonType = 'solid' | 'outline' | 'outlineClear' | 'clear';
 
 export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown> extends PressableProps {
   /** TODO improve this comment
-   * * `'solid'` - Paint inside with theme.primary a
-   * * `'outline'` - Paints the border (with `outlineWidth`) with the text color and sets the background to transparent.
-   * * `'clear'` same as 'outline' but without the border colored.
+   * * `'solid'` - Paint inside with theme.primary by default.
+   * * `'outline'` - Same as `'solid'` but has an outline with the text's color and with width defined by `outlineWidth`.
+   * * `'outlineClear'` - Same as `'outline'` but the `backgroundColor` is transparent.
+   * * `'clear'` - Just the text. No `backgroundColor` or outline.
    * @default 'solid' */
   type?: ButtonType;
   /** Switches the background color and the text color. */
@@ -139,7 +140,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   const backgroundColorTemp = invert ? colors._button.text : colors._button.action;
   const textColorTemp = invert ? colors._button.actionTextInverted : colors._button.text;
 
-  const hasOutline = type === 'outline';
+  const hasOutline = type === 'outline' || type === 'outlineClear';
   const shrink = shrinkProp === true ? 'center' : shrinkProp;
 
   const marginTop = marginTopArg
@@ -187,7 +188,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     sPressable.borderWidth = outlineWidth;
     // Allows overwritting.
     sPressable.borderColor = sPressable.borderColor ?? textColor;
-    sPressable.backgroundColor = 'transparent';
+    sPressable.backgroundColor = type === 'outlineClear' ? 'transparent' : backgroundColor;
   }
 
   /** I like a light ripple even on light buttons, but there is a point where it can't be anymore noticeable, so we must use a dark ripple!
