@@ -306,8 +306,7 @@ const s = StyleSheet.create({
     fontSize: 18.5,
     textAlign: 'center',
     textAlignVertical: 'center',
-    includeFontPadding: false,
-    paddingTop: Platform.OS === 'web' ? 4 : 2, // It was for some reason a little to the top
+    top: StyleSheet.hairlineWidth * 1,
   },
   /** Do also use text */
   textWhenIcon: {

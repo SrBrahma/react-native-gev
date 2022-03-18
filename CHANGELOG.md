@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.42.3
+* Changed `Button` textStyle default `paddingTop` to `top`.
+
 ## 0.42.2
 * Fixed `Button`'s `textStyle`'s `textAlignVertical` defaulting to `'bottom'` instead of `'center'`.
 
