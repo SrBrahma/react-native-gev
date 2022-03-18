@@ -139,6 +139,9 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   const backgroundColorTemp = invert ? colors._button.text : colors._button.action;
   const textColorTemp = invert ? colors._button.actionTextInverted : colors._button.text;
 
+  const hasOutline = type === 'outline';
+  const shrink = shrinkProp === true ? 'center' : shrinkProp;
+
   const marginTop = marginTopArg
     ? (typeof marginTopArg === 'number' ? marginTopArg : buttonMargin)
     : 0;
@@ -166,11 +169,6 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   );
 
 
-
-
-  const hasOutline = type === 'outline';
-
-  const shrink = shrinkProp === true ? 'center' : shrinkProp;
 
   const sPressable = StyleSheet.flatten<ViewStyle>([
     s.pressable,
@@ -281,7 +279,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     borderRadius: buttonBorderRadius,
     flexDirection: 'row',
-    minHeight: iconSize + (iconPadding * 2),
+    minHeight: iconSize + (iconPadding * 2), // change this? not good to change it?
     flexGrow: 1,
     paddingHorizontal: buttonPaddingHorizontal,
   },
@@ -307,7 +305,7 @@ const s = StyleSheet.create({
     flexShrink: 1, // Also needed to make adjustsFontSizeToFit work
     fontSize: 18.5,
     textAlign: 'center',
-    textAlignVertical: 'bottom',
+    textAlignVertical: 'center',
     includeFontPadding: false,
     paddingTop: Platform.OS === 'web' ? 4 : 2, // It was for some reason a little to the top
   },

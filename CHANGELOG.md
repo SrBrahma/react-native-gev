@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.42.2
+* Fixed `Button`'s `textStyle`'s `textAlignVertical` defaulting to `'bottom'` instead of `'center'`.
 
 ## 0.42.1
 * Fixed `FlatList` generic type.
