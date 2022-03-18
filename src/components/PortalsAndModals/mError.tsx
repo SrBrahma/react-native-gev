@@ -6,5 +6,5 @@ import { getErrorMessage } from '../../utils/utils';
 export function mError(err: any): void {
   const header = 'Erro ' + typeof err === 'object' && err.code ? err.code : '';
   const message = getErrorMessage(err, '');
-  Alert.alert(header, message);
+  Alert.alert(header, message, undefined, { cancelable: true });
 }

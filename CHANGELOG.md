@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.42.0
+* Added `floating` property to `Loading`
+* Added `{ cancelable: true }` to Alert.alert in mError.
 
 ## 0.41.1
 * Fixed `PageScrollView` backgroundColor property.
