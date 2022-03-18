@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 0.42.5
+* Changed `TextInput` when `type === 'outline'`: `style.borderColor` may be overwritten.
+* Changed `Button`: `!hasShadow` has priority over `shadowProps`.
+
 ## 0.42.4
 * Changed `TextInput`'s `const label = labelProp ?? idToLabel?.[id] ?? id;` to `labelProp ?? idToLabel ? (idToLabel?.[id] ?? id) : undefined;`
 

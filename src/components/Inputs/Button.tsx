@@ -185,7 +185,8 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     sPressable.paddingTop = (sPressable.paddingTop ?? sPressable.paddingVertical ?? sPressable.padding ?? 0) as number - outlineWidth;
     sPressable.paddingBottom = (sPressable.paddingBottom ?? sPressable.paddingVertical ?? sPressable.padding ?? 0) as number - outlineWidth;
     sPressable.borderWidth = outlineWidth;
-    sPressable.borderColor = textColor;
+    // Allows overwritting.
+    sPressable.borderColor = sPressable.borderColor ?? textColor;
     sPressable.backgroundColor = 'transparent';
   }
 
@@ -217,8 +218,8 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
       offset={[0, 0.5]}
       distance={2} // cleaner without it.
       startColor='#0001'
-      {...!hasShadow && { distance: 0, paintInside: false }}
       {...shadowProps}
+      {...!hasShadow && { distance: 0, paintInside: false }}
       containerViewStyle={[
         row
           ? (shrink ? s.shadowContainerRowShrink : s.shadowContainerRow)
