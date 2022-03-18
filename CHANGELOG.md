@@ -1,14 +1,18 @@
 # Changelog
 
+
+## 0.42.1
+* Fixed `FlatList` generic type.
+
 ## 0.42.0
-* Added `floating` property to `Loading`
+* Added `floating` property to `Loading`.
 * Added `{ cancelable: true }` to Alert.alert in mError.
 
 ## 0.41.1
 * Fixed `PageScrollView` backgroundColor property.
 
 ## 0.41.0
-* Trying out `pagescrollview@2.0.0-beta.0.`
+* Trying out `pagescrollview@2.0.0-beta.0.`.
 
 ## 0.40.1
 * Changed `useGetThemeDefaultProps`: It no longer uses useMemo on it. If our component defaultProp is a hook, it would complain hooks can't be inside useMemo().
