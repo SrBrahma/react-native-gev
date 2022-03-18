@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.42.4
+* Changed `TextInput`'s `const label = labelProp ?? idToLabel?.[id] ?? id;` to `labelProp ?? idToLabel ? (idToLabel?.[id] ?? id) : undefined;`
+
 ## 0.42.3
 * Changed `Button` textStyle default `paddingTop` to `top`.
 

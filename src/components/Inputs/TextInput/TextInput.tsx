@@ -123,7 +123,7 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
 
   if (!id) throw new Error('id prop not set for controlled TextInput!');
 
-  const label = labelProp ?? idToLabel?.[id] ?? id;
+  const label = labelProp ?? idToLabel ? (idToLabel?.[id] ?? id) : undefined;
 
   const overwriters = {
     maxLength: p.maxLength,
@@ -193,7 +193,7 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
 export type TextInputProps<T extends Control = Control> = TextInputUncontrolledProps | TextInputControlledProps<T>;
 
 /**
- * `label`, a text that will show up identifying the TextInput, defaults to `idToLabel?.[id]`, and then to `id`.
+ * `label`, a text that will show up identifying the TextInput, defaults to `idToLabel?.[id]`.
  *
  * `accessibilityLabel` defaults to `label`, as it's useful for unit tests.
  */
