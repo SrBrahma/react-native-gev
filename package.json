@@ -1,6 +1,6 @@
 {
   "name": "react-native-gev",
-  "version": "0.43.0",
+  "version": "0.44.0",
   "description": "RN components for quick and smart apps development",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
@@ -30,13 +30,12 @@
     "expo-image-picker": "^12.0.2",
     "expo-status-bar": "^1.2.0",
     "pagescrollview": "2.0.0-beta.0",
-    "react-hook-form": "^7.27.1",
     "react-hooks-global-state": "^1.0.2",
     "react-native-mask-text": "^0.7.0",
     "react-native-shadow-2": "^6.0.3",
     "react-native-size-matters": "^0.4.0",
     "ts-retry-promise": "^0.6.1",
-    "zod": "^3.13.4"
+    "zod": "^3.14.2"
   },
   "devDependencies": {
     "@types/color": "^3.0.3",
@@ -46,13 +45,15 @@
     "react-native": "^0.64.3",
     "react-native-reanimated": "^2.0.0",
     "react-native-safe-area-context": "^3.0.0",
-    "typescript": "^4.6.2"
+    "typescript": "^4.6.3",
+    "react-hook-form": "^7.28.1"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
     "react-native-reanimated": "^2.0.0",
     "react-native-safe-area-context": "^3.0.0",
-    "react-native-svg": "*"
+    "react-native-svg": "*",
+    "react-hook-form": "^7.28.1"
   }
 }

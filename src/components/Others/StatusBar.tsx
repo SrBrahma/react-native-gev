@@ -3,7 +3,7 @@
 
 
 import { createContext } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // From expo as it has some better default values.
@@ -22,7 +22,7 @@ export type StatusBarProviderProps = {
   useNativeDriver?: boolean;
   /** The starting color for the StatusBar.
    * @default #fff */
-  backgroundColor?: string;
+  backgroundColor?: ColorValue;
   /** iOS hasn't a statusBar backgroundColor by default. https://stackoverflow.com/a/39300715 */
   // changeIOSColor
   /** Set the statusBar text color */

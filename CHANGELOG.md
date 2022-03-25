@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.44.0
+* Upgraded `react-native-form` to 7.28.1
+* `react-native-form` is now a peerDep, as you may want to use other functionalities of it without involving gev.
+* `StatusBarProvider` `backgroundColor` type from `string` to `ColorValue`
+* `TextInputOutline`: Removed `alignSelf: 'stretch'` from `containerStyle` default.
+
 ## 0.43.0
 * Changed `Button`'s `'outline' type`: It's now painted.
 * Added to `Button`: `'outlineClear'` as a new `type`. It's the same as the previous `'outline'`

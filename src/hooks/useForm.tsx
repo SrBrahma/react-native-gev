@@ -12,12 +12,12 @@ import { getErrorMessage, Switch } from '../main';
 /** Remove control props from the controlled components as we will automatically fill them. */
 type OmitControl<T> = Omit<T, 'control'>;
 
-type Components<F extends FieldValues = FieldValues, C extends object = object> = {
+type Components<F extends FieldValues = FieldValues, C = any> = {
   TextInput: (p: OmitControl<TextInputControlledProps<Control<F, C>>>) => JSX.Element;
   Switch: (p: OmitControl<SwitchControlledProps<Control<F, C>>>) => JSX.Element;
 };
 
-type UseFormReturn<F extends FieldValues = FieldValues, C extends object = object> = {
+type UseFormReturn<F extends FieldValues = FieldValues, C = any> = {
   components: Components<F, C>;
   /** Same as `handleSubmit(valid, invalid)`, but:
    *
@@ -32,7 +32,7 @@ type UseFormReturn<F extends FieldValues = FieldValues, C extends object = objec
 } & UseFormReturnInternal<F, C>;
 
 
-type UseFormProps<F extends FieldValues = FieldValues, C extends object = object> = UseFormPropsInternal<F, C> & {
+type UseFormProps<F extends FieldValues = FieldValues, C = any> = UseFormPropsInternal<F, C> & {
   idToLabel?: Record<keyof F, string>;
 };
 
@@ -42,9 +42,9 @@ type UseFormProps<F extends FieldValues = FieldValues, C extends object = object
  * * Returns inputs components with `control` prop populated
  * * Returns inputs components with `idToLabel` prop populated, if defined
  */
-export function useForm<F extends FieldValues = FieldValues, C extends object = object>(props?: UseFormProps<F, C>): UseFormReturn<F, C> {
+export function useForm<F extends FieldValues = FieldValues, C = any>(props?: UseFormProps<F, C>): UseFormReturn<F, C> {
   const { idToLabel, ...rest } = props ?? {};
-  const useFormReturn = useFormInternal({ mode: 'onTouched', ...rest });
+  const useFormReturn = useFormInternal<F, C>({ mode: 'onTouched', ...rest });
   // Without this memo, the inputs/the form would lose their values on parent state change / render.
   return useMemo(() => {
     const onError = (message: string) => {
