@@ -5,7 +5,7 @@ import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from '
 import type { ThemeProps } from '../../../internalUtils/defaultProps';
 import { propsMerger, useGetThemeDefaultProps } from '../../../internalUtils/defaultProps';
 import { useTheme } from '../../../main';
-import type { Control } from '../utils';
+import type { Control, ControlIds } from '../utils';
 import { isControlled } from '../utils';
 import type { PresetIds, TextInputPreset, Validations } from './presets/presets';
 import { getPreset } from './presets/presets';
@@ -82,14 +82,12 @@ function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
   return <Component {...commonProps}/>;
 }
 
-type Id<T extends Control> = (keyof T['_defaultValues']) & string;
-
-export type TextInputControlledProps<T extends Control = Control> = Omit<TextInputUncontrolledProps & {
-  control: T;
+export type TextInputControlledProps<C extends Control = Control> = Omit<TextInputUncontrolledProps & {
+  control: C;
   /** How you will get it with react-hook-form */
-  id: Id<T>;
+  id: ControlIds<C>;
   /** An object that relates the `id` prop to the `label` prop for this TextInput. */
-  idToLabel?: Record<Id<T>, string>;
+  idToLabel?: Record<ControlIds<C>, string>;
   /** @default false */
   required?: boolean;
   preset?: PresetIds | TextInputPreset;

@@ -3,7 +3,7 @@ import { useController } from 'react-hook-form';
 import type { SwitchProps as RNSwitchProps } from 'react-native';
 import { Switch as RNSwitch } from 'react-native';
 import is from '@sindresorhus/is';
-import type { Control } from './utils';
+import type { Control, ControlIds } from './utils';
 import { isControlled } from './utils';
 
 
@@ -12,11 +12,11 @@ type Common = RNSwitchProps & {
   size?: 'normal' | 'small';
 };
 
-export type SwitchControlledProps<T extends Control> = Common & {
+export type SwitchControlledProps<C extends Control> = Common & {
   /** Not required if not using inside a react-hook-form's form. */
-  control: T;
+  control: C;
   /** Not required if not using inside a react-hook-form's form. */
-  id: (keyof T['_defaultValues']) & string;
+  id: ControlIds<C>;
 };
 
 export type SwitchUncontrolledProps = Common;

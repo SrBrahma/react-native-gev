@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.44.1
+* Fixed controlled inputs `id` property type for newer react-hook-form version
+
 ## 0.44.0
 * Upgraded `react-native-form` to 7.28.1
 * `react-native-form` is now a peerDep, as you may want to use other functionalities of it without involving gev.
