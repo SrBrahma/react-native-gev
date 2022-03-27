@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.44.2
+* `Pressable` default ripple from `'#0000000d' : '#ffffff14'` to `'#00000010' : '#ffffff20'`.
+
 ## 0.44.1
 * Fixed controlled inputs `id` property type for newer react-hook-form version
 

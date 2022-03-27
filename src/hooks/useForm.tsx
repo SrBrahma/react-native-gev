@@ -19,6 +19,7 @@ type Components<F extends FieldValues = FieldValues, C = any> = {
 
 type UseFormReturn<F extends FieldValues = FieldValues, C = any> = {
   components: Components<F, C>;
+  // TODO add mention to `onSubmitError`
   /** Same as `handleSubmit(valid, invalid)`, but:
    *
    * * Uncaught errors on `valid` creates a Snackbar with the error message.
@@ -34,6 +35,11 @@ type UseFormReturn<F extends FieldValues = FieldValues, C = any> = {
 
 type UseFormProps<F extends FieldValues = FieldValues, C = any> = UseFormPropsInternal<F, C> & {
   idToLabel?: Record<keyof F, string>;
+  /** How to report the error to the user when the submit is called, either being it a form error
+   * of uncaught error on the submit function.
+   *
+   * @default 'snackbar' */
+  onSubmitError?: 'snackbar';
 };
 
 /** Improves the useForm:
@@ -43,7 +49,11 @@ type UseFormProps<F extends FieldValues = FieldValues, C = any> = UseFormPropsIn
  * * Returns inputs components with `idToLabel` prop populated, if defined
  */
 export function useForm<F extends FieldValues = FieldValues, C = any>(props?: UseFormProps<F, C>): UseFormReturn<F, C> {
-  const { idToLabel, ...rest } = props ?? {};
+  const {
+    idToLabel,
+    onSubmitError = 'snackbar',
+    ...rest
+  } = props ?? {};
   const useFormReturn = useFormInternal<F, C>({ mode: 'onTouched', ...rest });
   // Without this memo, the inputs/the form would lose their values on parent state change / render.
   return useMemo(() => {
@@ -63,7 +73,10 @@ export function useForm<F extends FieldValues = FieldValues, C = any>(props?: Us
       const error = Object.entries(e)[0]! as [id: keyof F, error: FieldError];
       const label = idToLabel?.[error[0]] ?? error[0];
       const message = `${label} - ${error[1].message}`;
-      mSnackbar({ text: message });
+      switch (onSubmitError) {
+        case 'snackbar':
+          mSnackbar({ text: message });
+      }
       invalid?.(e);
     });
 
@@ -78,5 +91,5 @@ export function useForm<F extends FieldValues = FieldValues, C = any>(props?: Us
       smartHandleSubmit,
     };
 
-  }, [idToLabel, useFormReturn]);
+  }, [idToLabel, onSubmitError, useFormReturn]);
 }
