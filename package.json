@@ -1,7 +1,7 @@
 {
   "name": "react-native-gev",
-  "version": "0.44.2",
-  "description": "RN components for quick and smart apps development",
+  "version": "0.45.0",
+  "description": "The best UI/DX kit for React Native!",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
   "scripts": {

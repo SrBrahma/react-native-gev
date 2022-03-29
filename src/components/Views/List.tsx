@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import type { FlatListProps, StyleProp, TextProps, TextStyle, ViewStyle } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import type { FlatListProps, ListRenderItemInfo, StyleProp, TextProps, TextStyle, ViewStyle } from 'react-native';
 import {
   FlatList,
   Platform,
@@ -25,7 +25,8 @@ const defaultPaddingLeft = Web ? 20 : moderateScale(22, scale);
 const noIconExtraPadLeft = Web ? 18 : moderateScale(18, scale);
 // const a = new MaterialCommunityIcons({})
 type Icons = keyof typeof MaterialCommunityIcons.glyphMap;
-type DividerType = undefined | boolean | 'full' | 'mid' | number;
+/** If `true`, defaults to 'mid'. If falsy, it isn't shown. */
+type SeparatorType = boolean | 'full' | 'mid';
 type HideableItems = 'subtitle' | 'rightIcon' | 'switch';
 type GreyableItems = 'title' | 'background';
 
@@ -64,46 +65,69 @@ export type ListProps<Nav extends NavBase = NavBase> = {
    * @default true */
   chevronOnNavTo?: boolean;
   items: ItemListItemProps<Nav>[];
-  flatListProps?: FlatListProps<unknown>;
+  flatListProps?: Partial<FlatListProps<unknown>>;
   refreshing?: boolean;
   onRefresh?: () => void;
-  // divider // TODO
+  /** @default 'mid' */
+  separator?: SeparatorType;
 };
 
 /** The backgroundColor defaults to the theme background color. */
 export function List<Nav extends NavBase = NavBase>({
   items, navigation, chevronOnNavTo = true, flatListProps,
   refreshing, onRefresh,
+  separator = 'mid',
 }: ListProps<Nav>): JSX.Element {
   const theme = useTheme();
-  return <FlatList
-    refreshControl={onRefresh ? <RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/> : undefined}
-    data={items}
-    keyExtractor={(i) => (i.key ?? i.title ?? i.pretitle) as string}
-    renderItem={({ item: i, index }) => {
-      // FIXME if omit and first item, the next item that will so be the first, won't have firstItemPadTop as index is 1.
-      if (i.omit === true || i.show === false) return null;
-      if (i.onPressNav && !navigation) throw new Error ('onPressNav is defined but navigation is not!');
-      return <ListItem
-        chevron={i.onPressNav && chevronOnNavTo}
-        firstItemPadTop={index === 0}
-        lastItemPadBottom={index === items.length - 1}
-        {...(i.onPressNav && { onPress: () => navigation?.navigate && i.onPressNav?.(navigation.navigate) })}
-        {...i}
-      />;
-    }}
-    {...flatListProps as any as Record<string, never>} // typecast so it won't mess the FlatList generic type.
-    style={[{ flexGrow: 1 }, flatListProps?.style]}
-    bounces={false}
-    overScrollMode='never'
-    keyboardShouldPersistTaps='handled'
-    contentContainerStyle={[{ flex: 1, backgroundColor: theme.colors.background }, flatListProps?.contentContainerStyle]}
-  />;
+
+  const keyExtractor = useCallback((i: ItemListItemProps<Nav>) => {
+    return (i.key ?? i.title ?? i.pretitle) as string;
+  }, []);
+
+  const renderItem = useCallback(({ index, item: i }: ListRenderItemInfo<ItemListItemProps<Nav>>) => {
+    // FIXME if omit and first item, the next item that will so be the first, won't have firstItemPadTop as index is 1.
+    if (i.omit === true || i.show === false) return null;
+    if (i.onPressNav && !navigation) throw new Error ('onPressNav is defined but navigation is not!');
+    return <ListItem
+      chevron={i.onPressNav && chevronOnNavTo}
+      firstItemPadTop={index === 0}
+      lastItemPadBottom={index === items.length - 1}
+      {...(i.onPressNav && { onPress: () => navigation?.navigate && i.onPressNav?.(navigation.navigate) })}
+      topSeparator={index > 0 && separator}
+      {...i}
+    />;
+  }, [chevronOnNavTo, items.length, navigation, separator]);
+
+  const style = useMemo(() => StyleSheet.flatten(
+    [{ flexGrow: 1 }, flatListProps?.style],
+  ), [flatListProps?.style]);
+
+  const contentContainerStyle = useMemo(() => StyleSheet.flatten([
+    { flex: 1, backgroundColor: theme.colors.background }, flatListProps?.contentContainerStyle,
+  ],
+  ), [flatListProps?.contentContainerStyle, theme.colors.background]);
+
+  const result = useMemo(() => {
+    return <FlatList
+      refreshControl={onRefresh ? <RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/> : undefined}
+      data={items}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      {...flatListProps as any as Record<string, never>} // typecast so it won't mess the FlatList generic type.
+      style={style}
+      bounces={false}
+      overScrollMode='never'
+      keyboardShouldPersistTaps='handled'
+      contentContainerStyle={contentContainerStyle}
+    />;
+  }, [contentContainerStyle, flatListProps, items, keyExtractor, onRefresh, refreshing, renderItem, style]);
+
+  return result;
 }
 
 
 
-function divider(divider: DividerType): JSX.Element | null {
+function separator(divider?: SeparatorType): JSX.Element | null {
   return divider
     ? <View s={divider === 'full' ? s.dividerFull : s.divider}/>
     : null;
@@ -118,8 +142,8 @@ export type ListItemProps = {
   blankLeftIcon?: number | boolean;
   /** If should pad right by the icon size */
   blankRightIcon?: number | boolean;
-  topDivider?: DividerType;
-  bottomDivider?: DividerType;
+  topSeparator?: SeparatorType;
+  bottomSeparator?: SeparatorType;
   firstItemPadTop?: boolean;
   lastItemPadBottom?: boolean;
   hideItemIfDisabled?: HideableItems | HideableItems[];
@@ -162,14 +186,14 @@ export type ListItemProps = {
 
 export const ListItem: React.FC<ListItemProps> = (props) => {
   const theme = useTheme();
-
+  // TODO: Could we also wrap it with React.memo?
   const result = useMemo(() => {
     const {
       leftIcon: leftIconProp, rightIcon: rightIconProp,
       blankLeftIcon, blankRightIcon,
       leftIconStyle, rightIconStyle,
       chevron,
-      bottomDivider, topDivider,
+      bottomSeparator, topSeparator,
       containerStyle,
       noHorizontalPadding,
       firstItemPadTop, lastItemPadBottom,
@@ -244,20 +268,21 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
     ]);
     const subtitleStyle = StyleSheet.flatten([
       s.subtitle,
+      // fonts.regular, // already added to our Text component
       { color: colors._list.subtitle },
       subtitleStyleProp,
     ]);
 
     return (
       <View s={containerStyle}>
-        {divider(topDivider)}
+        {separator(topSeparator)}
         <Pressable
           disabled={!onPress}
           onPress={onPress}
           android_ripple={{ color: listColors.onPress }}
           s={pressableStyle}
         >
-          <View s={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View row align>
             {leftComponent}
             {left}
             <View s={s.textsView}>
@@ -284,7 +309,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
           },
         }} */}
         </Pressable>
-        {divider(bottomDivider)}
+        {separator(bottomSeparator)}
       </View>
     );
   }, [props, theme]);
@@ -330,17 +355,19 @@ const s = ScaledSheet.create({
     flexGrow: 1, // Use available space.
     flexShrink: 1, // Shrink internal texts if required, don't push right stuff away
     justifyContent: 'center',
-    paddingRight: 10, // Don't touch right stuff like switches.
+    paddingRight: 14, // Don't touch right stuff like switches.
   },
   pretitle: {
     fontSize: Web ? 18 : moderateScale(13.5, scale),
+    flexWrap: 'wrap',
   },
   title: {
     fontSize: Web ? 20 : moderateScale(15, scale),
+    flexWrap: 'wrap',
   },
   subtitle: {
     fontSize: Web ? 15 : moderateScale(13.5, scale),
-    // maybe add flexWrap: 1 to avoid text not properly overlapping?
+    flexWrap: 'wrap',
   },
   leftIcon: {
     fontSize: iconDefaultSize,

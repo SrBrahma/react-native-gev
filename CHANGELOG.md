@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.45.0
+* Added `separator` property to `List`.
+* Renamed: `ListItem` `topDivider` and `bottomDivider` to `topSeparator` and `bottomSeparator`. Separator is the name used in FlatList for dividers.
+* Change: `ListItem` increased texts padding right from `10` to `14`.
+* Fix: `ListProps[flatListProps]` is now Partial.
+
 ## 0.44.2
 * `Pressable` default ripple from `'#0000000d' : '#ffffff14'` to `'#00000010' : '#ffffff20'`.
 
