@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { FlexAlignType, StyleProp, ViewProps as RnViewProps, ViewStyle } from 'react-native';
 import { View as RnView } from 'react-native';
 
@@ -59,11 +60,12 @@ export function mergeViewStyles({
  * * `onPress`, to use a Pressable instead of a View!
  * */
 export const View: React.FC<ViewProps> = (props) => {
+  const style = useMemo(() => mergeViewStyles(props), [props]);
 
   return (
     <RnView
       {...props}
-      style={mergeViewStyles(props)}
+      style={style}
     />
   );
 };

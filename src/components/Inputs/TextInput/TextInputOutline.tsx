@@ -81,48 +81,40 @@ export type InputOutlineProps = Partial<CommonTextInputProps> & {
 };
 
 
-export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProps>(({
-  onBlur,
-  leftText,
+export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProps>((props, ref) => {
+  const {
+    onBlur,
+    leftText,
+    style, containerStyle,
+    // theme colors
+    inactiveColor: inactiveColorProp,
+    activeColor: activeColorProp,
+    errorColor: errorColorProp,
+    error,
+    errorTextStyle: errorTextStyleProp,
+    assistiveText,
+    assistiveTextStyle: assistiveTextStyleProp,
+    hideCharacterCount,
+    characterCountTextStyle: counterTextStyleProp,
+    // styling
+    paddingHorizontal = 16,
+    paddingVertical = 9,
+    // features
+    placeholder = props.label ?? 'Placeholder',
+    trailingIcon,
+    // others
+    value: valueProp = '',
+    onChangeText: onChangeTextProp,
+    defaultValue: defaultValueProp,
+    // Mask
+    mask: pattern,
+    maskType = 'custom',
+    maxLength: maxLengthProp,
+    options, // No default so it won't create a new obj each render
+    selectionColor: selectionColorProp,
+    ...inputProps
+  } = props;
 
-  style, containerStyle,
-
-  // theme colors
-  inactiveColor: inactiveColorProp,
-  activeColor: activeColorProp,
-  errorColor: errorColorProp,
-
-  error,
-  errorTextStyle: errorTextStyleProp,
-
-  assistiveText,
-  assistiveTextStyle: assistiveTextStyleProp,
-
-  hideCharacterCount,
-  characterCountTextStyle: counterTextStyleProp,
-
-  // styling
-  paddingHorizontal = 16,
-  paddingVertical = 9,
-
-  // features
-  label,
-  placeholder = label ?? 'Placeholder',
-  trailingIcon,
-
-  // others
-  value: valueProp = '',
-  onChangeText: onChangeTextProp,
-  defaultValue: defaultValueProp,
-
-  // Mask
-  mask: pattern,
-  maskType = 'custom',
-  maxLength: maxLengthProp,
-  options, // No default so it won't create a new obj each render
-  selectionColor: selectionColorProp,
-  ...inputProps
-}, ref) => {
   const theme = useTheme();
   const activeColor = activeColorProp ?? theme.colors.primary;
   const inactiveColor = inactiveColorProp ?? 'grey';

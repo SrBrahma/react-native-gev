@@ -1,15 +1,16 @@
 import { useCallback, useMemo, useRef } from 'react';
 import type { GestureResponderEvent, PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Keyboard, Platform, StyleSheet, View } from 'react-native';
 import type { ShadowProps } from 'react-native-shadow-2';
 import { Shadow } from 'react-native-shadow-2';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { colord, extend } from 'colord';
+import { extend } from 'colord';
 import namesPlugin from 'colord/plugins/names';
 import type { ThemeProps } from '../../internalUtils/defaultProps';
 import { propsMerger, useGetThemeDefaultProps } from '../../internalUtils/defaultProps';
 import { useTheme } from '../../main/theme';
 import { mLoading } from '../PortalsAndModals/mLoading';
+import { Pressable } from '../Simple/Pressable';
 import type { TextProps } from '../Simple/Text';
 import { Text } from '../Simple/Text';
 
@@ -191,9 +192,6 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     sPressable.backgroundColor = type === 'outlineClear' ? 'transparent' : backgroundColor;
   }
 
-  /** I like a light ripple even on light buttons, but there is a point where it can't be anymore noticeable, so we must use a dark ripple!
-   * https://github.com/omgovich/colord/issues/89 */
-  const rippleColor = colord(backgroundColor as any).brightness() > 0.8 ? '#00000014' : '#ffffff2f';
 
   const onPress = useCallback(async (e: GestureResponderEvent) => {
     if (disabled) return onDisabledPress?.();
@@ -235,10 +233,10 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
       ]}
     >
       <Pressable
-        android_ripple={{ color: rippleColor }}
+        feedback={disabled ? 'none' : 'ripple'}
         onPress={onPress}
         {...p} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
-        style={sPressable}
+        s={sPressable}
       >
         {leftIcon}
         <Text

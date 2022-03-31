@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { StyleProp, TextProps as RnTextProps, TextStyle } from 'react-native';
 import { StyleSheet, Text as RnText } from 'react-native';
 import { useTheme } from '../../main';
@@ -21,31 +22,36 @@ export type TextProps = RnTextProps & {
  * * `includeFontPadding: false` style by default. It is usually just bad for vertical centering.
  */
 export const Text: React.FC<TextProps> = ({
-  t, text, children, s: sProp, singlelineEllipsis, style,
+  t, text, children, s, singlelineEllipsis, style,
   ...rest
 }) => {
   const theme = useTheme();
 
+  const mergedStyle = useMemo(() => StyleSheet.flatten([
+    styles.style,
+    singlelineEllipsis && styles.shrink,
+    {
+      ...theme.fonts.regular,
+      color: theme.colors.text,
+    },
+    style,
+    s,
+  ]), [style, s, singlelineEllipsis, theme]);
+
   return (
     <RnText
-      {...singlelineEllipsis && { numberOfLines: 1, ellipsizeMode: 'tail' }}
+      {...singlelineEllipsis && singleLineEllipsisProps}
       {...rest}
-      style={[
-        s.style,
-        singlelineEllipsis && s.shrink,
-        {
-          ...theme.fonts.regular,
-          color: theme.colors.text,
-        },
-        sProp ?? style,
-      ]}
+      style={mergedStyle}
     >
       {t ?? text ?? children}
     </RnText>
   );
 };
 
-const s = StyleSheet.create({
+const singleLineEllipsisProps = { numberOfLines: 1, ellipsizeMode: 'tail' } as const;
+
+const styles = StyleSheet.create({
   style: {
     includeFontPadding: false,
   },

@@ -107,8 +107,8 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
     control,
     required = false,
     preset,
-    label: labelProp,
     idToLabel,
+    label: labelProp,
     Component = TextInputFormal,
     onChangeText: onChangeProp,
     validations: validationsProp,
@@ -121,7 +121,7 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
 
   if (!id) throw new Error('id prop not set for controlled TextInput!');
 
-  const label = labelProp ?? idToLabel ? (idToLabel?.[id] ?? id) : undefined;
+  const label = labelProp ?? (idToLabel ? (idToLabel[id] ?? id) : undefined);
 
   const overwriters = {
     maxLength: p.maxLength,

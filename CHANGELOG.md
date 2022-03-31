@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.45.1 - 2022-03-30
+* Fixed `TextInput`: id prop was overwriting label prop.
+* Changed `Button`: Removed ripple when disabled.
+* Added memoization to `View`, `Text` and `Pressable`.
+
 ## 0.45.0
 * Added `separator` property to `List`.
 * Renamed: `ListItem` `topDivider` and `bottomDivider` to `topSeparator` and `bottomSeparator`. Separator is the name used in FlatList for dividers.
