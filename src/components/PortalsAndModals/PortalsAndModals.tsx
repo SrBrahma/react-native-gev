@@ -245,7 +245,7 @@ export const Portal: React.FC<PortalProps> = ({
   /** Check if it was required for this portal to unmount. */
   useEffect(() => {
     if (metaData?.id && metaIdsToRetire[metaData.id]) {
-      becomeInvisible();
+      becomeInvisible(true);
       setMetaIdsToRetire((v) => {
         if (!metaData.id) return v;
         const newIds = { ...v };
