@@ -35,7 +35,7 @@ export type SnackbarProps = {
    *
    * It has a false as argument so you can `onTimeout={setSnackbarVisible}`. */
   onTimeout: (v: false) => void;
-  /** Called when the fade animation finishes and the Snackbar is no longer visible. */
+  /** Called when the unmount animation finishes and the Snackbar is no longer visible. */
   onDisappear?: () => void;
   /** Text content of the Snackbar. */
   text: Text;

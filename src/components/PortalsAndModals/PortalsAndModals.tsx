@@ -1,4 +1,4 @@
-import { createContext, Fragment, useCallback, useContext, useEffect, useRef } from 'react';
+import { createContext, Fragment, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Animated, BackHandler, Pressable, StyleSheet } from 'react-native';
@@ -108,7 +108,29 @@ const fadeDefaultDuration = 250;
 
 
 export type PortalProps = {
- /**
+  /** While not usually needed (even without using this it will have animation on mount and unmount),
+   * this may be useful if you have something like:
+   *
+   * ```jsx
+   * {portalActive && <MyPortal data={portalActive}/>}
+   *
+   * function MyPortal() {
+   * // ...
+   * return <PortalView>
+   *   <Text>{data.value}</Text>
+   * </PortalView>
+   * }
+   *
+   * ```
+   *
+   * If portalActive is falsy, during the unmount animation it will still try to access its data,
+   * causing an error, like `undefined is not an object`.
+   *
+   * @default true
+   */
+  visible?: boolean;
+  /** Style of the View that wraps your children.
+   *
    * @default
    * ```
    * {
@@ -120,13 +142,16 @@ export type PortalProps = {
    *
    * as you will most usually want it to act like a centered modal.
    */
-  viewStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
   /** If shall give a dark background. Will also darken StatusBar and NavigationBar.
    *
    * It's a shortcut to viewStyle.backgroundColor.
    * @default true */
   darken?: boolean;
+  /** Called when pressed outside your content, aka the backdrop, or when the Android back button is pressed. */
   onRequestClose?: () => void;
+  /** Called when the unmount animation finishes and the Portal is no longer visible. */
+  onDisappear?: () => void;
   /** If shall call onRequestClose when pressing outside.
    * @default true */
   requestCloseOnOutsidePress?: boolean;
@@ -141,35 +166,49 @@ export type PortalProps = {
 };
 
 export const Portal: React.FC<PortalProps> = ({
-  children, viewStyle, darken = true, onRequestClose, fade = fadeDefaultDuration,
-  requestCloseOnOutsidePress = true,
+  children, style, darken = true, onRequestClose, fade = fadeDefaultDuration,
+  requestCloseOnOutsidePress = true, visible = true, onDisappear,
 }) => {
   const { colors } = useTheme();
   const fadeDuration = fade === true ? fadeDefaultDuration : (fade || 0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const isMounting = useRef<boolean>(true);
-  const isUnmounting = useRef<boolean>(false);
   const portalId = useRef<undefined | string>();
   const metaData = useContext(MetaContext); // May be undefined if added via component instead addPortal().
   const [metaIdsToRetire, setMetaIdsToRetire] = useGlobalState('metaIdsAskedToRetire');
 
+  const state = useRef<'invisible' | 'mountingAnimation' | 'visible' | 'unmountingAnimation'>('invisible');
 
-  const isAnimatingToUnmount = useRef(false);
-  const animateToUnmount = useCallback(() => {
-    if (!isAnimatingToUnmount.current) {
-      isAnimatingToUnmount.current = true;
-      Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(() => {
-        portalId.current && removeFromPortalsAndModals(portalId.current); // No need to !== undefined, it's a string not number (won't be 0)
-        metaData?.id && removePortal(metaData.id, 'now');
+
+  const doUnmount = useCallback(() => {
+    if (state.current === 'visible' || state.current === 'mountingAnimation') {
+      state.current = 'unmountingAnimation';
+      Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(({ finished }) => {
+        if (finished) {
+          state.current = 'invisible';
+          portalId.current && removeFromPortalsAndModals(portalId.current); // No need to !== undefined, it's a string not number (won't be 0)
+          metaData?.id && removePortal(metaData.id, 'now');
+          onDisappear?.();
+        }
       });
     }
-  }, [fadeAnim, fadeDuration, metaData]);
+  }, [fadeAnim, fadeDuration, metaData?.id, onDisappear]);
+
+  const doMount = useCallback(() => {
+    if (state.current === 'invisible' || state.current === 'unmountingAnimation') {
+      state.current = 'mountingAnimation';
+      Animated.timing(fadeAnim, { toValue: 1, duration: fadeDuration, useNativeDriver: true }).start(({ finished }) => {
+        if (finished) {
+          state.current = 'visible';
+        }
+      });
+    }
+  }, [fadeAnim, fadeDuration]);
 
 
   /** Check if it was required for this portal to unmount. */
   useEffect(() => {
     if (metaData?.id && metaIdsToRetire[metaData.id]) {
-      animateToUnmount();
+      doUnmount();
       setMetaIdsToRetire((v) => {
         if (!metaData.id) return v;
         const newIds = { ...v };
@@ -177,42 +216,48 @@ export const Portal: React.FC<PortalProps> = ({
         return newIds;
       });
     }
-  }, [animateToUnmount, metaData?.id, metaIdsToRetire, setMetaIdsToRetire]);
+  }, [doUnmount, metaData?.id, metaIdsToRetire, setMetaIdsToRetire]);
 
+  /** Handle `visible` prop change. As it defaults to true, it also handles the onMount event. */
+  const prevVisible = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (visible !== prevVisible.current) {
+      prevVisible.current = visible;
+      if (visible)
+        doMount();
+      else
+        doUnmount();
+    }
+  }, [doMount, doUnmount, visible]);
 
-  /** Set isUnmounting=true on unmount. */
-  useEffect(() => { return () => { isUnmounting.current = true; }; }, []);
+  /** Animate on unmount */
+  const isUnmounting = useRef(false);
+  useEffect(() => () => { isUnmounting.current = true; }, []);
+  useEffect(() => () => { isUnmounting.current && doUnmount(); }, [doUnmount]);
 
 
   /** Update the portal on component change. Reuses the same key */
+
+  const component = useMemo(() => (
+    <Pressable onPress={() => requestCloseOnOutsidePress && onRequestClose?.()} style={s.container}>
+      <Animated.View
+        style={[
+          s.viewStyle,
+          { opacity: fadeAnim },
+          darken && { backgroundColor: colors.backdrop },
+          style,
+        ]}
+      >
+        {children}
+      </Animated.View>
+    </Pressable>
+  ), [children, colors.backdrop, darken, fadeAnim, onRequestClose, requestCloseOnOutsidePress, style]);
+
+  /** Handle component update. */
   useEffect(() => {
-    const component = (
-      <Pressable onPress={() => requestCloseOnOutsidePress && onRequestClose?.()} style={s.container}>
-        <Animated.View
-          style={[
-            s.viewStyle,
-            { opacity: fadeAnim },
-            darken && { backgroundColor: colors.backdrop },
-            viewStyle,
-          ]}>
-          {children}
-        </Animated.View>
-      </Pressable>
-    );
-    portalId.current = addToPortalsAndModals(component, { id: portalId.current });
-  }, [children, colors.backdrop, darken, fadeAnim, onRequestClose, requestCloseOnOutsidePress, viewStyle]);
-
-
-  /** Animate on mount */
-  useEffect(() => {
-    if (isMounting.current)
-      Animated.timing(fadeAnim, { toValue: 1, duration: fadeDuration, useNativeDriver: true }).start();
-  }, [fadeAnim, fadeDuration, isMounting]);
-
-
-  /** Animate on unmount */
-  useEffect(() => (() => { isUnmounting.current && animateToUnmount(); }), [animateToUnmount]);
-
+    if (state.current !== 'invisible')
+      portalId.current = addToPortalsAndModals(component, { id: portalId.current });
+  }, [component]);
 
   /** Handle the back button press */
   // TODO this will prob be messed on multiple Portals
@@ -226,11 +271,9 @@ export const Portal: React.FC<PortalProps> = ({
   }, [onRequestClose]));
 
 
-  /** Set isMounting=false */
-  useEffect(() => { isMounting.current = false; }, []);
-
   return null;
 };
+
 
 const s = StyleSheet.create({
   container: {

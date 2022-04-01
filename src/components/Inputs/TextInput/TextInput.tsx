@@ -1,5 +1,5 @@
 import type { Ref } from 'react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useController } from 'react-hook-form';
 import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from 'react-native';
 import type { ThemeProps } from '../../../internalUtils/defaultProps';
@@ -123,19 +123,21 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
 
   const label = labelProp ?? (idToLabel ? (idToLabel[id] ?? id) : undefined);
 
-  const overwriters = {
-    maxLength: p.maxLength,
-    mask: p.mask,
-  };
 
   const {
     maxLength, minLength,
     mask, validations, inputProps,
     textToLogical, logicalToUnmasked,
-  } = {
-    ...(typeof preset === 'string' ? getPreset(preset) : preset),
-    ...(JSON.parse(JSON.stringify(overwriters)) as Partial<typeof overwriters>),
-  };
+  } = useMemo(() => {
+    const overwriters = {
+      maxLength: p.maxLength,
+      mask: p.mask,
+    };
+    return {
+      ...(typeof preset === 'string' ? getPreset(preset) : preset),
+      ...(JSON.parse(JSON.stringify(overwriters)) as Partial<typeof overwriters>),
+    };
+  }, [p.mask, p.maxLength, preset]);
 
   const { field, fieldState } = useController({
     name: id,
@@ -158,17 +160,18 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
     // return prettifyUnmasked?.({ unmasked }) ?? unmasked;
   });
 
-  const onBlur = (): void => {
+  const onBlur = useCallback((): void => {
     // if (prettifyUnmasked && !fieldState.error)
     //   setUnmasked(prettifyUnmasked({ unmasked: unmasked }) ?? unmasked);
     field.onBlur();
-  };
-  const onChangeText = (masked: string, unmasked: string) => {
+  }, [field]);
+
+  const onChangeText = useCallback((masked: string, unmasked: string) => {
     const logicalValue: string | number = textToLogical?.({ masked, unmasked }) ?? unmasked;
     field.onChange(logicalValue);
     setUnmasked(unmasked);
     onChangeProp?.(masked, unmasked);
-  };
+  }, [field, onChangeProp, textToLogical]);
 
   const commonProps: CommonTextInputProps = {
     label,

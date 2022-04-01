@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.45.2 - 2022-04-01
+* Added: `visible` prop to `Portal`.
+* Renamed: `viewStyle` of `Portal` to `style`
+* Renamed: `onCancel` of `PortalView` to `onRequestClose`.
+
 ## 0.45.1 - 2022-03-30
 * Fixed `TextInput`: id prop was overwriting label prop.
 * Changed `Button`: Removed ripple when disabled.

@@ -81,6 +81,8 @@ export type InputOutlineProps = Partial<CommonTextInputProps> & {
 };
 
 
+const bottomTextDist = 12;
+
 export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProps>((props, ref) => {
   const {
     onBlur,
@@ -272,7 +274,6 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
     clear,
   }));
 
-  const bottomTextDist = 12;
 
 
   const s = StyleSheet.create({
