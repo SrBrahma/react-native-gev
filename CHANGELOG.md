@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.45.2 - 2022-04-01
+## 0.45.2~3 - 2022-04-01
 * Added: `visible` prop to `Portal`.
 * Renamed: `viewStyle` of `Portal` to `style`
 * Renamed: `onCancel` of `PortalView` to `onRequestClose`.
