@@ -129,6 +129,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     shadowProps,
     type = 'solid',
     outlineWidth = 1,
+    containerStyle,
     ...p
   } = mergedProps;
 
@@ -162,13 +163,13 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     disabled && { backgroundColor: colors.disabled },
   ]).backgroundColor ?? '#449';
 
-  const leftIcon = leftIconProp && (
+  const leftIcon = useMemo(() => leftIconProp && (
     <View style={[s.iconContainer, iconContainerStyle]}>{
       typeof leftIconProp === 'string'
         ? <MaterialCommunityIcons name={leftIconProp} style={[s.icon, { color: textColor }]}/>
         : leftIconProp
     }</View>
-  );
+  ), [iconContainerStyle, leftIconProp, textColor]);
 
 
 
@@ -210,47 +211,65 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   const { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius } = style;
 
 
+  const containerStyleMemo = useMemo(() => StyleSheet.flatten([
+    row
+      ? (shrink ? s.shadowContainerRowShrink : s.shadowContainerRow)
+      : (shrink ? { alignSelf: shrink } : s.shadowContainerColumn),
+    { marginTop },
+    containerStyle, shadowProps?.containerViewStyle,
+  ]), [containerStyle, marginTop, row, shadowProps?.containerViewStyle, shrink]);
 
+  const contentStyleMemo = useMemo(() => StyleSheet.flatten([
+    s.shadowView,
+    { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius },
+    shadowProps?.viewStyle,
+  ]), [borderBottomLeftRadius, borderBottomRightRadius, borderRadius, borderTopLeftRadius, borderTopRightRadius, shadowProps?.viewStyle]);
 
-  return (
-    <Shadow
-      offset={[0, 0.5]}
-      distance={2} // cleaner without it.
-      startColor='#0001'
-      {...shadowProps}
-      {...!hasShadow && { distance: 0, paintInside: false }}
-      containerViewStyle={[
-        row
-          ? (shrink ? s.shadowContainerRowShrink : s.shadowContainerRow)
-          : (shrink ? { alignSelf: shrink } : s.shadowContainerColumn),
-        { marginTop },
-        p.containerStyle, shadowProps?.containerViewStyle,
-      ]}
-      viewStyle={[
-        s.shadowView,
-        { borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius },
-        shadowProps?.viewStyle,
-      ]}
+  const inner = useMemo(() =>
+    <Pressable
+      feedback={disabled ? 'none' : 'ripple'}
+      onPress={onPress}
+      {...p} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
+      s={sPressable}
     >
-      <Pressable
-        feedback={disabled ? 'none' : 'ripple'}
-        onPress={onPress}
-        {...p} // We don't use the disabled prop in Pressable so it keeps the ripple. It isn't contained in props.
-        s={sPressable}
-      >
-        {leftIcon}
-        <Text
-          selectable={false}
-          adjustsFontSizeToFit
-          textBreakStrategy='simple' // https://stackoverflow.com/a/54750759
-          numberOfLines={1}
-          t={text}
-          {...textProps}
-          style={[s.text, fonts.bold, leftIcon && s.textWhenIcon, { color: textColor }, textStyle, textProps?.style]}
-        />
-      </Pressable>
-    </Shadow>
-  );
+      {leftIcon}
+      <Text
+        selectable={false}
+        adjustsFontSizeToFit
+        textBreakStrategy='simple' // https://stackoverflow.com/a/54750759
+        numberOfLines={1}
+        t={text}
+        {...textProps}
+        style={[s.text, fonts.bold, leftIcon && s.textWhenIcon, { color: textColor }, textStyle, textProps?.style]}
+      />
+    </Pressable>
+  , [onPress, p, sPressable, text, textStyle, textProps, textColor, disabled, fonts.bold, leftIcon]);
+
+  const result = useMemo(() => {
+    if (hasShadow) {
+      return (
+        <Shadow
+          offset={[0, 0.5]}
+          distance={2} // cleaner without it.
+          startColor='#0001'
+          {...shadowProps}
+          containerViewStyle={containerStyleMemo}
+          viewStyle={contentStyleMemo}
+        >
+          {inner}
+        </Shadow>
+      );
+    }
+    else return (
+      <View style={containerStyleMemo}>
+        <View style={contentStyleMemo}>
+          {inner}
+        </View>
+      </View>
+    );
+  }, [inner, containerStyleMemo, contentStyleMemo, hasShadow, shadowProps]);
+
+  return result;
 }
 
 /** Useful when having a leftIcon with background color, so you want to paddingLeft the text. */

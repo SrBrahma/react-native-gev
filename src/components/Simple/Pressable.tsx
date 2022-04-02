@@ -43,7 +43,9 @@ export const Pressable: React.FC<PressableProps> = ({
         // also removes the pressable background for some weird reason.
         color: props.onPress ? rippleColor : 'transparent',
         ...props.android_ripple,
-      } : undefined}
+      } : {
+        color: 'transparent',
+      }}
       style={mergedStyle}
     />
   );

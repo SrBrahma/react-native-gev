@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.45.5
+* Fixed `Button` crashing app when there aren't shadow radii and hasShadow=false.
+
 ## 0.45.2~4 - 2022-04-01
 * Added: `visible` prop to `Portal`.
 * Renamed: `viewStyle` of `Portal` to `style`

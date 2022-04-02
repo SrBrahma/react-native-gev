@@ -1,6 +1,6 @@
 {
   "name": "react-native-gev",
-  "version": "0.45.4",
+  "version": "0.45.5",
   "description": "The best UI/DX kit for React Native!",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
