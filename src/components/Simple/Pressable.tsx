@@ -44,7 +44,7 @@ export const Pressable: React.FC<PressableProps> = ({
         color: props.onPress ? rippleColor : 'transparent',
         ...props.android_ripple,
       } : {
-        color: 'transparent',
+        color: 'transparent', // prob not needed here. rework this.
       }}
       style={mergedStyle}
     />

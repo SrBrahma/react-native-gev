@@ -206,19 +206,21 @@ export const Portal: React.FC<PortalProps> = ({
   const isUnmounting = useRef(false);
   useEffect(() => () => { isUnmounting.current = true; }, []);
 
-  const becomeInvisible = useCallback((doUnmount: boolean = false) => {
+  const becomeInvisible = useCallback(({ doUnmount }: {doUnmount: boolean} = { doUnmount: false }) => {
     Animated.timing(fadeAnim, { toValue: 0, duration: fadeDuration, useNativeDriver: true }).start(({ finished }) => {
-      if (finished)
-        setState('invisible');
+      if (finished) {
+        if (!isUnmounting.current) // Don't change state if component no longer exists
+          setState('invisible');
+      }
       // To force its removal on unmount.
-      if (doUnmount)
+      if (doUnmount || isUnmounting.current)
         unmount();
     });
   }, [fadeAnim, fadeDuration, unmount]);
 
 
   /** Animate on unmount */
-  useEffect(() => () => { isUnmounting.current && becomeInvisible(); }, [becomeInvisible]);
+  useEffect(() => () => { isUnmounting.current && becomeInvisible({ doUnmount: true }); }, [becomeInvisible]);
 
 
   const becomeVisible = useCallback(() => {
@@ -245,7 +247,7 @@ export const Portal: React.FC<PortalProps> = ({
   /** Check if it was required for this portal to unmount. */
   useEffect(() => {
     if (metaData?.id && metaIdsToRetire[metaData.id]) {
-      becomeInvisible(true);
+      becomeInvisible({ doUnmount: true });
       setMetaIdsToRetire((v) => {
         if (!metaData.id) return v;
         const newIds = { ...v };

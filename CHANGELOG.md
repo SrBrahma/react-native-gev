@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.45.6
+* Fixed `Portal` "Cant perform a React state update on an unmounted component" warn on unmount.
+
 ## 0.45.5
 * Fixed `Button` crashing app when there aren't shadow radii and hasShadow=false.
 
