@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.45.7
+* Added memoization to `TextInputFormal`.
+* Fixed Controlled components `id` prop.
+
 ## 0.45.6
 * Fixed `Portal` "Cant perform a React state update on an unmounted component" warn on unmount.
 

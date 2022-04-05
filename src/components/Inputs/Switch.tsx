@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import type { Control, FieldPath, FieldValues } from 'react-hook-form';
 import { useController } from 'react-hook-form';
 import type { SwitchProps as RNSwitchProps } from 'react-native';
 import { Switch as RNSwitch } from 'react-native';
 import is from '@sindresorhus/is';
-import type { Control, ControlIds } from './utils';
 import { isControlled } from './utils';
 
 
@@ -12,16 +12,16 @@ type Common = RNSwitchProps & {
   size?: 'normal' | 'small';
 };
 
-export type SwitchControlledProps<C extends Control> = Common & {
+export type SwitchControlledProps<F extends FieldValues = FieldValues> = Common & {
   /** Not required if not using inside a react-hook-form's form. */
-  control: C;
+  control: Control<F, any>;
   /** Not required if not using inside a react-hook-form's form. */
-  id: ControlIds<C>;
+  id: FieldPath<F>;
 };
 
 export type SwitchUncontrolledProps = Common;
 
-export type SwitchProps<T extends Control = Control> = SwitchControlledProps<T> | SwitchUncontrolledProps;
+export type SwitchProps<F extends FieldValues = FieldValues> = SwitchControlledProps<F> | SwitchUncontrolledProps;
 
 
 const sizes = {
@@ -31,13 +31,13 @@ const sizes = {
 
 const hitSlop = { bottom: 20, left: 20, right: 20, top: 20 };
 
-function ControlledSwitch<T extends Control>(p: SwitchControlledProps<T>) {
-  const { control, id } = p;
+function ControlledSwitch<F extends FieldValues = FieldValues>(p: SwitchControlledProps<F>) {
+  const { control, id, ...rest } = p;
   const { field } = useController({
     name: id,
     control: control as any,
   });
-  return <RNSwitch hitSlop={hitSlop} {...p} onValueChange={field.onChange} value={field.value}/>;
+  return <RNSwitch hitSlop={hitSlop} {...rest} onValueChange={field.onChange} value={field.value}/>;
 }
 
 function UncontrolledSwitch(p: RNSwitchProps) {
@@ -72,10 +72,10 @@ function UncontrolledSwitch(p: RNSwitchProps) {
   />;
 }
 
-export function Switch<T extends Control = Control>({
+export function Switch<F extends FieldValues = FieldValues>({
   size = 'normal',
   ...p
-}: SwitchProps<T>): JSX.Element {
+}: SwitchProps<F>): JSX.Element {
   const style = [{ transform: [{ scale: sizes[size] }] }, p.style];
 
   return isControlled(p)

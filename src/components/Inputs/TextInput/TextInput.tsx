@@ -1,11 +1,12 @@
 import type { Ref } from 'react';
 import { useCallback, useMemo, useState } from 'react';
+import type { FieldPath, FieldValues } from 'react-hook-form';
 import { useController } from 'react-hook-form';
 import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from 'react-native';
 import type { ThemeProps } from '../../../internalUtils/defaultProps';
 import { propsMerger, useGetThemeDefaultProps } from '../../../internalUtils/defaultProps';
 import { useTheme } from '../../../main';
-import type { Control, ControlIds } from '../utils';
+import type { Control } from '../utils';
 import { isControlled } from '../utils';
 import type { PresetIds, TextInputPreset, Validations } from './presets/presets';
 import { getPreset } from './presets/presets';
@@ -26,6 +27,7 @@ export interface CommonTextInputProps extends Partial<MaskedTextInputProps> {
   /** Label's style */
   labelStyle?: StyleProp<TextStyle>;
   error?: string;
+  // errorMode?: 'pad' | 'hideShow'
   errorStyle?: StyleProp<TextStyle>;
   /** As our TextInput may have other refs in the future and ref forwarding is bad when having generics components,
    * the TextInput ref is used with this prop. */
@@ -82,18 +84,19 @@ function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
   return <Component {...commonProps}/>;
 }
 
-export type TextInputControlledProps<C extends Control = Control> = Omit<TextInputUncontrolledProps & {
-  control: C;
-  /** How you will get it with react-hook-form */
-  id: ControlIds<C>;
-  /** An object that relates the `id` prop to the `label` prop for this TextInput. */
-  idToLabel?: Record<ControlIds<C>, string>;
-  /** @default false */
-  required?: boolean;
-  preset?: PresetIds | TextInputPreset;
-  validations?: Validations;
-}, 'defaultValue'>; /** defaultValue unused as we at most use hook-form defaultValues. It sets the field value. */
-export function TextInputControlled<T extends Control>(props: TextInputControlledProps<T>): JSX.Element {
+export type TextInputControlledProps<F extends FieldValues = FieldValues> =
+  Omit<TextInputUncontrolledProps & {
+    control: Control<F>;
+    /** How you will get it with react-hook-form */
+    id: FieldPath<F>;
+    /** An object that relates the `id` prop to the `label` prop for this TextInput. */
+    idToLabel?: Record<FieldPath<F>, string>;
+    /** @default false */
+    required?: boolean;
+    preset?: PresetIds | TextInputPreset;
+    validations?: Validations;
+  }, 'defaultValue'>; /** defaultValue unused as we at most use hook-form defaultValues. It sets the field value. */
+export function TextInputControlled<F extends FieldValues = FieldValues>(props: TextInputControlledProps<F>): JSX.Element {
   const theme = useTheme();
   const defaultProps = useGetThemeDefaultProps({
     themeProps: theme.defaultProps.TextInput,
@@ -191,15 +194,22 @@ export function TextInputControlled<T extends Control>(props: TextInputControlle
 }
 
 
-export type TextInputProps<T extends Control = Control> = TextInputUncontrolledProps | TextInputControlledProps<T>;
+export type TextInputProps<F extends FieldValues = FieldValues> = TextInputControlledProps<F> | TextInputUncontrolledProps;
 
 /**
  * `label`, a text that will show up identifying the TextInput, defaults to `idToLabel?.[id]`.
  *
  * `accessibilityLabel` defaults to `label`, as it's useful for unit tests.
  */
-export function TextInput<T extends Control = Control>(p: TextInputProps<T>): JSX.Element {
+export function TextInput<F extends FieldValues = FieldValues>(p: TextInputProps<F>): JSX.Element {
   return isControlled(p)
+    // @ts-ignore
     ? <TextInputControlled {...p}/>
     : <TextInputUncontrolled {...p}/>;
 }
+
+// id test:
+// const A = () => {
+//   const {components: {TextInput}} = useForm<{a: number, b: string}>()
+//   return <TextInput id='b'/>
+// }

@@ -302,7 +302,7 @@ export const Portal: React.FC<PortalProps> = ({
   // https://reactnavigation.org/docs/custom-android-back-button-handling/#why-not-use-component-lifecycle-methods
   useFocusEffect(useCallback(() => {
     return BackHandler.addEventListener('hardwareBackPress', () => {
-      if (requestCloseOnBackPress && state !== 'invisible') {
+      if (requestCloseOnBackPress && state === 'visible') {
         onRequestClose?.();
         return true;
       }

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Control, FieldError, FieldValues, UseFormHandleSubmit, UseFormProps as UseFormPropsInternal, UseFormReturn as UseFormReturnInternal } from 'react-hook-form';
+import type { FieldError, FieldValues, UseFormHandleSubmit, UseFormProps as UseFormPropsInternal, UseFormReturn as UseFormReturnInternal } from 'react-hook-form';
 import { useForm as useFormInternal } from 'react-hook-form';
 import {} from 'react-native';
 import type { SwitchControlledProps } from '../components/Inputs/Switch';
@@ -12,13 +12,13 @@ import { getErrorMessage, Switch } from '../main';
 /** Remove control props from the controlled components as we will automatically fill them. */
 type OmitControl<T> = Omit<T, 'control'>;
 
-type Components<F extends FieldValues = FieldValues, C = any> = {
-  TextInput: (p: OmitControl<TextInputControlledProps<Control<F, C>>>) => JSX.Element;
-  Switch: (p: OmitControl<SwitchControlledProps<Control<F, C>>>) => JSX.Element;
+type Components<F extends FieldValues = FieldValues> = {
+  TextInput: (p: OmitControl<TextInputControlledProps<F>>) => JSX.Element;
+  Switch: (p: OmitControl<SwitchControlledProps<F>>) => JSX.Element;
 };
 
-type UseFormReturn<F extends FieldValues = FieldValues, C = any> = {
-  components: Components<F, C>;
+type UseFormReturn<F extends FieldValues = FieldValues, C = any> = UseFormReturnInternal<F, C> & {
+  components: Components<F>;
   // TODO add mention to `onSubmitError`
   /** Same as `handleSubmit(valid, invalid)`, but:
    *
@@ -30,7 +30,7 @@ type UseFormReturn<F extends FieldValues = FieldValues, C = any> = {
    */
  // TODO add other errors displays besides Snackbar, as Alert/mError.
  smartHandleSubmit: UseFormHandleSubmit<F>;
-} & UseFormReturnInternal<F, C>;
+};
 
 
 type UseFormProps<F extends FieldValues = FieldValues, C = any> = UseFormPropsInternal<F, C> & {
@@ -80,7 +80,7 @@ export function useForm<F extends FieldValues = FieldValues, C = any>(props?: Us
       invalid?.(e);
     });
 
-    const components: Components<F, C> = {
+    const components: Components<F> = {
       TextInput(p) { return <TextInput control={control} idToLabel={idToLabel} {...p}/>; },
       Switch(p) { return <Switch control={control} {...p}/>; },
     };
