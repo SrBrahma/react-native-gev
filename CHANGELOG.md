@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.45.8
+* Added `keyExtractor` to `List`.
+
 ## 0.45.7
 * Added memoization to `TextInputFormal`.
 * Fixed Controlled components `id` prop.

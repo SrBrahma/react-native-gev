@@ -70,19 +70,22 @@ export type ListProps<Nav extends NavBase = NavBase> = {
   onRefresh?: () => void;
   /** @default 'mid' */
   separator?: SeparatorType;
+  /** By default, it uses item.key, then item.title then item.subtitle. */
+  keyExtractor?: ((item: ItemListItemProps<Nav>, index: number) => string) | undefined;
 };
+
+function defaultKeyExtractor(i: ItemListItemProps): string {
+  return (i.key ?? i.title ?? i.pretitle) as string;
+}
 
 /** The backgroundColor defaults to the theme background color. */
 export function List<Nav extends NavBase = NavBase>({
   items, navigation, chevronOnNavTo = true, flatListProps,
   refreshing, onRefresh,
+  keyExtractor,
   separator = 'mid',
 }: ListProps<Nav>): JSX.Element {
   const theme = useTheme();
-
-  const keyExtractor = useCallback((i: ItemListItemProps<Nav>) => {
-    return (i.key ?? i.title ?? i.pretitle) as string;
-  }, []);
 
   const renderItem = useCallback(({ index, item: i }: ListRenderItemInfo<ItemListItemProps<Nav>>) => {
     // FIXME if omit and first item, the next item that will so be the first, won't have firstItemPadTop as index is 1.
@@ -111,7 +114,7 @@ export function List<Nav extends NavBase = NavBase>({
     return <FlatList
       refreshControl={onRefresh ? <RefreshControl onRefresh={onRefresh} refreshing={refreshing ?? false}/> : undefined}
       data={items}
-      keyExtractor={keyExtractor}
+      keyExtractor={keyExtractor ?? defaultKeyExtractor}
       renderItem={renderItem}
       {...flatListProps as any as Record<string, never>} // typecast so it won't mess the FlatList generic type.
       style={style}
