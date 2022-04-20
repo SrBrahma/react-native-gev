@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 0.45.9
+* Fixed `List` scroll.
+
 ## 0.45.8
 * Added `keyExtractor` to `List`.
 

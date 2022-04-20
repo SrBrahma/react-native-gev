@@ -101,12 +101,8 @@ export function List<Nav extends NavBase = NavBase>({
     />;
   }, [chevronOnNavTo, items.length, navigation, separator]);
 
-  const style = useMemo(() => StyleSheet.flatten(
-    [{ flexGrow: 1 }, flatListProps?.style],
-  ), [flatListProps?.style]);
-
   const contentContainerStyle = useMemo(() => StyleSheet.flatten([
-    { flex: 1, backgroundColor: theme.colors.background }, flatListProps?.contentContainerStyle,
+    { flexGrow: 1, backgroundColor: theme.colors.background }, flatListProps?.contentContainerStyle,
   ],
   ), [flatListProps?.contentContainerStyle, theme.colors.background]);
 
@@ -117,13 +113,12 @@ export function List<Nav extends NavBase = NavBase>({
       keyExtractor={keyExtractor ?? defaultKeyExtractor}
       renderItem={renderItem}
       {...flatListProps as any as Record<string, never>} // typecast so it won't mess the FlatList generic type.
-      style={style}
       bounces={false}
       overScrollMode='never'
       keyboardShouldPersistTaps='handled'
       contentContainerStyle={contentContainerStyle}
     />;
-  }, [contentContainerStyle, flatListProps, items, keyExtractor, onRefresh, refreshing, renderItem, style]);
+  }, [contentContainerStyle, flatListProps, items, keyExtractor, onRefresh, refreshing, renderItem]);
 
   return result;
 }
