@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.46.0
+> Run the new Readme's installation command to install the now peerDependencies.
+
+* Removed TextInput's legacy 'country.br.cpf' preset.
+* `expo-image-picker`, `expo-image-picker`, `@react-navigation/native`, `@expo/vector-icons` and `expo-status-bar` are now a peerDependency.
+* Now exporting from index the `TextInputPreset` type.
+* Fixed `PortalBottomView` having a `borderBottomLeftRadius: 9` instead of 0.
 
 ## 0.45.9
 * Fixed `List` scroll.

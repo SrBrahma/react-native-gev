@@ -30,26 +30,26 @@ This both improves some React Natives components like `View` and add many other 
 This is opinionated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
 
 
-#### It uses:
-
-```
-react-native-mask-text
-react-hook-forms
-react-native-size-matters
-@expo/vector-icons
-react-native-shadow-2
-@react-navigation
-pagescrollview
-```
-
-
 ## Installation
 
 ### Expo
 ```
-expo install react-native-gev react-native-safe-area-context react-native-reanimated
+expo install react-native-gev react-native-safe-area-context react-native-reanimated expo-image-picker @react-navigation/native @expo/vector-icons expo-status-bar
 ```
 
+> `react-native-safe-area-context` for StatusBar
+
+> `@react-navigation/native` for TextInputOutline
+
+> `@react-navigation/native` for useFocusEffect hook
+
+> `expo-image-picker` for our useImagePicker
+
+> `@expo/vector-icons` for icons
+
+> `expo-status-bar` for StatusBar
+
+I am trying to find a way to reduce the deps amount, using a plugin-like system.
 
 ## Philosophy
 * Opinionated
@@ -81,13 +81,23 @@ expo install react-native-gev react-native-safe-area-context react-native-reanim
   <Text anyOtherProp s={s.text} t='Hi, Earth!'/>
 ```
 
+## It uses:
+
+```
+react-native-mask-text
+react-hook-forms
+react-native-size-matters
+@expo/vector-icons
+react-native-shadow-2
+pagescrollview
+```
 
 ## Info
 * The `/src` is intentionally shipped with the package. This ensures you will always have access to the source code for your installed version.
 * Some patterns and components were based / built on top of others libs, so this has the best current practices. When they do, they have their source properly linked, with all the respect to the authors and to their licenses. This aims to improve them and make them fit better this project.
 * We use Portals instead of native Modals. Modals have a good amount of issues and limitations. However, our mFunctions like mSnackbar etc have the m for Modal instead of p for Portal as pSnackbar wouldn't look too good. Maybe I will change it later?
 * When there is another property that changes the component style, the `style` property has priority over it, if changing the same style property. (should it be the opposite of it? style as a reusable info, and props as a specific customization?)
-
+* We use MaterialCommunityIcons as the default icons family. For `Button`'s `leftIcon` property, for example, we can pass `'email'` to use the corresponding MaterialCommunityIcons icon.
 ## TODO
 * i18n maybe in Provider or via global state: `{currency: 'R$', decimalSeparator: ','}`
 

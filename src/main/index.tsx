@@ -3,6 +3,7 @@ export * from './theme';
 // Inputs
 export { Button, ButtonProps, ButtonPropsTheme } from '../components/Inputs/Button';
 export { Switch, SwitchProps } from '../components/Inputs/Switch';
+export { TextInputPreset } from '../components/Inputs/TextInput/presets/presets';
 export { CommonTextInputProps, TextInput, TextInputProps, TextInputPropsTheme } from '../components/Inputs/TextInput/TextInput';
 export { TextInputFormal } from '../components/Inputs/TextInput/TextInputFormal';
 export { limitWheelIndex, WheelPicker, WheelPickerProps } from '../components/Inputs/WheelPicker';

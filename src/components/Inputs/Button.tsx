@@ -3,7 +3,7 @@ import type { GestureResponderEvent, PressableProps, StyleProp, TextStyle, ViewS
 import { Keyboard, Platform, StyleSheet, View } from 'react-native';
 import type { ShadowProps } from 'react-native-shadow-2';
 import { Shadow } from 'react-native-shadow-2';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { extend } from 'colord';
 import namesPlugin from 'colord/plugins/names';
 import type { ThemeProps } from '../../internalUtils/defaultProps';

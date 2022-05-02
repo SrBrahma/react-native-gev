@@ -1,5 +1,4 @@
 import type { Validate, ValidateResult } from 'react-hook-form';
-import { cpf } from 'cpf-cnpj-validator';
 import type { ZodSchema } from 'zod';
 import { z } from 'zod';
 import type { Mask } from '../MaskedTextInput';
@@ -34,7 +33,6 @@ export type PresetIds =
   'name'
   | 'email'
   | 'password'
-  | 'country.br.cpf'
   | 'mm/yy'
   | 'integerPrice'
   | 'floatPrice';
@@ -73,17 +71,6 @@ const presets: Record<PresetIds, TextInputPreset> = {
     },
     validations: {
       validEmail: (v: string) => parseZod(z.string().email('Email inválido'), v),
-    },
-  },
-  // Move this to a separate dir and require specific import. same for cc presets.
-  // https://pt.stackoverflow.com/q/94956
-  'country.br.cpf': {
-    mask: '999.999.999-99',
-    inputProps: {
-      keyboardType: 'numeric',
-    },
-    validations: {
-      validCpf: (v: string) => { if (!cpf.isValid(v)) return 'Valor inválido'; },
     },
   },
   'mm/yy': {

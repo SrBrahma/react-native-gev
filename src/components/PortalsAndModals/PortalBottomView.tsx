@@ -24,7 +24,7 @@ const s = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   container: {
-    borderBottomLeftRadius: 9,
+    borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     width: '100%',
   },

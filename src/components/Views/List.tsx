@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { RefreshControl, useTheme } from '../../main';
 import type { SwitchProps } from '../Inputs/Switch';
 import { Switch } from '../Inputs/Switch';
