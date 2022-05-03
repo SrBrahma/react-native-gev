@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.47.0
+* Removed default style of `PortalView`'s `contentStyle` (`{padding: 5}`).
+* Added `Body` property to `PortalView` as an alias to `children`.
+
 ## 0.46.0
 > Run the new Readme's installation command to install the now peerDependencies.
 

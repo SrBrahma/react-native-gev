@@ -29,6 +29,8 @@ This both improves some React Natives components like `View` and add many other 
 
 This is opinionated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
 
+As it's not released yet (v0), breaking or UI changes may be introduced on minor versions.
+
 
 ## Installation
 

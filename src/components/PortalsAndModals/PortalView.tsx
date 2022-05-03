@@ -19,6 +19,10 @@ export type PortalViewProps = OmitKey<PortalProps, 'style'> & {
   Header?: (() => JSX.Element | null) | JSX.Element | null;
   /** Won't be affected by the scroll, as children are. */
   Footer?: (() => JSX.Element | null) | JSX.Element | null;
+  /** Same as children, but better if you are using Header and/or Footer.
+   *
+   * As children, it's first wrapped by a Pressable and then by a ScrollView. */
+  Body?: (() => JSX.Element | null) | JSX.Element | null;
   /** The ScrollView props when using the innerScroll prop. */
   scrollViewProps?: ScrollViewProps;
 };
@@ -28,7 +32,7 @@ export const PortalView: React.FC<PortalViewProps> = ({
   children,
   containerStyle, portalStyle, contentStyle,
   scrollViewProps,
-  Header, Footer,
+  Header, Body, Footer,
   ...portalProps
 }) => {
   const { colors } = useTheme();
@@ -36,9 +40,9 @@ export const PortalView: React.FC<PortalViewProps> = ({
     <Portal style={portalStyle} {...portalProps}>
       <Pressable style={[s.container, { backgroundColor: colors.background }, containerStyle]} onPress={() => Keyboard.dismiss()}>
         {Header && (typeof Header === 'function' ? <Header/> : Header)}
-        <PageScrollView viewStyle={[s.content, contentStyle]} {...scrollViewProps}>
+        <PageScrollView viewStyle={contentStyle} {...scrollViewProps}>
           <Pressable onPress={() => Keyboard.dismiss()}>
-            {children}
+            {Body ?? children}
           </Pressable>
         </PageScrollView>
         {Footer && (typeof Footer === 'function' ? <Footer/> : Footer)}
@@ -55,9 +59,5 @@ const s = StyleSheet.create({
     width: '80%', // TODO?
     paddingVertical: 40,
     paddingHorizontal: 32,
-  },
-  content: {
-    // This padding because absolute stuff were being cropped
-    padding: 5,
   },
 });
