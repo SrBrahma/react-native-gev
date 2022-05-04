@@ -8,15 +8,13 @@ import { View } from '../Simple/View';
 
 
 export type LoadingProps = {
-  /** If should be a portal in the middle of the screen.
-   * @default false */
+  /** If should be a portal in the middle of the screen. */
   fullscreen?: boolean;
   /** When using fullscreen */
   onRequestClose?: () => void;
   size?: number | 'large' | 'small' | undefined;
   text?: string;
-  /** If not using fullscreen, if the loading view should flex to use all available space.
-   * @default false */
+  /** If not using fullscreen, if the loading view should flex to use all available space. */
   flex?: boolean;
   viewStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
@@ -59,7 +57,7 @@ export function Loading({
     return <Portal children={children} onRequestClose={onRequestClose}/>;
   else
     return <View
-      center flex={flex}
+      center flex={flex || undefined}
       s={[
         floating && { ...StyleSheet.absoluteFillObject, backgroundColor: colors.backdrop },
         viewStyle,
