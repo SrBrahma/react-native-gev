@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 0.48.0
+* Added `grow` and `shrink` properties to `View`.
+* Added `align`, `alignVertical` and `center` properties to `Text`.
+
 ## 0.47.0
 * Removed default style of `PortalView`'s `contentStyle` (`{padding: 5}`).
 * Added `Body` property to `PortalView` as an alias to `children`.

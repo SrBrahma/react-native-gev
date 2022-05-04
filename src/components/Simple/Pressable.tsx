@@ -2,12 +2,12 @@ import { useMemo } from 'react';
 import type { PressableProps as RnPressableProps, StyleProp, ViewStyle } from 'react-native';
 import { Pressable as RnPressable, StyleSheet } from 'react-native';
 import { colord } from 'colord';
-import type { NewViewProps } from './View';
+import type { GevViewProps } from './View';
 import { mergeViewStyles } from './View';
 
 
 
-export interface PressableProps extends RnPressableProps, NewViewProps {
+export interface PressableProps extends RnPressableProps, GevViewProps {
   /**
    * @default 'ripple'
    * */

@@ -183,7 +183,7 @@ const defaultTheme: DeepPartial<Theme> = {
 const defaultInitialThemeId = 'light';
 
 
-type ThemeReturn<T extends Obj = EmptyObj> = Theme & T & {
+export type ThemeReturn<T extends Obj = EmptyObj> = Theme & T & {
   $settings: {
     /** The themes that are available. */
     availableThemes: string[];
