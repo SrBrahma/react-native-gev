@@ -174,7 +174,7 @@ type TextInputBoth<F extends FieldValues = FieldValues> = (
 // We would have errors on useForm is we used PartialBy around all.
 export type TextInputProps<F extends FieldValues = FieldValues> = TextInputBoth<F> & {
   type?: TextInputType;
-  typesStyles?: Record<TextInputType, TextInputStyles>;
+  typesStyles?: Partial<Record<TextInputType, TextInputStyles>>;
 };
 
 const componentsDict: Record<TextInputType, (p: CommonTextInputProps) => JSX.Element | null> = {
