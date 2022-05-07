@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.49.0~1
+## 0.49.0
 * Removed defaultProps. While it worked nicely, others would find it too complex and weird. Felt back to component wrapping.
 
 ## 0.48.0
