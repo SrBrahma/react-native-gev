@@ -3,7 +3,7 @@ import type { FieldError, FieldValues, UseFormHandleSubmit, UseFormProps as UseF
 import { useForm as useFormInternal } from 'react-hook-form';
 import {} from 'react-native';
 import type { SwitchControlledProps } from '../components/Inputs/Switch';
-import type { TextInputControlledProps } from '../components/Inputs/TextInput/TextInput';
+import type { TextInputProps } from '../components/Inputs/TextInput/TextInput';
 import { TextInput } from '../components/Inputs/TextInput/TextInput';
 import { mSnackbar } from '../components/PortalsAndModals/mSnackbar';
 import { getErrorMessage, Switch } from '../main';
@@ -13,7 +13,7 @@ import { getErrorMessage, Switch } from '../main';
 type OmitControl<T> = Omit<T, 'control'>;
 
 type Components<F extends FieldValues = FieldValues> = {
-  TextInput: (p: OmitControl<TextInputControlledProps<F>>) => JSX.Element;
+  TextInput: (p: OmitControl<TextInputProps<F>>) => JSX.Element;
   Switch: (p: OmitControl<SwitchControlledProps<F>>) => JSX.Element;
 };
 
