@@ -3,8 +3,8 @@ import { Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 
-/** https://stackoverflow.com/a/18650249
- * https://stackoverflow.com/a/33448478 */
+/** https://stackoverflow.com/a/18650249/10247962
+ * https://stackoverflow.com/a/33448478/10247962 */
 function blobToBase64(blob: any): Promise<any> {
   return new Promise((resolve) => {
     const reader = new FileReader();

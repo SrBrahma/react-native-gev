@@ -10,21 +10,16 @@ import type { CommonTextInputProps } from './TextInput';
 export const TextInputFormal = forwardRef<TextInput, CommonTextInputProps>(({
   label, error, containerStyle, contentStyle, errorStyle, inputRef,
   labelStyle, rightComponent, style,
-  sublabel, sublabelStyle,
   ...inputProps
 }, ref) => {
   const theme = useTheme();
-
-  const labelStyleMemo = useMemo(() => StyleSheet.flatten([s.label, theme.fonts.medium, labelStyle]), [labelStyle, theme]);
-  const sublabelStyleMemo = useMemo(() => StyleSheet.flatten([s.sublabel, theme.fonts.medium, sublabelStyle]), [sublabelStyle, theme]);
-  const contentStyleMemo = useMemo(() => StyleSheet.flatten([s.content, !!error && { borderColor: theme.colors.error }, contentStyle]), [contentStyle, error, theme]);
-  const textInputMemo = useMemo(() => StyleSheet.flatten([s.textInput, style]), [style]);
-  const errorStyleMemo = useMemo(() => StyleSheet.flatten([s.errorMessage, { color: theme.colors.error }, theme.fonts.medium, errorStyle]), [errorStyle, theme]);
-
+  const labelStyleMemo = useMemo(() => [s.label, theme.fonts.medium, labelStyle], [labelStyle, theme]);
+  const contentStyleMemo = useMemo(() => [s.content, !!error && { borderColor: theme.colors.error }, contentStyle], [contentStyle, error, theme]);
+  const textInputMemo = useMemo(() => [s.textInput, style], [style]);
+  const errorStyleMemo = useMemo(() => [s.errorMessage, { color: theme.colors.error }, theme.fonts.medium, errorStyle], [errorStyle, theme]);
   return (
     <View style={containerStyle}>
-      {label && <Text s={labelStyleMemo} t={label}/>}
-      {sublabel && <Text s={sublabelStyleMemo} t={sublabel}/>}
+      {label && <Text t={label} s={labelStyleMemo}/>}
       <View style={contentStyleMemo}>
         <MaskedTextInput
           ref={ref}
@@ -35,7 +30,7 @@ export const TextInputFormal = forwardRef<TextInput, CommonTextInputProps>(({
         />
         <View style={s.rightComponent}>{rightComponent}</View>
       </View>
-      <Text s={errorStyleMemo} t={error ?? ''}/>
+      <Text t={error ?? ''} s={errorStyleMemo}/>
     </View>
   );
 });
@@ -46,8 +41,6 @@ const s = StyleSheet.create({
     fontSize: 16,
     marginBottom: 4,
   },
-  sublabel: {
-  }, // TODO
   content: {
     flexDirection: 'row',
     justifyContent: 'space-between',

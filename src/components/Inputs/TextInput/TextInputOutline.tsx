@@ -3,7 +3,7 @@ import type React from 'react';
 import {
   forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState,
 } from 'react';
-import type { StyleProp, TextStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { LogBox, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { mask, unMask } from 'react-native-mask-text';
 import Animated, {
@@ -29,6 +29,7 @@ export interface InputOutlineMethods {
 }
 
 export type InputOutlineProps = Partial<CommonTextInputProps> & {
+  containerStyle?: StyleProp<ViewStyle>;
   leftText?: string;
 
   /** Placeholder for the textinput.
@@ -66,6 +67,11 @@ export type InputOutlineProps = Partial<CommonTextInputProps> & {
   hideCharacterCount?: boolean;
   characterCountTextStyle?: StyleProp<TextStyle>;
 
+  /** Helper text that can be displayed to assist users with Inputs. `error` prop will override this.
+   * @default undefined */
+  assistiveText?: string;
+  assistiveTextStyle?: StyleProp<TextStyle>;
+
   /** If setting this up and mask is active (you may have a good reason for it, like using conditional mask),
    * it will sum all non key chars in mask, so a maxLength 5 with a mask 999.9, will become a maxLength of
    *
@@ -88,8 +94,8 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
     errorColor: errorColorProp,
     error,
     errorTextStyle: errorTextStyleProp,
-    sublabel: assistiveText,
-    sublabelStyle: sublabelStyleProp,
+    assistiveText,
+    assistiveTextStyle: assistiveTextStyleProp,
     hideCharacterCount,
     characterCountTextStyle: counterTextStyleProp,
     // styling
@@ -129,7 +135,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
   }, counterTextStyleProp]) as TextStyle & {fontSize: number};
   const { color: assistiveColor, ...assistiveStyle } = StyleSheet.flatten([{
     color: inactiveColor, fontSize: 10,
-  }, sublabelStyleProp]) as TextStyle & {fontSize: number};
+  }, assistiveTextStyleProp]) as TextStyle & {fontSize: number};
 
 
   const hasMask = (pattern !== undefined || maskType === 'currency');

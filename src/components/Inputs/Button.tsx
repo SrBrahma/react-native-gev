@@ -6,6 +6,8 @@ import { Shadow } from 'react-native-shadow-2';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { extend } from 'colord';
 import namesPlugin from 'colord/plugins/names';
+import type { ThemeProps } from '../../internalUtils/defaultProps';
+import { propsMerger, useGetThemeDefaultProps } from '../../internalUtils/defaultProps';
 import { useTheme } from '../../main/theme';
 import { mLoading } from '../PortalsAndModals/mLoading';
 import { Pressable } from '../Simple/Pressable';
@@ -86,12 +88,29 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   onDisabledPress?: () => void;
   /** @default false */
   hasShadow?: boolean;
+
   /** react-native-shadow-2's props for the wrapping Shadow component. */
   shadowProps?: ShadowProps;
 }
 
+/** If a function, it's run as a React Hook. */
+export type ButtonPropsTheme = ThemeProps<ButtonProps, 'testID' | 'nativeID' | 'text' | 'children'>;
+
 
 export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<T>): JSX.Element {
+  const { colors, fonts, defaultProps: themeProps } = useTheme();
+
+  const defaultProps = useGetThemeDefaultProps({
+    themeProps: themeProps.Button,
+    componentProps: props,
+  });
+
+  // ts strange error on stretch = strechRow if not doing this here separatedly
+  const mergedProps = useMemo(() => propsMerger<ButtonProps>({
+    props: [defaultProps, props],
+    stylesKeys: ['style', 'textStyle', 'iconContainerStyle', 'containerStyle'],
+  }), [defaultProps, props]);
+
   const {
     marginTop: marginTopArg = false,
     leftIcon: leftIconProp,
@@ -112,9 +131,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     outlineWidth = 1,
     containerStyle,
     ...p
-  } = props;
-
-  const { colors, fonts } = useTheme();
+  } = mergedProps;
 
   let text = textProp ?? t ?? ' ';
   if (uppercase)
@@ -184,7 +201,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     Keyboard.dismiss();
     if (awaitOnPress) {
       isAwaitingPress.current = true;
-      await mLoading(() => onPressProp(e)).finally(() => { isAwaitingPress.current = false; });
+      await mLoading(onPressProp).finally(() => { isAwaitingPress.current = false; });
     }
     else void onPressProp(e);
   }, [awaitOnPress, disabled, onDisabledPress, onPressProp]);

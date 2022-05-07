@@ -1,7 +1,10 @@
 import type { DeepPartial } from 'react-hook-form';
 import { createGlobalState } from 'react-hooks-global-state';
-import type { TextStyle } from 'react-native';
 import deepmerge from 'deepmerge';
+import type { ButtonPropsTheme } from '../components/Inputs/Button';
+import type { TextInputPropsTheme } from '../components/Inputs/TextInput/TextInput';
+import { TextInputFormal } from '../components/Inputs/TextInput/TextInputFormal';
+import { TextInputOutline } from '../components/Inputs/TextInput/TextInputOutline';
 import type { DeepPartialAndExpandable, EmptyObj, Obj } from '../internalUtils/types';
 import type { Fonts } from './fonts';
 import { defaultFonts } from './fonts';
@@ -114,17 +117,27 @@ export type Sizes = typeof defaultSizes;
 
 
 
-type Styles = {
-  label: TextStyle;
-  sublabel: TextStyle;
-};
+interface DefaultProps {
+  TextInput: TextInputPropsTheme;
+  Button: ButtonPropsTheme;
+}
+
 
 interface Theme {
   colors: Colors;
   sizes: Sizes;
   /** The fonts for basic texts. */
   fonts: Fonts;
-  styles: Styles;
+  /** Default props for our components. Easier customization!
+   *
+   * The styles are merged.
+   *
+   * It may either be the component props or a function that returns it.
+   *
+   * If it's a function, it's run like a React hook, so you may useTheme().
+   *
+   * Wrapping the function's object-props return in a useMemo is recommended for a better performance. */
+  defaultProps: DefaultProps;
 }
 
 
@@ -151,6 +164,19 @@ const defaultTheme: DeepPartial<Theme> = {
       title: '#111',
       subtitle: '#777',
       pretitle: '#869286',
+    },
+  },
+  defaultProps: {
+    TextInput: {
+      type: 'formal',
+      typeProps: {
+        formal: {
+          Component: TextInputFormal,
+        },
+        outline: {
+          Component: TextInputOutline,
+        },
+      },
     },
   },
 };

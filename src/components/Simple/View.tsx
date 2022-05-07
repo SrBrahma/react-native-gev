@@ -56,8 +56,8 @@ export function mergeViewStyles({
  * * `justify`, shortcut to `style: {justifyContent: X}`.
  * * `align`, shortcut to `style: {alignItems: X}`. If true, it defaults to `'center'`.
  * * `flex`, shortcut to `style: { flex: X }`. `1` if true.
- * * `grow`, shortcut to `style: { flexGrow: X }`. `1` if true.
- * * `shrink`, shortcut to `style: { flexShrink: X }`. `1` if true.
+ * * `grow`, shortcut to `style: { flex: X }`. `1` if true.
+ * * `shrink`, shortcut to `style: { flex: X }`. `1` if true.
  * */
 export const View: React.FC<ViewProps> = (props) => {
   return (
