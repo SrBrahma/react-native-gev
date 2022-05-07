@@ -133,7 +133,7 @@ export const BottomInput: React.FC<BottomInputProps> = ({
 // <Pressable style={[s.container, containerStyle]} onPress={() => Keyboard.dismiss()}>
 // {/* This padding because absolute stuff were being cropped */}
 // <PageScrollView viewStyle={[{ padding: 5 }, contentStyle]} {...scrollViewProps} nestedScrollEnabled>
-//   {/* Without this internal pressable (RN 0.64), the scroll rarely works. https://stackoverflow.com/a/57960538/10247962 */}
+//   {/* Without this internal pressable (RN 0.64), the scroll rarely works. https://stackoverflow.com/a/57960538 */}
 //   <Pressable onPress={() => Keyboard.dismiss()}>
 //     {children}
 //   </Pressable>
