@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.50.0
+* Added `getControl` to `useForm`.
+* Added `label` and `subLabel` to `TextInput` and themeing.
+* Added event to `Button`'s `onPress`.
+
+## 0.49.x
+* Unpublished.
 
 ## 0.48.0
 * Added `grow` and `shrink` properties to `View`.
