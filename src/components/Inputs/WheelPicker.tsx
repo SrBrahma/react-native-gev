@@ -262,7 +262,7 @@ export function WheelPicker<T>({
         scrollEventThrottle={changeValueWhileDragging ? 4 : undefined} // Don't know if it's being good, or bad. 16 wasn't better. 4 seemed better?
         overScrollMode='never'
       >
-        {/* Pressable to fix scroll hardly working https://stackoverflow.com/a/67028240/10247962 */}
+        {/* Pressable to fix scroll hardly working https://stackoverflow.com/a/67028240 */}
         <Pressable>
           {verticalSpacing}
           {data.map(renderItem)}
