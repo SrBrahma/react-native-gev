@@ -15,20 +15,29 @@ import { TextInputFormal } from './TextInputFormal';
 
 
 
-
-/** The TextInput components are given this. */
-export interface CommonTextInputProps extends Partial<MaskedTextInputProps> {
+type TextInputStyles = {
   /** The style of the view that contains everything. */
   containerStyle?: StyleProp<ViewStyle>;
   /** The style of the view that contains the TextInput and rightComponent. Set here the color and radius! */
   contentStyle?: StyleProp<ViewStyle>;
-  /** User-readable name of this input. */
-  label?: string;
   /** Label's style */
   labelStyle?: StyleProp<TextStyle>;
+  /** Sublabel's style */
+  sublabelStyle?: StyleProp<TextStyle>;
+  /** Error style */
+  errorStyle?: StyleProp<TextStyle>;
+  /** TextInput's style */
+  style?: StyleProp<TextStyle>;
+};
+
+/** The TextInput components are given this. */
+export interface CommonTextInputProps extends Partial<MaskedTextInputProps>, TextInputStyles {
+  /** User-readable name of this input. */
+  label?: string;
+  /** User-readable additional description of this input. Below label. */
+  sublabel?: string;
   error?: string;
   // errorMode?: 'pad' | 'hideShow'
-  errorStyle?: StyleProp<TextStyle>;
   /** As our TextInput may have other refs in the future and ref forwarding is bad when having generics components,
    * the TextInput ref is used with this prop. */
   inputRef?: Ref<RnTextInput>;
@@ -39,15 +48,13 @@ export interface CommonTextInputProps extends Partial<MaskedTextInputProps> {
   hideCharacterCount?: boolean;
 }
 
-
-
 export type TextInputType = 'formal' | 'outline';
 
 type TextInputTypeProps = Record<TextInputType, Partial<Omit<TextInputUncontrolledProps, 'typeProps'>>>;
 
 export interface TextInputUncontrolledProps extends CommonTextInputProps {
   /** If you want to use a custom component. */
-  Component?: (p: CommonTextInputProps) => JSX.Element;
+  Component?: (p: CommonTextInputProps) => (JSX.Element | null);
   /** A record to customize the props for the given TextInput type.
    *
    * Intended to be used by theme.props. */
@@ -207,9 +214,3 @@ export function TextInput<F extends FieldValues = FieldValues>(p: TextInputProps
     ? <TextInputControlled {...p}/>
     : <TextInputUncontrolled {...p}/>;
 }
-
-// id test:
-// const A = () => {
-//   const {components: {TextInput}} = useForm<{a: number, b: string}>()
-//   return <TextInput id='b'/>
-// }

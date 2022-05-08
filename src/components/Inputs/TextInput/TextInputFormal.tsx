@@ -1,4 +1,4 @@
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 import type { TextInput } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import { Text, useTheme } from '../../../main';
@@ -10,37 +10,32 @@ import type { CommonTextInputProps } from './TextInput';
 export const TextInputFormal = forwardRef<TextInput, CommonTextInputProps>(({
   label, error, containerStyle, contentStyle, errorStyle, inputRef,
   labelStyle, rightComponent, style,
+  sublabel, sublabelStyle,
   ...inputProps
 }, ref) => {
   const theme = useTheme();
-  const labelStyleMemo = useMemo(() => [s.label, theme.fonts.medium, labelStyle], [labelStyle, theme]);
-  const contentStyleMemo = useMemo(() => [s.content, !!error && { borderColor: theme.colors.error }, contentStyle], [contentStyle, error, theme]);
-  const textInputMemo = useMemo(() => [s.textInput, style], [style]);
-  const errorStyleMemo = useMemo(() => [s.errorMessage, { color: theme.colors.error }, theme.fonts.medium, errorStyle], [errorStyle, theme]);
+
   return (
     <View style={containerStyle}>
-      {label && <Text t={label} s={labelStyleMemo}/>}
-      <View style={contentStyleMemo}>
+      {label && <Text s={[theme.styles.label, labelStyle]} t={label}/>}
+      {sublabel && <Text s={[theme.styles.sublabel, sublabelStyle]} t={sublabel}/>}
+      <View style={[s.content, !!error && { borderColor: theme.colors.error }, contentStyle]}>
         <MaskedTextInput
           ref={ref}
           placeholderTextColor={theme.colors.placeholder}
           selectionColor={theme.colors.primary}
-          style={textInputMemo}
+          style={[s.textInput, style]}
           {...inputProps}
         />
         <View style={s.rightComponent}>{rightComponent}</View>
       </View>
-      <Text t={error ?? ''} s={errorStyleMemo}/>
+      <Text s={[s.errorMessage, { color: theme.colors.error }, theme.fonts.medium, errorStyle]} t={error ?? ''}/>
     </View>
   );
 });
 
 
 const s = StyleSheet.create({
-  label: {
-    fontSize: 16,
-    marginBottom: 4,
-  },
   content: {
     flexDirection: 'row',
     justifyContent: 'space-between',

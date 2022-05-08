@@ -1,5 +1,6 @@
 import type { DeepPartial } from 'react-hook-form';
 import { createGlobalState } from 'react-hooks-global-state';
+import type { TextStyle } from 'react-native';
 import deepmerge from 'deepmerge';
 import type { ButtonPropsTheme } from '../components/Inputs/Button';
 import type { TextInputPropsTheme } from '../components/Inputs/TextInput/TextInput';
@@ -122,6 +123,10 @@ interface DefaultProps {
   Button: ButtonPropsTheme;
 }
 
+type Styles = {
+  label: TextStyle;
+  sublabel: TextStyle;
+};
 
 interface Theme {
   colors: Colors;
@@ -138,6 +143,8 @@ interface Theme {
    *
    * Wrapping the function's object-props return in a useMemo is recommended for a better performance. */
   defaultProps: DefaultProps;
+  /** Styles for common  */
+  styles: Styles;
 }
 
 
@@ -165,6 +172,10 @@ const defaultTheme: DeepPartial<Theme> = {
       subtitle: '#777',
       pretitle: '#869286',
     },
+  },
+  styles: {
+    label: {},
+    sublabel: {},
   },
   defaultProps: {
     TextInput: {
