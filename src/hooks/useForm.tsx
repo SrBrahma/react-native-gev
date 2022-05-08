@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import type { FieldError, FieldValues, UseFormHandleSubmit, UseFormProps as UseFormPropsInternal, UseFormReturn as UseFormReturnInternal } from 'react-hook-form';
+import type { Control, FieldError, FieldValues, UseFormHandleSubmit, UseFormProps as UseFormPropsInternal, UseFormReturn as UseFormReturnInternal } from 'react-hook-form';
 import { useForm as useFormInternal } from 'react-hook-form';
-import {} from 'react-native';
+import { Alert } from 'react-native';
 import type { SwitchControlledProps } from '../components/Inputs/Switch';
 import type { TextInputControlledProps } from '../components/Inputs/TextInput/TextInput';
 import { TextInput } from '../components/Inputs/TextInput/TextInput';
@@ -28,8 +28,25 @@ type UseFormReturn<F extends FieldValues = FieldValues, C = any> = UseFormReturn
    * - - If `label` is undefined, fallbacks to `id`.
    * - - `idToLabel` property on `useForm` may be used to define the `label` automatically.
    */
- // TODO add other errors displays besides Snackbar, as Alert/mError.
- smartHandleSubmit: UseFormHandleSubmit<F>;
+  // TODO add other errors displays besides Snackbar, as Alert/mError.
+  smartHandleSubmit: UseFormHandleSubmit<F>;
+  /** To apply control props to your component.
+   *
+   * It returns `control`, `label` and `id`.
+   *
+   * `label`'s value come from `idToLabel[id]`.
+   *
+   * @example
+   *
+   * ```jsx
+   * <TextInput {...setControl('name')} otherProps/>
+   * ```
+   * */
+  getControl: <Id extends keyof F>(id: Id) => {
+    control: Control<F, C>;
+    label: string | undefined;
+    id: Id;
+  };
 };
 
 
@@ -39,7 +56,7 @@ type UseFormProps<F extends FieldValues = FieldValues, C = any> = UseFormPropsIn
    * of uncaught error on the submit function.
    *
    * @default 'snackbar' */
-  onSubmitError?: 'snackbar';
+  onSubmitError?: 'snackbar' | 'alert';
 };
 
 /** Improves the useForm:
@@ -75,7 +92,9 @@ export function useForm<F extends FieldValues = FieldValues, C = any>(props?: Us
       const message = `${label} - ${error[1].message}`;
       switch (onSubmitError) {
         case 'snackbar':
-          mSnackbar({ text: message });
+          mSnackbar({ text: message }); break;
+        case 'alert':
+          Alert.alert('', message); break;
       }
       invalid?.(e);
     });
@@ -85,10 +104,17 @@ export function useForm<F extends FieldValues = FieldValues, C = any>(props?: Us
       Switch(p) { return <Switch control={control} {...p}/>; },
     };
 
+    const getControl = <Id extends keyof F>(id: Id) => ({
+      control,
+      id,
+      label: idToLabel?.[id],
+    });
+
     return {
       ...useFormReturn,
       components,
       smartHandleSubmit,
+      getControl,
     };
 
   }, [idToLabel, onSubmitError, useFormReturn]);
