@@ -201,7 +201,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
     Keyboard.dismiss();
     if (awaitOnPress) {
       isAwaitingPress.current = true;
-      await mLoading(onPressProp).finally(() => { isAwaitingPress.current = false; });
+      await mLoading(() => onPressProp(e)).finally(() => { isAwaitingPress.current = false; });
     }
     else void onPressProp(e);
   }, [awaitOnPress, disabled, onDisabledPress, onPressProp]);
