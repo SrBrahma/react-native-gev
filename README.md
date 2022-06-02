@@ -107,6 +107,6 @@ pagescrollview
 
 ## Usage
 
-## [Changelog](CHANGELOG.md)
+## [Changelog](https://github.com/SrBrahma/react-native-gev/blob/main/CHANGELOG.md)
 
 ## TODO add a builtin way to locally store data using another lib.
