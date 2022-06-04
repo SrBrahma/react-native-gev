@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.52.0 - 2022-06-04
+* Added `defaultValue` to `TextInput`.
+* Added `nonNegativeInteger` as preset to `TextInput`.
+
 ## 0.51.0
 * Added `Validations` to exports.
 

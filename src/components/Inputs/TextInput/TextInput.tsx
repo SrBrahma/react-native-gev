@@ -92,7 +92,7 @@ function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
 }
 
 export type TextInputControlledProps<F extends FieldValues = FieldValues> =
-  Omit<TextInputUncontrolledProps & {
+  TextInputUncontrolledProps & {
     control: Control<F>;
     /** How you will get it with react-hook-form */
     id: FieldPath<F>;
@@ -102,7 +102,7 @@ export type TextInputControlledProps<F extends FieldValues = FieldValues> =
     required?: boolean;
     preset?: PresetIds | TextInputPreset;
     validations?: Validations;
-  }, 'defaultValue'>; /** defaultValue unused as we at most use hook-form defaultValues. It sets the field value. */
+  };
 export function TextInputControlled<F extends FieldValues = FieldValues>(props: TextInputControlledProps<F>): JSX.Element {
   const theme = useTheme();
   const defaultProps = useGetThemeDefaultProps({
@@ -149,9 +149,11 @@ export function TextInputControlled<F extends FieldValues = FieldValues>(props: 
     };
   }, [p.mask, p.maxLength, preset]);
 
+  // maybe memo the useController props?
   const { field, fieldState } = useController({
     name: id,
     control: control as any,
+    defaultValue: props.defaultValue,
     rules: {
       required: { value: required, message: 'Requerido' },
       ...maxLength && { maxLength: { value: maxLength, message: `Excede ${maxLength} caracteres` } },

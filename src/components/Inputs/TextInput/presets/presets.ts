@@ -31,16 +31,14 @@ function parseZod(z: ZodSchema<any>, v: any): ValidateResult {
 
 
 export type PresetIds =
-  'name'
-  | 'email'
-  | 'password'
-  | 'mm/yy'
-  | 'integerPrice'
-  | 'floatPrice'
-  /** Only >=0 allowed. */
-  | 'nonNegativeInteger';
-
-
+  'name' |
+  'email' |
+  'password' |
+  'mm/yy' |
+  'integerPrice' |
+  'floatPrice' |
+  /** Only >=0 allowed. Note that this one may output '' if empty input. Using 'required' may be useful for you. */
+  'nonNegativeInteger';
 
 
 export type TextInputPreset = {
@@ -105,12 +103,10 @@ const presets: Record<PresetIds, TextInputPreset> = {
     },
   },
   nonNegativeInteger: {
-    textToLogical: ({ unmasked }) => Number(unmasked),
-
-    inputProps: {
-      keyboardType: 'decimal-pad',
-
-    },
+    // With this conditional, we won't get 0 if empty. This allows us using 'required' prop.
+    textToLogical: ({ unmasked }) => (/^\d+$/.test(unmasked) ? Number(unmasked) : unmasked),
+    inputProps: { keyboardType: 'number-pad' },
+    validations: { numbersOnly: Validations.numbersOnly },
   },
 };
 
