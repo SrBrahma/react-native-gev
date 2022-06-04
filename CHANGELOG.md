@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.52.1 - 2022-06-04
+* Added `shouldUnregister` to `TextInput`
+* Added `| number` to `TextInput`'s `defaultValue` property.
+
 ## 0.52.0 - 2022-06-04
 * Added `defaultValue` to `TextInput`.
 * Added `nonNegativeInteger` as preset to `TextInput`.

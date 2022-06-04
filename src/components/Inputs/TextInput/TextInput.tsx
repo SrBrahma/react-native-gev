@@ -5,6 +5,7 @@ import { useController } from 'react-hook-form';
 import type { StyleProp, TextInput as RnTextInput, TextStyle, ViewStyle } from 'react-native';
 import type { ThemeProps } from '../../../internalUtils/defaultProps';
 import { propsMerger, useGetThemeDefaultProps } from '../../../internalUtils/defaultProps';
+import type { OmitKey } from '../../../internalUtils/types';
 import { useTheme } from '../../../main';
 import type { Control } from '../utils';
 import { isControlled } from '../utils';
@@ -63,7 +64,7 @@ export interface TextInputUncontrolledProps extends CommonTextInputProps {
 }
 
 /** If a function, it's run as a React Hook. */
-export type TextInputPropsTheme = ThemeProps<TextInputUncontrolledProps, 'inputRef' | 'testID' | 'nativeID' | 'defaultValue'>;
+export type TextInputPropsTheme = ThemeProps<OmitKey<TextInputUncontrolledProps, 'defaultValue'>, 'inputRef' | 'testID' | 'nativeID' | 'defaultValue'>;
 
 function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
   const theme = useTheme();
@@ -92,7 +93,7 @@ function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
 }
 
 export type TextInputControlledProps<F extends FieldValues = FieldValues> =
-  TextInputUncontrolledProps & {
+  Omit<TextInputUncontrolledProps, 'defaultValue'> & {
     control: Control<F>;
     /** How you will get it with react-hook-form */
     id: FieldPath<F>;
@@ -102,6 +103,10 @@ export type TextInputControlledProps<F extends FieldValues = FieldValues> =
     required?: boolean;
     preset?: PresetIds | TextInputPreset;
     validations?: Validations;
+    /** Passed to useController. Same as useForm's shouldUnregister but as a individual behavior.
+     * https://react-hook-form.com/api/useform/#shouldUnregister */
+    shouldUnregister?: boolean;
+    defaultValue?: string | number; // Adds number to defaultValue.
   };
 export function TextInputControlled<F extends FieldValues = FieldValues>(props: TextInputControlledProps<F>): JSX.Element {
   const theme = useTheme();
@@ -123,6 +128,7 @@ export function TextInputControlled<F extends FieldValues = FieldValues>(props: 
     onChangeText: onChangeProp,
     validations: validationsProp,
     type: _,
+    defaultValue: _2,
     ...p
   } = useMemo(() => propsMerger<TextInputControlledProps>({
     props: [defaultProps, defaultProps.typeProps?.[type], props],
@@ -154,6 +160,7 @@ export function TextInputControlled<F extends FieldValues = FieldValues>(props: 
     name: id,
     control: control as any,
     defaultValue: props.defaultValue,
+    shouldUnregister: props.shouldUnregister,
     rules: {
       required: { value: required, message: 'Requerido' },
       ...maxLength && { maxLength: { value: maxLength, message: `Excede ${maxLength} caracteres` } },
