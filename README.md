@@ -21,7 +21,8 @@
 
 
 
-## This package is on early dev stage. Don't use it yet. This readme is a draft.
+## This package is on dev stage. Don't use it yet. This readme is a draft.
+> While it's already great, useful and being used on prod, constant breaking changes are still being made to achieve the best DX. I will keep making it more mature to avoid having legacy systems.
 
 There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think they don't exactly fit my use cases.
 
@@ -56,10 +57,11 @@ I am trying to find a way to reduce the deps amount, using a plugin-like system.
 ## Philosophy
 * Opinionated
 * Quick and effortless to setup
+* Expo is the future - and already the present!
 * Quick to get your app done
 * Developer Experience (DX) centered
 * Combines the best libs
-* Bleeding edge technologies, no legacy nonsenses.
+* Bleeding edge technologies, no legacy nonsenses
 * Expo support (and suggested!)
 * Simplifies and automates common patterns
 * Easy customization
@@ -105,6 +107,6 @@ pagescrollview
 
 ## Usage
 
-## [Changelog](CHANGELOG.md)
+## [Changelog](https://github.com/SrBrahma/react-native-gev/blob/main/CHANGELOG.md)
 
 ## TODO add a builtin way to locally store data using another lib.
