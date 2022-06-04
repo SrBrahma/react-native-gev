@@ -15,5 +15,5 @@
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
     "importsNotUsedAsValues": "error"
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
 }

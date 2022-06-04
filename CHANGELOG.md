@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.51.0
+* Added `Validations` to exports.
+
 ## 0.50.0
 * Added `getControl` to `useForm`.
 * Added `label` and `subLabel` to `TextInput` and themeing.

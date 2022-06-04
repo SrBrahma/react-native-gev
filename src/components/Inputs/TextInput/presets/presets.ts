@@ -14,8 +14,9 @@ export type Validations = Record<string, Validate<any>>;
 // To be reused inside presets
 function makeValidations<T extends Record<string, Validate<any> |((p: any) => Record<string, Validate<any>>)>>(p: T) { return p; }
 export const Validations = makeValidations({
+  /** Only numbers ([0-9]) allowed. Won't complain if empty. Use 'required' for it. */
   numbersOnly: (v: string) => /^\d*$/.test(v) || 'Número inválido',
-  mustBeNotNegative: (v: number) => v >= 0 || 'Deve ser positivo',
+  notNegative: (v: number) => v >= 0 || 'Deve ser positivo',
   isNumber: (v: number) => !isNaN(v) || 'Número inválido',
   maxDecimalPlaces: (max: number) => ({
     maxDecimalPlaces: (v: number) => (((v.toString().split('.')[1] ?? []).length <= 2) || `>= ${max} casas decimais`),
@@ -35,7 +36,9 @@ export type PresetIds =
   | 'password'
   | 'mm/yy'
   | 'integerPrice'
-  | 'floatPrice';
+  | 'floatPrice'
+  /** Only >=0 allowed. */
+  | 'nonNegativeInteger';
 
 
 
@@ -99,6 +102,14 @@ const presets: Record<PresetIds, TextInputPreset> = {
       maskType: 'currency', // No need to logicalToUnmasked when using this
       keyboardType: 'decimal-pad',
       options: { precision: 2, groupSeparator: '.', decimalSeparator: ',' },
+    },
+  },
+  nonNegativeInteger: {
+    textToLogical: ({ unmasked }) => Number(unmasked),
+
+    inputProps: {
+      keyboardType: 'decimal-pad',
+
     },
   },
 };
