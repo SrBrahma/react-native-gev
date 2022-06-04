@@ -38,7 +38,7 @@ export type InputOutlineProps = Partial<CommonTextInputProps> & {
   /** Vertical padding for TextInput Container. Used to calculate animations.
    * @default 9 */
   paddingVertical?: number;
-  /** Vertical padding for TextInput Container.
+  /** Horizontal padding for TextInput Container.
    * @default 16 */
   paddingHorizontal?: number;
 
@@ -277,7 +277,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
       borderRadius: 4,
       flexDirection: 'row',
       backgroundColor,
-      marginBottom: 32,
+      marginBottom: 30,
     },
     inputContainer: {
       flex: 1,
@@ -315,7 +315,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
       position: 'absolute',
       color: errorColor,
       bottom: -errorTextStyle.fontSize - bottomTextDist,
-      left: paddingHorizontal,
+      left: 9,
     },
     trailingIcon: {
       position: 'absolute',
@@ -326,7 +326,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
       position: 'absolute',
       color: errorState ? errorColor : counterColor,
       bottom: -counterTextStyle.fontSize - bottomTextDist,
-      right: paddingHorizontal,
+      right: 14,
     },
     assistiveText: {
       position: 'absolute',

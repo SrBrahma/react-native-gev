@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.52.2
+* Improved `TextInputOutline` errorText and counterText positioning and marginBottom reduced by 2.
+
 ## 0.52.1 - 2022-06-04
 * Added `shouldUnregister` to `TextInput`
 * Added `| number` to `TextInput`'s `defaultValue` property.
