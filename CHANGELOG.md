@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.52.3
+* Added `debounceMs` to Uncontrolled `Switch`.
+
 ## 0.52.2
 * Improved `TextInputOutline` errorText and counterText positioning and marginBottom reduced by 2.
 

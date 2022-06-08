@@ -1,15 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Control, FieldPath, FieldValues } from 'react-hook-form';
 import { useController } from 'react-hook-form';
 import type { SwitchProps as RNSwitchProps } from 'react-native';
 import { Switch as RNSwitch } from 'react-native';
-import is from '@sindresorhus/is';
 import { isControlled } from './utils';
 
 
 
 type Common = RNSwitchProps & {
   size?: 'normal' | 'small';
+  /** Time in ms that the displayed state will be kept before returning to the `value` property after `onValueChange` is called.
+   *
+   * This is useful as sometimes your `value` state takes a few renders to be applied.
+   *
+   * On value change the temporary value is discarded and the timeout is clean.
+   *
+   * Only used in Uncontrolled component.
+   *
+   * @default 200 */
+   debounceMs?: number;
 };
 
 export type SwitchControlledProps<F extends FieldValues = FieldValues> = Common & {
@@ -40,7 +49,8 @@ function ControlledSwitch<F extends FieldValues = FieldValues>(p: SwitchControll
   return <RNSwitch hitSlop={hitSlop} {...rest} onValueChange={field.onChange} value={field.value}/>;
 }
 
-function UncontrolledSwitch(p: RNSwitchProps) {
+
+function UncontrolledSwitch({ debounceMs = 200, ...p }: SwitchUncontrolledProps) {
   const [tempValue, setTempValue] = useState<boolean | null>(null);
 
   const value = tempValue ?? p.value;
@@ -50,18 +60,30 @@ function UncontrolledSwitch(p: RNSwitchProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [p.value]);
 
+  const timeout = useRef<NodeJS.Timeout | null>(null);
+
+  const isMounted = useRef(true);
+  useEffect(() => { return () => { isMounted.current = false; }; }, []);
+
   // useCallback would mess the value, wouldn't update.
   const onValueChange = async (value: boolean) => {
     if (p.onValueChange) {
+      // We do this as we may have a unstable value due to rendering timing.
       try {
-        const rtn = p.onValueChange(value);
-        if (is.promise(rtn)) {
-          setTempValue(value);
-          await rtn;
+        setTempValue(value);
+        await p.onValueChange(value);
+        if (timeout.current) {
+          clearTimeout(timeout.current);
+          timeout.current = null;
         }
-      } finally {
-        // Always resetting tempValue. Dev is responsible to change the switch value by himself.
-        setTempValue(null);
+        timeout.current = setTimeout(() => {
+          if (isMounted.current)
+            setTempValue(null);
+          timeout.current = null;
+        }, debounceMs);
+      } catch (err) {
+        if (isMounted.current)
+          setTempValue(null);
       }
     }
   };
