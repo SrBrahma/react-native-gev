@@ -4,13 +4,18 @@ export * from './theme';
 export { Button, ButtonProps, ButtonPropsTheme } from '../components/Inputs/Button';
 export { Switch, SwitchProps } from '../components/Inputs/Switch';
 export { TextInputPreset, Validations } from '../components/Inputs/TextInput/presets/presets';
-export { CommonTextInputProps, TextInput, TextInputProps, TextInputPropsTheme } from '../components/Inputs/TextInput/TextInput';
+export {
+  CommonTextInputProps, TextInput, TextInputControlledProps, TextInputProps, TextInputPropsTheme,
+  TextInputUncontrolledProps,
+} from '../components/Inputs/TextInput/TextInput';
 export { TextInputFormal } from '../components/Inputs/TextInput/TextInputFormal';
 export { limitWheelIndex, WheelPicker, WheelPickerProps } from '../components/Inputs/WheelPicker';
 
 // Modals
 export { mError } from '../components/PortalsAndModals/mError';
 export { mLoading, OnModalLoadingError } from '../components/PortalsAndModals/mLoading';
+export * from '../components/PortalsAndModals/mTextInput';
+export * from '../components/PortalsAndModals/mTextInputBottom';
 export { PortalBottomView, PortalBottomViewProps } from '../components/PortalsAndModals/PortalBottomView';
 export {
   addPortal, addToPortalsAndModals, Portal, PortalProps,

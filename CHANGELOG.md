@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.53.0
+* Added `mTextInput` and `mTextInputBottom`.
+* Removed `TextInputOutline`'s containerStyle's `flex: 1`.
+* Moved from `color` package to `colord`.
+
 ## 0.52.3
 * Added `debounceMs` to Uncontrolled `Switch`.
 

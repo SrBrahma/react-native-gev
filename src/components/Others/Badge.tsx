@@ -3,14 +3,14 @@
 import { useEffect, useRef } from 'react';
 import type { ColorValue, StyleProp, TextStyle } from 'react-native';
 import { Animated, StyleSheet } from 'react-native';
-import color from 'color';
+import { colord } from 'colord';
 import { useTheme } from '../../main';
 
 
 
 export function getContrastingColor(input: ColorValue, light: string, dark: string): string {
   if (typeof input === 'string')
-    return color(input).isLight() ? dark : light;
+    return colord(input).brightness() > 0.5 ? dark : light;
   return light;
 }
 

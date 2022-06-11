@@ -272,7 +272,6 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
 
   const s = StyleSheet.create({
     container: {
-      flex: 1,
       borderWidth: 1,
       borderRadius: 4,
       flexDirection: 'row',
@@ -288,7 +287,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
       alignItems: 'center',
     },
     input: {
-      textAlignVertical: ((inputProps.numberOfLines ?? 1) > 1) ? 'top' : 'center',
+      textAlignVertical: 'top',
       textAlign: leftText ? 'right' : 'left',
       flex: 1,
       fontSize,

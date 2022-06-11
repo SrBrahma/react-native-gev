@@ -48,6 +48,7 @@ const s = StyleSheet.create({
     flex: 1,
     paddingVertical: 4,
     fontSize: 18,
+    textAlignVertical: 'top',
   },
   rightComponent: {
     justifyContent: 'center',
