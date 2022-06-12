@@ -154,7 +154,10 @@ export type ListItemProps = {
   greyIfDisabled?: GreyableItems | GreyableItems[];
   /** Conditionally grey the title. greyIfDisabled will OR with this.*/
   greyTitle?: boolean;
+  /** Style of the View that wrapps all (Pressable and Separators). Useful for margins. */
   containerStyle?: StyleProp<ViewStyle>;
+  /** Style of the Pressable. Useful for paddings. */
+  contentStyle?: StyleProp<ViewStyle>;
   title?: string | React.ReactElement | number;
   titleProps?: TextProps;
   titleStyle?: StyleProp<TextStyle>;
@@ -192,7 +195,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       leftIconStyle, rightIconStyle,
       chevron,
       bottomSeparator, topSeparator,
-      containerStyle,
+      containerStyle, contentStyle,
       noHorizontalPadding,
       firstItemPadTop, lastItemPadBottom,
       switch: switchProp, // cant use switch as it is a reserved word
@@ -250,6 +253,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
       lastItemPadBottom && s.lastItemPadBottom,
       disabled && greyIfDisabled?.includes('background') && s.backgroundDisabled,
       noHorizontalPadding && s.noHorizontalPadding,
+      contentStyle,
     ]);
     const pretitleStyle = StyleSheet.flatten([
       s.pretitle,

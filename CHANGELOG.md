@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.54.1
+* Added `contentStyle` to `ListItem`.
+
 ## 0.54.0
 * Removed `useImagePicker` hook. To keep using it, install my new `expo-image-picker-hook`.
 
