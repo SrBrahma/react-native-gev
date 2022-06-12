@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.54.0
+* Removed `useImagePicker` hook. To keep using it, install my new `expo-image-picker-hook`.
+
 ## 0.53.0
 * Added `mTextInput` and `mTextInputBottom`.
 * Removed `TextInputOutline`'s containerStyle's `flex: 1`.

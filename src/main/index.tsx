@@ -35,7 +35,6 @@ export { StatusBarProvider, StatusBarProviderProps } from '../components/Others/
 
 // Hooks
 export { useForm } from '../hooks/useForm';
-export { useImagePicker } from '../hooks/useImagePicker';
 export { usePreventCloseApp } from '../hooks/usePreventClose';
 
 // Utils

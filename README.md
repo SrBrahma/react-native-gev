@@ -22,7 +22,7 @@
 
 
 ## This package is on dev stage. Don't use it yet. This readme is a draft.
-> While it's already great, useful and being used on prod, constant breaking changes are still being made to achieve the best DX. I will keep making it more mature to avoid having legacy systems.
+> While it's already great, useful and being used on prod on two apps, constant breaking changes are still being made to achieve the best DX. I will keep making it more mature to avoid having legacy systems.
 
 There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think they don't exactly fit my use cases.
 
@@ -30,29 +30,19 @@ This both improves some React Natives components like `View` and add many other 
 
 This is opinionated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
 
-As it's not released yet (v0), breaking or UI changes may be introduced on minor versions.
-
-
 ## Installation
 
-### Expo
+```bash
+expo install react-native-gev react-native-safe-area-context expo-status-bar react-native-reanimated @react-navigation/native @expo/vector-icons
 ```
-expo install react-native-gev react-native-safe-area-context react-native-reanimated expo-image-picker @react-navigation/native @expo/vector-icons expo-status-bar
-```
 
-> `react-native-safe-area-context` for StatusBar
-
-> `@react-navigation/native` for TextInputOutline
-
+> `react-native-safe-area-context` and `expo-status-bar` for StatusBar
+>
+> `react-native-reanimated` for TextInputOutline
+>
 > `@react-navigation/native` for useFocusEffect hook
-
-> `expo-image-picker` for our useImagePicker
-
+>
 > `@expo/vector-icons` for icons
-
-> `expo-status-bar` for StatusBar
-
-I am trying to find a way to reduce the deps amount, using a plugin-like system.
 
 ## Philosophy
 * Opinionated
@@ -65,7 +55,7 @@ I am trying to find a way to reduce the deps amount, using a plugin-like system.
 * Expo support (and suggested!)
 * Simplifies and automates common patterns
 * Easy customization
-* Powerful theming
+* Powerful and simple theming
 * Follows [Semantic Versioning](https://semver.org/), breaking / UI changes are majors. (Not yet on v0), future proof
 
 
@@ -85,13 +75,12 @@ I am trying to find a way to reduce the deps amount, using a plugin-like system.
   <Text anyOtherProp s={s.text} t='Hi, Earth!'/>
 ```
 
-## It uses:
+## Powered by:
 
 ```
 react-native-mask-text
 react-hook-forms
 react-native-size-matters
-@expo/vector-icons
 react-native-shadow-2
 pagescrollview
 ```
@@ -108,5 +97,3 @@ pagescrollview
 ## Usage
 
 ## [Changelog](https://github.com/SrBrahma/react-native-gev/blob/main/CHANGELOG.md)
-
-## TODO add a builtin way to locally store data using another lib.

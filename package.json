@@ -1,6 +1,6 @@
 {
   "name": "react-native-gev",
-  "version": "0.53.0",
+  "version": "0.54.0",
   "description": "The smartest UI/DX kit for React Native!",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
@@ -38,7 +38,6 @@
     "@types/color": "^3.0.3",
     "@types/react-native": "0.64.23",
     "eslint-config-gev": "2.33.0",
-    "expo-image-picker": "^12.0.2",
     "expo-status-bar": "^1.2.0",
     "react": "*",
     "react-hook-form": "^7.30.0",
@@ -50,7 +49,6 @@
   "peerDependencies": {
     "@expo/vector-icons": "*",
     "@react-navigation/native": "*",
-    "expo-image-picker": "*",
     "expo-status-bar": "*",
     "react": "*",
     "react-hook-form": "^7.30.0",
