@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.57.0
+* `Text`'s `text`/`t` now may be an array of objects.
+
 ## 0.56.0
 * Prop aliases/shortcuts of `Text`, `TextInput`, `View` now have priority over `style`/`s` property. `s` now also have priority over `style`.
 * `marginTop` property may now be a `string`.
