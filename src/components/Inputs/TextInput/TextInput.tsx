@@ -19,6 +19,8 @@ import { TextInputFormal } from './TextInputFormal';
 type TextInputStyles = {
   /** The style of the view that contains everything. */
   containerStyle?: StyleProp<ViewStyle>;
+  /** Shortcut to `containerStyle: { marginTop: X }`. */
+  marginTop?: number;
   /** The style of the view that contains the TextInput and rightComponent. Set here the color and radius! */
   contentStyle?: StyleProp<ViewStyle>;
   /** Label's style */
@@ -79,7 +81,7 @@ function TextInputUncontrolled(props: TextInputUncontrolledProps): JSX.Element {
     type: _,
     ...p
   } = useMemo(() => propsMerger({
-    props: [defaultProps, defaultProps.typeProps?.[type], props],
+    props: [defaultProps, defaultProps.typeProps?.[type], { containerStyle: { marginTop: props.marginTop } }, props],
     stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle', 'contentStyle'],
   }), [props, defaultProps, type]);
 
@@ -131,7 +133,7 @@ export function TextInputControlled<F extends FieldValues = FieldValues>(props: 
     defaultValue: _2,
     ...p
   } = useMemo(() => propsMerger<TextInputControlledProps>({
-    props: [defaultProps, defaultProps.typeProps?.[type], props],
+    props: [defaultProps, defaultProps.typeProps?.[type], { containerStyle: { marginTop: props.marginTop } }, props],
     stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle', 'contentStyle'],
   }), [props, defaultProps, type]);
 

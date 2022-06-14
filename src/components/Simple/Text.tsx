@@ -19,8 +19,10 @@ export type GevTextProps = {
    align?: true | TextStyle['textAlign'];
    /** Shortcut to `style: { textAlignVertical: X }`. `'center'` if true. */
    alignVertical?: true | TextStyle['textAlignVertical'];
-   /** Shortcut to style `style: { textAlign: 'center', textAlignVertical: 'center' }`. */
+   /** Shortcut to `style: { textAlign: 'center', textAlignVertical: 'center' }`. */
    center?: true;
+   /** Shortcut to `style: { marginTop: X }`. */
+   marginTop?: number;
 };
 
 export type TextProps = RnTextProps & GevTextProps;
@@ -30,7 +32,7 @@ type MergeTextStyle = OmitKey<GevTextProps, 't' | 'text'> & {
   style: StyleProp<TextStyle>;
 };
 function mergeTextStyle({
-  align, alignVertical, center, s, style, singlelineEllipsis, theme,
+  align, alignVertical, center, s, style, singlelineEllipsis, theme, marginTop,
 }: MergeTextStyle): StyleProp<TextStyle> {
   return [
     {
@@ -41,6 +43,7 @@ function mergeTextStyle({
       ...singlelineEllipsis && styles.shrink,
       ...center && styles.center,
       color: theme.colors.text,
+      marginTop,
     },
     s,
     style,

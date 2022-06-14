@@ -18,7 +18,9 @@ type Common = RNSwitchProps & {
    * Only used in Uncontrolled component.
    *
    * @default 200 */
-   debounceMs?: number;
+  debounceMs?: number;
+  /** Shortcut to `containerStyle: { marginTop: X }`. */
+  marginTop?: number;
 };
 
 export type SwitchControlledProps<F extends FieldValues = FieldValues> = Common & {
@@ -89,7 +91,10 @@ function UncontrolledSwitch({ debounceMs = 200, ...p }: SwitchUncontrolledProps)
   };
 
   return <RNSwitch
-    hitSlop={hitSlop} {...p} value={value}
+    hitSlop={hitSlop}
+    value={value}
+    {...p}
+    style={[{ marginTop: p.marginTop }, p.style]}
     onValueChange={p.onValueChange ? onValueChange : undefined}
   />;
 }

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.55.0
+* Added `marginTop` to `View`-based, `Text`, `TextInput` and `Switch`.
+
 ## 0.54.1
 * Added `contentStyle` to `ListItem`.
 

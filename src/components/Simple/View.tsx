@@ -22,6 +22,8 @@ export type GevViewProps = {
   shrink?: true | number;
   /** Shortcut to `style: { flexGrow: X }`. `1` if true. */
   grow?: true | number;
+  /** Shortcut to `style: { marginTop: X }`. */
+  marginTop?: number;
 };
 
 export interface ViewProps extends RnViewProps, GevViewProps {}
@@ -32,7 +34,7 @@ type MergeViewStylesProps = Omit<ViewProps, 'hitSlop'>;
 
 export function mergeViewStyles({
   row, reverse, justify, align, center, s, style,
-  flex, grow, shrink,
+  flex, grow, shrink, marginTop,
 }: MergeViewStylesProps): StyleProp<ViewStyle> {
   return [{
     flex: flex === true ? 1 : flex,
@@ -44,6 +46,7 @@ export function mergeViewStyles({
     justifyContent: justify,
     alignItems: align === true ? 'center' : align,
     ...center && styles.center,
+    marginTop,
   }, s, style];
 }
 

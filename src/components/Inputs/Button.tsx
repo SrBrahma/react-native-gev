@@ -59,15 +59,14 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   /** The style of the wrapping shadow. Shortcut for shadowProps.containerViewStyle.
    * Use this for margins. */
   containerStyle?: ViewStyle;
+  /** Shortcut to `containerStyle: { marginTop: X }`.
+   *
+   * `true` will use a default value, but you may provide a number. */
+  // TODO remove boolean?
+  marginTop?: number | boolean;
   leftIcon?: Icons | JSX.Element;
   iconContainerStyle?: ViewStyle;
   // contentStyle?: ViewStyle;
-  /** If should add marginTop.
-   *
-   * `true` will use a default value, but you may provide a number.
-   *
-   * @default false */
-  marginTop?: number | boolean;
   /** If should render a fullscreen Loading. Will also alert on error.
    * @default true */
   awaitOnPress?: boolean;
@@ -112,7 +111,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   }), [defaultProps, props]);
 
   const {
-    marginTop: marginTopArg = false,
+    marginTop: marginTopArg,
     leftIcon: leftIconProp,
     onPress: onPressProp,
     awaitOnPress = true,
