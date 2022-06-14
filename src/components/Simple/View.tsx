@@ -23,7 +23,7 @@ export type GevViewProps = {
   /** Shortcut to `style: { flexGrow: X }`. `1` if true. */
   grow?: true | number;
   /** Shortcut to `style: { marginTop: X }`. */
-  marginTop?: number;
+  marginTop?: number | string;
 };
 
 export interface ViewProps extends RnViewProps, GevViewProps {}
@@ -36,18 +36,21 @@ export function mergeViewStyles({
   row, reverse, justify, align, center, s, style,
   flex, grow, shrink, marginTop,
 }: MergeViewStylesProps): StyleProp<ViewStyle> {
-  return [{
-    flex: flex === true ? 1 : flex,
-    flexGrow: grow === true ? 1 : grow,
-    flexShrink: shrink === true ? 1 : shrink,
-    flexDirection: (row
-      ? (reverse ? 'row-reverse' : 'row')
-      : (reverse ? 'column-reverse' : 'column')),
-    justifyContent: justify,
-    alignItems: align === true ? 'center' : align,
+  return [style, s, {
+    ...flex !== undefined && { flex: flex === true ? 1 : flex },
+    ...grow !== undefined && { flexGrow: grow === true ? 1 : grow },
+    ...shrink !== undefined && { flexShrink: shrink === true ? 1 : shrink },
+    ...justify && { justifyContent: justify },
+    ...align && { alignItems: align === true ? 'center' : align },
     ...center && styles.center,
-    marginTop,
-  }, s, style];
+    ...marginTop !== undefined && { marginTop },
+    // TODO Explain that if we have 'row' in `s`, having `reverse` will use `column`.
+    ...(row || reverse) && {
+      flexDirection: (row
+        ? (reverse ? 'row-reverse' : 'row')
+        : (reverse ? 'column-reverse' : 'column')),
+    },
+  }];
 }
 
 /** Wrapper for the View component. It adds the properties:

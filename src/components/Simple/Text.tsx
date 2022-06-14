@@ -9,7 +9,7 @@ import { useTheme } from '../../main';
 export type GevTextProps = {
    /** Shortcut prop instead using children to pass the text. */
    text?: React.ReactNode;
-   /** Shortcut prop instead using children to pass the text. Alias to text prop. */
+   /** Shortcut prop instead using children to pass the text. Alias to `text` property. */
    t?: React.ReactNode;
    /** Alias to style. */
    s?: StyleProp<TextStyle>;
@@ -22,7 +22,9 @@ export type GevTextProps = {
    /** Shortcut to `style: { textAlign: 'center', textAlignVertical: 'center' }`. */
    center?: true;
    /** Shortcut to `style: { marginTop: X }`. */
-   marginTop?: number;
+   marginTop?: number | string;
+   /** Shortcut to `style: { color: X }`. */
+   color?: TextStyle['color'];
 };
 
 export type TextProps = RnTextProps & GevTextProps;
@@ -32,21 +34,24 @@ type MergeTextStyle = OmitKey<GevTextProps, 't' | 'text'> & {
   style: StyleProp<TextStyle>;
 };
 function mergeTextStyle({
-  align, alignVertical, center, s, style, singlelineEllipsis, theme, marginTop,
+  align, alignVertical, center, s, style, singlelineEllipsis, theme, marginTop, color,
 }: MergeTextStyle): StyleProp<TextStyle> {
   return [
     {
       includeFontPadding: false,
-      textAlign: align === true ? 'center' : align,
-      textAlignVertical: alignVertical === true ? 'center' : alignVertical,
       ...theme.fonts.regular,
-      ...singlelineEllipsis && styles.shrink,
-      ...center && styles.center,
       color: theme.colors.text,
-      marginTop,
     },
-    s,
     style,
+    s,
+    {
+      ...align && { textAlign: align === true ? 'center' : align },
+      ...alignVertical && { textAlignVertical: alignVertical === true ? 'center' : alignVertical },
+      ...center && styles.center,
+      ...singlelineEllipsis && styles.shrink,
+      ...marginTop !== undefined && { marginTop },
+      ...color && { color },
+    },
   ];
 }
 

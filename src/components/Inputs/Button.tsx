@@ -20,7 +20,6 @@ extend([namesPlugin]);
 
 
 const buttonBorderRadius = 4;
-const buttonMargin = 12;
 const iconSize = 22;
 
 const iconPadding = 15;
@@ -46,24 +45,22 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
   /** The borderWidth when `type === 'outline'`.
    * @default 1 */
   outlineWidth?: number;
+  /** The text inside the button. */
   text?: string;
-  /** Alias to `text`. */
+  /** The text inside the button. Alias to `text`. */
   t?: string;
   /** Converts the text to uppercase.
    * @default false */
   uppercase?: boolean;
   textProps?: TextProps;
-  // Removes the function from the pressable style type. It messes the Shadow-roundness-obtaining
+  // This explicity removes the function from the pressable style type. It messes the Shadow-roundness-obtaining
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   /** The style of the wrapping shadow. Shortcut for shadowProps.containerViewStyle.
    * Use this for margins. */
   containerStyle?: ViewStyle;
-  /** Shortcut to `containerStyle: { marginTop: X }`.
-   *
-   * `true` will use a default value, but you may provide a number. */
-  // TODO remove boolean?
-  marginTop?: number | boolean;
+  /** Shortcut to `containerStyle: { marginTop: X }`. */
+  marginTop?: number | string;
   leftIcon?: Icons | JSX.Element;
   iconContainerStyle?: ViewStyle;
   // contentStyle?: ViewStyle;
@@ -76,8 +73,7 @@ export interface ButtonProps<FunRtn extends void | any | Promise<any> = unknown>
    *
    * If `row` is true, this removes the `flexGrow` of `containerStyle`.
    *
-   * If true, defaults to `'center'` if `row` is false.
-  */
+   * If true, defaults to `'center'` if `row` is false. */
   shrink?: boolean | 'flex-start' | 'flex-end' | 'center' | 'baseline';
   /** Use this when the button is inside a row view. */
   row?: boolean;
@@ -111,7 +107,7 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   }), [defaultProps, props]);
 
   const {
-    marginTop: marginTopArg,
+    marginTop,
     leftIcon: leftIconProp,
     onPress: onPressProp,
     awaitOnPress = true,
@@ -144,10 +140,6 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
   const hasOutline = type === 'outline' || type === 'outlineClear';
   const shrink = shrinkProp === true ? 'center' : shrinkProp;
 
-  const marginTop = marginTopArg
-    ? (typeof marginTopArg === 'number' ? marginTopArg : buttonMargin)
-    : 0;
-
   /** Disables pressing while awaiting. */
   const isAwaitingPress = useRef(false);
 
@@ -174,9 +166,9 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
 
   const sPressable = StyleSheet.flatten<ViewStyle>([
     s.pressable,
-    shrink && s.pressableShrink,
     leftIcon && s.pressableWhenLeftIcon,
     style,
+    shrink && s.pressableShrink,
     { backgroundColor },
   ]);
 
@@ -211,11 +203,12 @@ export function Button<T extends(void | any | Promise<any>)>(props: ButtonProps<
 
 
   const containerStyleMemo = useMemo(() => StyleSheet.flatten([
-    row
-      ? (shrink ? s.shadowContainerRowShrink : s.shadowContainerRow)
-      : (shrink ? { alignSelf: shrink } : s.shadowContainerColumn),
-    { marginTop },
-    containerStyle, shadowProps?.containerViewStyle,
+    containerStyle, shadowProps?.containerViewStyle, {
+      ...(shrink || row) && row
+        ? (shrink ? s.shadowContainerRowShrink : s.shadowContainerRow)
+        : (shrink ? { alignSelf: shrink } : s.shadowContainerColumn),
+      ...marginTop !== undefined && { marginTop },
+    },
   ]), [containerStyle, marginTop, row, shadowProps?.containerViewStyle, shrink]);
 
   const contentStyleMemo = useMemo(() => StyleSheet.flatten([

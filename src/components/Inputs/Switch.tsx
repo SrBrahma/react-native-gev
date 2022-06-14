@@ -20,7 +20,7 @@ type Common = RNSwitchProps & {
    * @default 200 */
   debounceMs?: number;
   /** Shortcut to `containerStyle: { marginTop: X }`. */
-  marginTop?: number;
+  marginTop?: number | string;
 };
 
 export type SwitchControlledProps<F extends FieldValues = FieldValues> = Common & {

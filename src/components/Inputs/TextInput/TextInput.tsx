@@ -133,7 +133,11 @@ export function TextInputControlled<F extends FieldValues = FieldValues>(props: 
     defaultValue: _2,
     ...p
   } = useMemo(() => propsMerger<TextInputControlledProps>({
-    props: [defaultProps, defaultProps.typeProps?.[type], { containerStyle: { marginTop: props.marginTop } }, props],
+    props: [defaultProps, defaultProps.typeProps?.[type], props, {
+      containerStyle: {
+        ...props.marginTop !== undefined && { marginTop: props.marginTop },
+      },
+    }],
     stylesKeys: ['style', 'errorStyle', 'labelStyle', 'containerStyle', 'contentStyle'],
   }), [props, defaultProps, type]);
 

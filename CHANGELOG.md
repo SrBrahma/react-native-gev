@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.56.0
+* Prop aliases/shortcuts of `Text`, `TextInput`, `View` now have priority over `style`/`s` property. `s` now also have priority over `style`.
+* `marginTop` property may now be a `string`.
+* Removed `boolean` type from `Button`'s `marginTop`.
+
 ## 0.55.0
 * Added `marginTop` to `View`-based, `Text`, `TextInput` and `Switch`.
 
