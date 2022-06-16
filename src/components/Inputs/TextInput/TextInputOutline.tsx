@@ -287,8 +287,8 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
       alignItems: 'center',
     },
     input: {
-      textAlignVertical: 'top',
-      textAlign: leftText ? 'right' : 'left',
+      includeFontPadding: false,
+      textAlign: leftText ? 'right' : 'left', // TODO change this ?
       flex: 1,
       fontSize,
       fontFamily,

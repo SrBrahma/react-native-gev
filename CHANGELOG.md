@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.57.1
+* Added `autoCorrect: false` to TextInput preset `'email'`.
+* Added `includeFontPadding: false` to both TextInputs components.
+* Removed `textAlignVertical: 'top'` from TextInput components. It messed Android TextInputs.
+
 ## 0.57.0
 * `Text`'s `text`/`t` now may be an array of objects.
 

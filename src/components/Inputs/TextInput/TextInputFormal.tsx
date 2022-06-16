@@ -45,10 +45,10 @@ const s = StyleSheet.create({
     borderRadius: 1.5,
   },
   textInput: {
-    flex: 1,
+    flex: 1, // Use all the available horizontal space to auxiliate TextInput selection.
     paddingVertical: 4,
+    includeFontPadding: false,
     fontSize: 18,
-    textAlignVertical: 'top',
   },
   rightComponent: {
     justifyContent: 'center',

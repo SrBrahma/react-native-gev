@@ -33,9 +33,13 @@ export type GevTextProps = {
    singlelineEllipsis?: boolean;
    /** Shortcut to `style: { textAlign: X }`. `'center'` if true. */
    align?: true | TextStyle['textAlign'];
-   /** Shortcut to `style: { textAlignVertical: X }`. `'center'` if true. */
+   /** Shortcut to `style: { textAlignVertical: X }`. `'center'` if true.
+    *
+    * Beware that iOS doesn't support `textAlignVertical`. You shall prefer wrapping the Text with a View with `justifyContent: 'center'`. */
    alignVertical?: true | TextStyle['textAlignVertical'];
-   /** Shortcut to `style: { textAlign: 'center', textAlignVertical: 'center' }`. */
+   /** Shortcut to `style: { textAlign: 'center', textAlignVertical: 'center' }`.
+    *
+    * Beware that iOS doesn't support `textAlignVertical`. You shall prefer wrapping the Text with a View with `justifyContent: 'center'`. */
    center?: true;
    /** Shortcut to `style: { marginTop: X }`. */
    marginTop?: number | string;

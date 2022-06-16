@@ -66,6 +66,7 @@ const presets: Record<PresetIds, TextInputPreset> = {
     inputProps: {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
+      autoCorrect: false,
       keyboardType: 'email-address',
       autoCapitalize: 'none',
       caretHidden: false, // For some reason without defining this, the caret wasn't being shown
