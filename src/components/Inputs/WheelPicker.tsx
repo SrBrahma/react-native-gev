@@ -145,7 +145,7 @@ export function WheelPicker<T>({
     const distance = Math.abs(index - selectedIndex);
     const element = p.renderItem
       ? p.renderItem({ item, index, isSelected, distance })
-      : <Text style={[styles.itemText, isSelected && styles.itemTextSelected]}>{item}</Text>;
+      : <Text style={[styles.itemText, isSelected && styles.itemTextSelected]}>{String(item)}</Text>;
 
     return (
       <Pressable

@@ -9,7 +9,6 @@ export type FlatListProps<ItemT = any> = RnFlatListProps<ItemT>;
 /** Same as the FlatList, but also:
  * * Has RefreshControl with theme.colors.primary as `colors`. To use it, use `onRefresh` and `refreshing` properties.
  */
-// * * Applies the theme's backgroundColor. (should this be done? Maybe add backgroundColor shortcut.)
 export function FlatList<T>({ refreshing, onRefresh, ...p }: FlatListProps<T>): JSX.Element {
   return <RnFlatList
     // We could (onRefresh || refreshing), but without onRefresh it allows pull to refresh without doing anything.

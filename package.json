@@ -1,6 +1,6 @@
 {
   "name": "react-native-gev",
-  "version": "0.57.1",
+  "version": "0.58.0",
   "description": "The smartest UI/DX kit for React Native!",
   "main": "./lib/main/index.js",
   "types": "./lib/main/index.d.ts",
@@ -11,7 +11,8 @@
     "build": "npm run clean && tsc",
     "prepublishOnly": "npm run lint && npm run test",
     "prepare": "npm run build",
-    "start": "npm run watch"
+    "start": "npm run watch",
+    "typedoc": "typedoc --out docs src/main/index.tsx"
   },
   "keywords": [],
   "author": "SrBrahma",
@@ -44,6 +45,7 @@
     "react-native": "^0.64.3",
     "react-native-reanimated": "^2.0.0",
     "react-native-safe-area-context": "^3.0.0",
+    "typedoc": "^0.22.17",
     "typescript": "^4.6.4"
   },
   "peerDependencies": {
@@ -56,5 +58,6 @@
     "react-native-reanimated": "^2.0.0",
     "react-native-safe-area-context": "*",
     "react-native-svg": "*"
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }

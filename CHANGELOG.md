@@ -1,9 +1,15 @@
 # Changelog
 
+## 0.58.0
+* Removed `Text`'s `text` property. There is now only the `t`. Never used it and never really will.
+* `View`'s `row`, `center`
+* Moved to yarn.
+
 ## 0.57.1
 * Added `autoCorrect: false` to TextInput preset `'email'`.
 * Added `includeFontPadding: false` to both TextInputs components.
-* Removed `textAlignVertical: 'top'` from TextInput components. It messed Android TextInputs.
+* Removed `textAlignVertical: 'top'` from TextInput components. It messed singlelines Android TextInputs, made then some pixels to the top, even if in theory it shouldn't have vertical paddings.
+> For numberOfLines>1 (Android only), besides `textAlignVertical: 'top'`, it could also set a paddingTop to mimic the 'center' alignment, maybe using the fontSize.
 
 ## 0.57.0
 * `Text`'s `text`/`t` now may be an array of objects.

@@ -19,37 +19,44 @@ export type TextArray = {
 export type TextProp = React.ReactNode | TextArray;
 
 export type GevTextProps = {
-   /** Shortcut prop instead using children to pass the text.
-    *
-    * It also allows having a array of texts, being each item an object containing the text and its style. */
-   text?: TextProp;
-   /** Shortcut prop instead using children to pass the text. Alias to `text` property.
-    *
-    * It also allows having a array of texts, being each item an object containing the text and its style. */
-   t?: TextProp;
-   /** Alias to style. */
-   s?: StyleProp<TextStyle>;
-   /** Besides numberOfLines: 1, will ellipsis and shrink the text if going outside the maximum size. */
-   singlelineEllipsis?: boolean;
-   /** Shortcut to `style: { textAlign: X }`. `'center'` if true. */
-   align?: true | TextStyle['textAlign'];
-   /** Shortcut to `style: { textAlignVertical: X }`. `'center'` if true.
-    *
-    * Beware that iOS doesn't support `textAlignVertical`. You shall prefer wrapping the Text with a View with `justifyContent: 'center'`. */
-   alignVertical?: true | TextStyle['textAlignVertical'];
-   /** Shortcut to `style: { textAlign: 'center', textAlignVertical: 'center' }`.
-    *
-    * Beware that iOS doesn't support `textAlignVertical`. You shall prefer wrapping the Text with a View with `justifyContent: 'center'`. */
-   center?: true;
-   /** Shortcut to `style: { marginTop: X }`. */
-   marginTop?: number | string;
-   /** Shortcut to `style: { color: X }`. */
-   color?: TextStyle['color'];
+  /**
+   * Shortcut prop instead using children to pass the text.
+   *
+   * It also allows having a array of texts, being each item an object containing the text and its style.
+   *
+   * @example
+   *
+   * <Text t='Hi, world!'/>
+   */
+  t?: TextProp;
+  /** Alias to style. */
+  s?: StyleProp<TextStyle>;
+  /** Ellipsizes the singleline text if Shortcut to <... numberOfLines={1} ellipsizeMode={x} style={{ flex: 0, flexShrink: 1 }} */
+  singlelineEllipsis?: true;
+  /** Shortcut to <... numberOfLines={1} adjustsFontSizeToFit> */
+  //  TODO sure about this? Maybe revisit this and create a `singleline` prop?
+  //  singlelineAdjustFontSize?: boolean;
+  /** Shortcut to `style: { textAlign: X }`. `'center'` if true. */
+  align?: true | TextStyle['textAlign'];
+  /** Shortcut to `style: { textAlignVertical: X }`. `'center'` if true.
+   *
+   * Beware that iOS doesn't support `textAlignVertical`. You shall prefer wrapping the Text with a View with `justifyContent: 'center'`. */
+  // Is this useful? Android only as stated, and 'center' is already the default (actually 'auto', although ain't sure the dif.).
+  alignVertical?: true | TextStyle['textAlignVertical'];
+  /** Shortcut to `style: { textAlign: 'center', textAlignVertical: 'center' }`.
+   *
+   * Beware that iOS doesn't support `textAlignVertical`. You shall prefer wrapping the Text with a View with `justifyContent: 'center'`. */
+  center?: true;
+  /** Shortcut to `style: { marginTop: X }`. */
+  marginTop?: number | string;
+  /** Shortcut to `style: { color: X }`. */
+  // Unsure about this. Maybe this clutter too much. Never used it on may apps. Maybe useful for themeing
+  color?: TextStyle['color'];
 };
 
 export type TextProps = RnTextProps & GevTextProps;
 
-type MergeTextStyle = OmitKey<GevTextProps, 't' | 'text'> & {
+type MergeTextStyle = OmitKey<GevTextProps, 't'> & {
   theme: ThemeReturn;
   style: StyleProp<TextStyle>;
 };
@@ -86,7 +93,7 @@ function getTexts(textArray: TextArray) {
  *
  * And adds the properties:
  *
- * * `text` and `t` to be used instead of children. Smaller code and more readable.
+ * * `t` to be used instead of children. Smaller and more readable code.
  * * `s`, alias to `style`.
  * * `align`, shortcut to `style: { textAlign: X }`. `'center'` if true.
  * * `alignVertical`, shortcut to `style: { textAlignVertical: X }`. `'center'` if true.
@@ -94,15 +101,12 @@ function getTexts(textArray: TextArray) {
  * * `singlelineEllipsis`, besides numberOfLines: 1, will ellipsis and shrink the text if going outside the maximum size.
  */
 export const Text: React.FC<TextProps> = ({
-  align, alignVertical, center, style, s, singlelineEllipsis, t, text, children, ...rest
+  align, alignVertical, center, style, s, singlelineEllipsis, t, children, ...rest
 }) => {
   const theme = useTheme();
 
-  // `t` first because that's what we are mostly be using.
-  const textProp = t ?? text;
-
-  const data = textProp !== undefined
-    ? (Array.isArray(textProp) ? getTexts(textProp) : textProp)
+  const data = t !== undefined
+    ? (Array.isArray(t) ? getTexts(t) : t)
     : children;
 
   return (
@@ -116,7 +120,8 @@ export const Text: React.FC<TextProps> = ({
   );
 };
 
-const singleLineEllipsisProps = { numberOfLines: 1, ellipsizeMode: 'tail' } as const;
+const singleLineEllipsisProps: Partial<RnTextProps> = { numberOfLines: 1, ellipsizeMode: 'tail' };
+// const singleLineAdjustFontSize: Partial<RnTextProps> = { numberOfLines: 1, adjustsFontSizeToFit: true };
 
 const styles = StyleSheet.create({
   shrink: {

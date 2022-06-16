@@ -59,7 +59,8 @@ type UseFormProps<F extends FieldValues = FieldValues, C = any> = UseFormPropsIn
   onSubmitError?: 'snackbar' | 'alert';
 };
 
-/** Improves the useForm:
+/**
+ * Improves the useForm:
  * * Defaults `mode` to `'onTouched'`.
  * * Has a `smartHandleSubmit`, that automatically creates a Snackbar on errors.
  * * Returns inputs components with `control` prop populated
@@ -88,7 +89,7 @@ export function useForm<F extends FieldValues = FieldValues, C = any>(props?: Us
       }
     }, (e) => {
       const error = Object.entries(e)[0]! as [id: keyof F, error: FieldError];
-      const label = idToLabel?.[error[0]] ?? error[0];
+      const label = (idToLabel?.[error[0]] ?? error[0]) as string;
       const message = `${label} - ${error[1].message}`;
       switch (onSubmitError) {
         case 'snackbar':

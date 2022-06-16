@@ -202,7 +202,7 @@ export const TextInputOutline = forwardRef<InputOutlineMethods, InputOutlineProp
     inputRef.current?.blur();
   }, [colorMap, errorState, maskedValue, onBlur, placeholderMap]);
 
-  const handlePlaceholderLayout = useCallback(({ nativeEvent }) => {
+  const handlePlaceholderLayout = useCallback(({ nativeEvent }: { nativeEvent: any }) => {
     const { width } = nativeEvent.layout;
     placeholderSize.value = width;
   }, [placeholderSize]);

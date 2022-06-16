@@ -2,20 +2,28 @@ import type { FlexAlignType, StyleProp, ViewProps as RnViewProps, ViewStyle } fr
 import { StyleSheet, View as RnView } from 'react-native';
 
 
-
+/** Gev's specific View properties. Use our `ViewProps` for RNViewProps & GevViewProps. */
 export type GevViewProps = {
   /** Alias to `style` */
   s?: StyleProp<ViewStyle>;
   /** Shortcut to `style: { flexDirection: 'row' }`. */
-  row?: boolean;
-  /** If shall use 'row-reverse' / 'column-reverse' instead of 'row' / 'column'. */
-  reverse?: boolean;
+  row?: true;
+  /** If shall use `'row-reverse'` / `'column-reverse'` instead of `'row'` / `'column'`.
+   *
+   * It won't use style's flexDirection value. Use **`row`** property to have `'row-reverse'`.
+   *
+   * @example
+   *
+   * <View reverse/> // for `style: { flexDirection: 'column-reverse' }`
+   * <View row reverse/> // for `style: { flexDirection: 'row-reverse' }`
+  */
+  reverse?: true;
   /** Shortcut to `style: { justifyContent: X }`. */
   justify?: ViewStyle['justifyContent'];
   /** Shortcut to `style: { alignItems: X }`. `'center'` if true. */
   align?: true | FlexAlignType;
   /** Shortcut to `style: { justifyContent: 'center', alignItems: 'center' }`. */
-  center?: boolean;
+  center?: true;
   /** Shortcut to `style: { flex: X }`. `1` if true. */
   flex?: true | number;
   /** Shortcut to `style: { flexShrink: X }`. `1` if true. */
@@ -29,7 +37,7 @@ export type GevViewProps = {
 export interface ViewProps extends RnViewProps, GevViewProps {}
 
 /** ViewProps with some problematic props like hitSlop omitted. Pressable hitSlop type def is different. */
-type MergeViewStylesProps = Omit<ViewProps, 'hitSlop'>;
+type MergeViewStylesProps = Omit<ViewProps, 'hitSlop' | 'children'>;
 
 
 export function mergeViewStyles({

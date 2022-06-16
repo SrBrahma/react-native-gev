@@ -178,13 +178,14 @@ export type PortalProps = {
    *
    * @default 250 */
   fade?: true | number | false | null;
+  children?: React.ReactNode;
 };
 
-export const Portal: React.FC<PortalProps> = ({
+export function Portal({
   children, style, darken = true, onRequestClose, fade = fadeDefaultDuration,
   requestCloseOnOutsidePress = true, visible = true, onDisappear,
   capturePressOnOutside = true, requestCloseOnBackPress = true,
-}) => {
+}: PortalProps): JSX.Element | null {
   const { colors } = useTheme();
   const fadeDuration = fade === true ? fadeDefaultDuration : (fade || 0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -311,7 +312,7 @@ export const Portal: React.FC<PortalProps> = ({
 
 
   return null;
-};
+}
 
 
 const s = StyleSheet.create({

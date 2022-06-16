@@ -25,16 +25,17 @@ export type PortalViewProps = OmitKey<PortalProps, 'style'> & {
   Body?: (() => JSX.Element | null) | JSX.Element | null;
   /** The ScrollView props when using the innerScroll prop. */
   scrollViewProps?: ScrollViewProps;
+  children?: React.ReactNode;
 };
 // TODO can use header and footer from PageScrollView, now a FlatList.
 // Actually it uses Footer. Maybe convert it to use children to allow us to use those two?
-export const PortalView: React.FC<PortalViewProps> = ({
+export function PortalView({
   children,
   containerStyle, portalStyle, contentStyle,
   scrollViewProps,
   Header, Body, Footer,
   ...portalProps
-}) => {
+}: PortalViewProps): JSX.Element {
   const { colors } = useTheme();
   return (
     <Portal style={portalStyle} {...portalProps}>
@@ -49,7 +50,7 @@ export const PortalView: React.FC<PortalViewProps> = ({
       </Pressable>
     </Portal>
   );
-};
+}
 
 const s = StyleSheet.create({
   /** The box! */

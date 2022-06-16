@@ -21,21 +21,37 @@
 
 
 
-## This package is on dev stage. Don't use it yet. This readme is a draft.
+## This package is on development. This readme is a raw draft.
 > While it's already great, useful and being used on prod on two apps, constant breaking changes are still being made to achieve the best DX. I will keep making it more mature to avoid having legacy systems.
 
 There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think they don't exactly fit my use cases.
 
 This both improves some React Natives components like `View` and add many other useful components. They are all easily customizable and fast to catch up on how to use it.
 
-This is opinionated. The objective of this is to allow me have a way greater productivity, so I can create more apps in a lower timeframe, and as long projects (>6m) are very tiring, and more apps = more money!
+Along components, this package adds some very useful, simple and intuitive shortcuts to usual components.
 
-While tailwind is useful, it just isn't typesafe and Intellisense'able.
+This is opinionated and it's being conceptualized and developed for a long time. This provides a way greater productivity and joy during development.
+
+* Why we write hundreds of `style`s in Views when we can only type a single `s`? This is really quick to catch up and improves readability and productivity when we are talking about months of work.
+
+* Why to have a `<Text>My Text</Text>` when we can have only `<Text t='My Text'/>`?
+
+It also adds some common components:
+
+* A powerful TextInput, with great ready to use integration to `react-hook-form`. Has some very useful presets for common data input.
+* A really beautiful, validated and customizable `List` component with `react-navigation` integration, allowing simple navigation with a `onPressNav: (n) => n('Profile')`. It automatically adds a chevron when this is set! Also has a very useful `switch` property, to use our `Switch`!
+* A Switch that also ready to be used with `react-hook-form` and integrated debounce functionality for sync and async callbacks.
+* A ready to use `Button` that sets a fullscreen loading if the onPress returns a Promise. It also will sets Alert.alert() with the reject message.
+
+
+Themeing:
+* `RefreshControl` uses the primary color. There is also a convenient `FlatList` that uses this RefreshControl.
+* [To be written]
 
 ## Installation
 
 ```bash
-expo install react-native-gev react-native-safe-area-context expo-status-bar react-native-reanimated @react-navigation/native @expo/vector-icons
+expo install react-native-gev react-hook-form react-native-safe-area-context expo-status-bar react-native-reanimated @react-navigation/native @expo/vector-icons
 ```
 
 > `react-native-safe-area-context` and `expo-status-bar` for StatusBar
@@ -45,20 +61,6 @@ expo install react-native-gev react-native-safe-area-context expo-status-bar rea
 > `@react-navigation/native` for useFocusEffect hook
 >
 > `@expo/vector-icons` for icons
-
-## Philosophy
-* Opinionated
-* Quick and effortless to setup
-* Expo is the future - and already the present!
-* Quick to get your app done
-* Developer Experience (DX) centered
-* Combines the best libs
-* Bleeding edge technologies, no legacy nonsenses
-* Expo support (and suggested!)
-* Simplifies and automates common patterns
-* Easy customization
-* Powerful and simple theming
-* Follows [Semantic Versioning](https://semver.org/), breaking / UI changes are majors. (Not yet on v0), future proof
 
 
 ## Best practices
@@ -79,19 +81,24 @@ expo install react-native-gev react-native-safe-area-context expo-status-bar rea
 
 ## Powered by:
 
-```
-react-native-mask-text
-react-hook-forms
-react-native-size-matters
-react-native-shadow-2
-pagescrollview
-```
+* [react-hook-forms](https://github.com/react-hook-form/react-hook-form)
+* [react-native-shadow-2](https://github.com/SrBrahma/react-native-shadow-2)
+* [react-native-mask-text](https://github.com/akinncar/react-native-mask-text)
+* [react-native-size-matters](https://github.com/nirsky/react-native-size-matters)
+* [pagescrollview](https://github.com/SrBrahma/pagescrollview)
+
+
+## Alternatives
+
+* **react-native-paper** - Some components here such as `Snackbar` were built on top of it! It's a popular package but I just don't like most of it.
+* **react-native-elements** - I have used it a bit on the past. The `List` for example was a wrapper to their List, but it had so many customizations and limitations that I decided to made my own. It's also a good package but don't satisfy my needs.
+* **Tailwind** - While Tailwind is useful, it just isn't typesafe and Intellisense'able. I don't like how its styling is done.
 
 ## Info
-* The `/src` is intentionally shipped with the package. This ensures you will always have access to the source code for your installed version.
-* Some patterns and components were based / built on top of others libs, so this has the best current practices. When they do, they have their source properly linked, with all the respect to the authors and to their licenses. This aims to improve them and make them fit better this project.
-* We use Portals instead of native Modals. Modals have a good amount of issues and limitations. However, our mFunctions like mSnackbar etc have the m for Modal instead of p for Portal as pSnackbar wouldn't look too good. Maybe I will change it later?
-* When there is another property that changes the component style, the `style` property has priority over it, if changing the same style property. (should it be the opposite of it? style as a reusable info, and props as a specific customization?)
+* The `/src` is shipped with the package. This ensures the access to the source code.
+* Some patterns and components were based / built on top of others libs, so we have the best practices. When they do, they have their source properly linked, with all the respect to the authors and to their licenses. This aims to improve them and make them fit better this project.
+* We use Portals instead of native Modals. Modals have a good amount of issues and limitations. However, our mFunctions like mSnackbar etc have the m for Modal instead of p for Portal as pSnackbar wouldn't look too good.
+* When the component has properties that changes the component's style, they have priority over the styles property, to allow individual customization.
 * We use MaterialCommunityIcons as the default icons family. For `Button`'s `leftIcon` property, for example, we can pass `'email'` to use the corresponding MaterialCommunityIcons icon.
 ## TODO
 * i18n maybe in Provider or via global state: `{currency: 'R$', decimalSeparator: ','}`

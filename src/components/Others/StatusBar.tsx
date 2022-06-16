@@ -30,6 +30,7 @@ export type StatusBarProviderProps = {
   // etc add other StaturBar props here, and then add them in the hook/component to mirror the StatusBar behavior.
   /** Style for the View that simulates the StatusBar. */
   style?: StyleProp<ViewStyle>;
+  children?: React.ReactNode;
 };
 
 /** You shall add it before any SafeArea Provider, and have your content inside this. */
