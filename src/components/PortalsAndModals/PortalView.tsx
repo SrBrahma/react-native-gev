@@ -41,7 +41,7 @@ export function PortalView({
     <Portal style={portalStyle} {...portalProps}>
       <Pressable style={[s.container, { backgroundColor: colors.background }, containerStyle]} onPress={() => Keyboard.dismiss()}>
         {Header && (typeof Header === 'function' ? <Header/> : Header)}
-        <PageScrollView viewStyle={contentStyle} {...scrollViewProps}>
+        <PageScrollView style={contentStyle} {...scrollViewProps}>
           <Pressable onPress={() => Keyboard.dismiss()}>
             {Body ?? children}
           </Pressable>
