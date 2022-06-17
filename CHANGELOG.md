@@ -1,7 +1,10 @@
 # Changelog
 
+## 0.58.2
+* Upgraded `pagescrollview` to 2.0.0
+
 ## 0.58.1
-* `pagescrollview` upgraded to 2.0.0-beta.1
+* Upgraded `pagescrollview` to 2.0.0-beta.1
 
 ## 0.58.0
 * Removed `Text`'s `text` property. There is now only the `t`. Never used it and never really will.

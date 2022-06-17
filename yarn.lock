@@ -6074,13 +6074,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pagescrollview@npm:2.0.0-beta.1":
-  version: 2.0.0-beta.1
-  resolution: "pagescrollview@npm:2.0.0-beta.1"
+"pagescrollview@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "pagescrollview@npm:2.0.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: cec821e90d2b7ba9968870ba2bcd04a2f43063858ad242afdcb27664f7e0b85bee786f853d23b26050e1331af0a39c700b3ad2fa9675adb82d41551c20fe3112
+  checksum: 7d0ef77e355256c1b323d3f41e1212d26e603ada9ef6d1e15e00727234a9f6e0d9ea06d0fea9f80af1d4bce5885f4cb0c928c11319feca1f413c86b247a7ab48
   languageName: node
   linkType: hard
 
@@ -6411,7 +6411,7 @@ __metadata:
     deepmerge: ^4.2.2
     eslint-config-gev: 2.33.0
     expo-status-bar: ^1.2.0
-    pagescrollview: 2.0.0-beta.1
+    pagescrollview: ^2.0.0
     react: "*"
     react-hook-form: ^7.30.0
     react-hooks-global-state: ^1.0.2
