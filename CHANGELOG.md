@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.58.3
+* Upgraded `pagescrollview` to 2.1.0
+
 ## 0.58.2
 * Upgraded `pagescrollview` to 2.0.0
 
