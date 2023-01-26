@@ -21,7 +21,7 @@
 
 
 
-## This package is on development. This readme is a raw draft.
+## This readme is a draft.
 > While it's already great, useful and being used on prod on two apps, constant breaking changes are still being made to achieve the best DX. I will keep making it more mature to avoid having legacy systems.
 
 There are great known components libs like React Native Elements, React Native Paper... but there are always aspects on them that makes me not think they don't exactly fit my use cases.
